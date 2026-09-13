@@ -4,7 +4,7 @@ import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { soundFx } from '../utils/audio';
 import { factsData } from '../data/facts';
 
-export default function FactsSection({ onNavigateToGuess, onNavigate }) {
+export default function FactsSection({ onNavigateToGuess, onNavigate, onOpenMenu }) {
   return (
     <div id="facts" className="w-full">
       {factsData.map((fact, index) => {
@@ -29,12 +29,13 @@ export default function FactsSection({ onNavigateToGuess, onNavigate }) {
                   soundFx.playEvidenceClick();
                   onNavigate('hero');
                 }}
-                className="font-display font-black text-sm sm:text-base tracking-widest text-white uppercase focus:outline-none hover:text-brand-lightRed transition-colors"
+                className="font-display font-black text-sm sm:text-base tracking-widest text-white uppercase focus:outline-none hover:text-brand-lightRed transition-colors whitespace-nowrap"
               >
                 DEVKRAFT
               </button>
 
-              <nav className="flex items-center gap-4 sm:gap-8 font-mono text-[11px] sm:text-xs tracking-widest text-white/70">
+              {/* Desktop / Tablet Nav (sm:flex) */}
+              <nav className="hidden sm:flex items-center gap-6 lg:gap-8 font-mono text-xs tracking-widest text-white/70 whitespace-nowrap">
                 <button 
                   onClick={() => {
                     soundFx.playEvidenceClick();
@@ -74,13 +75,30 @@ export default function FactsSection({ onNavigateToGuess, onNavigate }) {
                 <button 
                   onClick={() => {
                     soundFx.playEvidenceClick();
-                    onNavigate('reveal');
+                    onOpenMenu();
                   }} 
                   className="hover:text-white transition-colors"
                 >
                   ☰
                 </button>
               </nav>
+
+              {/* Mobile Clean Menu Button (< sm) */}
+              <button
+                onClick={() => {
+                  soundFx.playEvidenceClick();
+                  onOpenMenu();
+                }}
+                className="sm:hidden flex items-center gap-2 font-mono text-xs tracking-widest text-white/90 hover:text-white focus:outline-none py-1 px-2 border border-white/10 rounded-sm bg-void/50"
+                aria-label="Open Navigation Menu"
+              >
+                <span className="tracking-widest uppercase text-[10px]">MENU</span>
+                <div className="flex flex-col justify-center space-y-1 w-3.5">
+                  <span className="w-full h-[1.5px] bg-white" />
+                  <span className="w-full h-[1.5px] bg-white" />
+                  <span className="w-full h-[1.5px] bg-white" />
+                </div>
+              </button>
             </header>
 
             {/* MAIN 2-COLUMN FACTS CHAPTER LAYOUT */}

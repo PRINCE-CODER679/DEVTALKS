@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { soundFx } from '../utils/audio';
 
-export default function LandingHero({ onBeginInvestigation, onNavigate }) {
+export default function LandingHero({ onBeginInvestigation, onNavigate, onOpenMenu }) {
   return (
     <section 
       id="hero" 
@@ -47,13 +47,30 @@ export default function LandingHero({ onBeginInvestigation, onNavigate }) {
             soundFx.playEvidenceClick();
             onNavigate('hero');
           }}
-          className="font-display font-black text-sm sm:text-base tracking-widest text-white uppercase focus:outline-none hover:text-brand-lightRed transition-colors"
+          className="font-display font-black text-sm sm:text-base tracking-widest text-white uppercase focus:outline-none hover:text-brand-lightRed transition-colors whitespace-nowrap"
         >
           DEVKRAFT
         </button>
 
-        <div className="font-mono text-[10px] sm:text-xs tracking-widest sm:tracking-mega text-white/50 uppercase">
-          DEVTALKS '26
+        <div className="flex items-center gap-3">
+          <div className="font-mono text-[10px] sm:text-xs tracking-widest sm:tracking-mega text-white/50 uppercase">
+            DEVTALKS '26
+          </div>
+          
+          <button
+            onClick={() => {
+              soundFx.playEvidenceClick();
+              onOpenMenu();
+            }}
+            className="sm:hidden flex items-center gap-1.5 font-mono text-[10px] tracking-widest text-white/80 hover:text-white py-1 px-2 border border-white/10 rounded-sm bg-void/50 focus:outline-none ml-2"
+            aria-label="Open Navigation Menu"
+          >
+            <div className="flex flex-col justify-center space-y-1 w-3.5">
+              <span className="w-full h-[1.5px] bg-white" />
+              <span className="w-full h-[1.5px] bg-white" />
+              <span className="w-full h-[1.5px] bg-white" />
+            </div>
+          </button>
         </div>
       </motion.header>
 

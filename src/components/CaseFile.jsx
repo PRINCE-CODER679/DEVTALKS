@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { soundFx } from '../utils/audio';
 
-export default function CaseFile({ onExploreClues, onNavigate }) {
+export default function CaseFile({ onExploreClues, onNavigate, onOpenMenu }) {
   return (
     <section 
       id="casefile" 
@@ -13,23 +13,41 @@ export default function CaseFile({ onExploreClues, onNavigate }) {
       <div className="absolute inset-0 film-grain pointer-events-none opacity-25" />
 
       {/* TOP HEADER */}
-      <header className="relative z-20 flex items-center justify-between w-full pb-2">
+      <header className="relative z-20 flex items-center justify-between w-full pb-3 border-b border-white/10">
         <button 
           onClick={() => {
             soundFx.playEvidenceClick();
             onNavigate('hero');
           }}
-          className="font-display font-black text-sm sm:text-base tracking-widest text-white uppercase focus:outline-none hover:text-brand-lightRed transition-colors"
+          className="font-display font-black text-sm sm:text-base tracking-widest text-white uppercase focus:outline-none hover:text-brand-lightRed transition-colors whitespace-nowrap"
         >
           DEVKRAFT
         </button>
 
-        <nav className="flex items-center gap-4 sm:gap-8 font-mono text-[11px] sm:text-xs tracking-widest text-white/70">
+        {/* Desktop / Tablet Nav (sm:flex) */}
+        <nav className="hidden sm:flex items-center gap-6 lg:gap-8 font-mono text-xs tracking-widest text-white/70 whitespace-nowrap">
           <button onClick={() => { soundFx.playEvidenceClick(); onNavigate('hero'); }} className="hover:text-white transition-colors">HOME</button>
-          <button onClick={() => { soundFx.playEvidenceClick(); onNavigate('fact-1'); }} className="text-white font-bold transition-colors">FACTS</button>
+          <button onClick={() => { soundFx.playEvidenceClick(); onNavigate('fact-1'); }} className="hover:text-white transition-colors">FACTS</button>
           <button onClick={() => { soundFx.playEvidenceClick(); onNavigate('guess'); }} className="hover:text-white transition-colors">GUESS</button>
-          <button onClick={() => { soundFx.playEvidenceClick(); onNavigate('reveal'); }} className="hover:text-white transition-colors">☰</button>
+          <button onClick={() => { soundFx.playEvidenceClick(); onOpenMenu(); }} className="hover:text-white transition-colors">☰</button>
         </nav>
+
+        {/* Mobile Clean Menu Button (< sm) */}
+        <button
+          onClick={() => {
+            soundFx.playEvidenceClick();
+            onOpenMenu();
+          }}
+          className="sm:hidden flex items-center gap-2 font-mono text-xs tracking-widest text-white/90 hover:text-white focus:outline-none py-1 px-2 border border-white/10 rounded-sm bg-void/50"
+          aria-label="Open Navigation Menu"
+        >
+          <span className="tracking-widest uppercase text-[10px]">MENU</span>
+          <div className="flex flex-col justify-center space-y-1 w-3.5">
+            <span className="w-full h-[1.5px] bg-white" />
+            <span className="w-full h-[1.5px] bg-white" />
+            <span className="w-full h-[1.5px] bg-white" />
+          </div>
+        </button>
       </header>
 
       {/* MAIN 2-COLUMN DOSSIER GRID */}

@@ -69,18 +69,21 @@ export default function App() {
         <LandingHero
           onBeginInvestigation={() => handleNavigate('casefile')}
           onNavigate={handleNavigate}
+          onOpenMenu={() => setIsMobileMenuOpen(true)}
         />
 
         {/* SLIDE 02: CASE FILE 001 (Page 3) */}
         <CaseFile
           onExploreClues={() => handleNavigate('fact-1')}
           onNavigate={handleNavigate}
+          onOpenMenu={() => setIsMobileMenuOpen(true)}
         />
 
         {/* SLIDES 03..06: SPEAKER FACTS DOSSIER (FACT 01, FACT 02, FACT 03, FACT 04) */}
         <FactsSection
           onNavigateToGuess={() => handleNavigate('guess')}
           onNavigate={handleNavigate}
+          onOpenMenu={() => setIsMobileMenuOpen(true)}
         />
 
         {/* SLIDE 07: GUESS THE SPEAKER (Page 8) */}
@@ -89,6 +92,7 @@ export default function App() {
           onCorrectGuess={() => {}}
           onJumpToReveal={() => handleNavigate('reveal')}
           onNavigate={handleNavigate}
+          onOpenMenu={() => setIsMobileMenuOpen(true)}
         />
 
         {/* SLIDE 08 & 09: COUNTDOWN & REVEAL SECTION (Pages 9 & 10) */}
