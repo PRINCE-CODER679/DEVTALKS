@@ -11,25 +11,29 @@ export default function LandingHero({ onBeginInvestigation, onNavigate }) {
     >
       {/* Background Side-Profile Silhouette with Red Rim Lighting (Right Side) */}
       <div className="absolute inset-0 z-0 flex items-center justify-end pointer-events-none overflow-hidden">
+        
+        {/* Subtle Red Volumetric Atmospheric Back-Glow */}
+        <div className="absolute right-4 sm:right-24 top-1/3 w-64 sm:w-[480px] h-64 sm:h-[480px] bg-brand-red/25 rounded-full blur-[110px] pointer-events-none" />
+
         <motion.div 
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.6, ease: "easeOut" }}
-          className="relative w-full sm:w-4/5 lg:w-3/5 h-full flex items-center justify-end"
+          className="relative w-full sm:w-[85%] lg:w-[65%] xl:w-[58%] h-full flex items-center justify-end"
         >
           <img
             src="/landing-profile.jpg"
             alt="DevTalks '26 Keynote Silhouette"
-            className="w-full h-full object-cover object-center lg:object-right opacity-60 sm:opacity-80 lg:opacity-100"
+            className="w-full h-full object-cover object-center sm:object-right brightness-115 contrast-125 saturate-125"
           />
-          {/* Subtle vignette / seamless gradient blend into pure black on left */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#070707] via-[#070707]/70 to-transparent pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-transparent to-[#070707]/70 pointer-events-none" />
+          {/* Subtle gradient blend on the left to ensure high readability of typography */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#070707] via-[#070707]/40 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-transparent to-[#070707]/50 pointer-events-none" />
         </motion.div>
       </div>
 
       {/* Film Grain Texture */}
-      <div className="absolute inset-0 film-grain pointer-events-none z-10 opacity-30" />
+      <div className="absolute inset-0 film-grain pointer-events-none z-10 opacity-25" />
 
       {/* TOP HEADER */}
       <motion.header 
