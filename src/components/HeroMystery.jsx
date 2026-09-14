@@ -10,7 +10,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
   return (
     <section 
       id="hero"
-      className="relative w-full h-[100dvh] min-h-[580px] max-h-[1080px] bg-[#000000] text-white flex flex-col justify-between pt-16 sm:pt-20 pb-5 sm:pb-8 px-3 sm:px-6 overflow-hidden select-none"
+      className="relative w-full h-[100dvh] min-h-[600px] max-h-[1080px] bg-[#000000] text-white flex flex-col justify-between pt-24 sm:pt-28 md:pt-32 pb-5 sm:pb-8 px-3 sm:px-6 overflow-hidden select-none"
     >
       {/* ================= FULL-SCREEN BACKGROUND ARTWORK: 3 KEYNOTE SPEAKERS IN PROFESSIONAL ATTIRE ================= */}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
@@ -35,15 +35,15 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       {/* Film Grain Texture */}
       <div className="absolute inset-0 film-grain pointer-events-none z-10 opacity-20" />
 
-      {/* ================= TOP SECTION: COMING SOON! ================= */}
-      <div className="relative z-20 max-w-4xl mx-auto w-full flex flex-col items-center text-center px-2 pt-1 sm:pt-2">
+      {/* ================= TOP SECTION: COMING SOON! (POSITIONED CLEARLY BELOW NAVBAR) ================= */}
+      <div className="relative z-20 max-w-4xl mx-auto w-full flex flex-col items-center text-center px-2 mt-1 sm:mt-2">
         
         {/* Top Massive Headline: COMING SOON! */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.94, y: -10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="space-y-0.5 sm:space-y-1 w-full max-w-full"
+          className="space-y-1 w-full max-w-full"
         >
           <h1 className="font-display font-black tracking-wide sm:tracking-widest md:tracking-[0.12em] uppercase text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-none flex items-center justify-center flex-wrap gap-x-2 sm:gap-x-4">
             <span className="bg-gradient-to-b from-[#FFFFFF] via-[#F0F0F0] to-[#A8A8A8] bg-clip-text text-transparent filter drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]">
