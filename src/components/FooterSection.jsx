@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
 
-export default function FooterSection({ onNavigate, onRegisterNow }) {
+export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro }) {
   const scrollToTop = () => {
     soundFx.playEvidenceClick();
     window.scrollTo({ top: 0, behavior: 'smooth' });

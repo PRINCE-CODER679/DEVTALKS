@@ -7,7 +7,8 @@ export default function Navbar({
   onNavigate, 
   isAudioActive, 
   onToggleAudio, 
-  onRegisterNow 
+  onRegisterNow,
+  onReplayIntro
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -102,30 +103,9 @@ export default function Navbar({
           </div>
         </nav>
 
-        {/* Right Controls: REGISTER NOW button & Audio */}
+        {/* Right Controls: REGISTER NOW CTA button */}
         <div className="flex items-center gap-3">
           
-          {/* Atmosphere Audio Button */}
-          <button
-            onClick={() => {
-              onToggleAudio();
-            }}
-            title={isAudioActive ? "Atmosphere Audio: ON" : "Atmosphere Audio: MUTED"}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-[#2B2B2B] hover:border-[#EB0028] text-neutral-400 hover:text-white bg-[#111111] text-xs font-mono transition-all"
-          >
-            {isAudioActive ? (
-              <>
-                <Volume2 className="w-3.5 h-3.5 text-[#EB0028] animate-pulse" />
-                <span className="hidden lg:inline text-[10px] tracking-widest text-[#EB0028] font-semibold">AUDIO ON</span>
-              </>
-            ) : (
-              <>
-                <VolumeX className="w-3.5 h-3.5 text-neutral-500" />
-                <span className="hidden lg:inline text-[10px] tracking-widest text-neutral-500">AUDIO MUTED</span>
-              </>
-            )}
-          </button>
-
           {/* REGISTER NOW -> CTA button (TEDx Red) */}
           <button
             onClick={() => {

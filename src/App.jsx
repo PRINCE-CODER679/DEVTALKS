@@ -7,14 +7,28 @@ import AboutSection from './components/AboutSection';
 import GuessesArena from './components/GuessesArena';
 import FooterSection from './components/FooterSection';
 import RegisterModal from './components/RegisterModal';
+import IntroVideoOverlay from './components/IntroVideoOverlay';
 
 import { speakersList, eventMetadata } from './data/speakers';
 import { soundFx } from './utils/audio';
 
 export default function App() {
+  const [showIntroVideo, setShowIntroVideo] = useState(true);
   const [activeSection, setActiveSection] = useState('hero');
   const [isAudioActive, setIsAudioActive] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+
+  // Lock body scroll while intro video is playing
+  useEffect(() => {
+    if (showIntroVideo) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showIntroVideo]);
 
   // Smooth Navigation Handler
   const handleNavigate = (sectionId) => {
@@ -58,6 +72,16 @@ export default function App() {
   return (
     <div className="relative min-h-screen bg-[#070707] text-white antialiased overflow-x-hidden selection:bg-[#EB0028] selection:text-white font-sans">
       
+      {/* ================= 0. CINEMATIC VIDEO INTRO ON FIRST LINK CLICK ================= */}
+      {showIntroVideo && (
+        <IntroVideoOverlay
+          onComplete={() => {
+            setShowIntroVideo(false);
+            // Optionally enable atmospheric drone if desired
+          }}
+        />
+      )}
+
       {/* 3D Three.js Interactive Particle Dust / Volumetric Light Atmosphere */}
       <ThreeAtmosphere />
 
@@ -68,6 +92,7 @@ export default function App() {
         isAudioActive={isAudioActive}
         onToggleAudio={handleToggleAudio}
         onRegisterNow={() => setIsRegisterOpen(true)}
+        onReplayIntro={() => setShowIntroVideo(true)}
       />
 
       <main className="relative z-10 w-full">
@@ -111,6 +136,7 @@ export default function App() {
       <FooterSection 
         onNavigate={handleNavigate}
         onRegisterNow={() => setIsRegisterOpen(true)}
+        onReplayIntro={() => setShowIntroVideo(true)}
       />
 
       {/* Free Conference Pass Registration Modal */}

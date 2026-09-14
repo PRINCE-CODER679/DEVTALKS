@@ -157,6 +157,108 @@ class AudioSynthesizer {
       osc.stop(this.ctx.currentTime + 0.2);
     } catch (e) {}
   }
+
+  playCinematicImpact() {
+    this.initContext();
+    if (!this.ctx) return;
+    try {
+      // Deep sub-drop
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.8);
+
+      gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.9);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.9);
+    } catch (e) {}
+  }
+
+  playCinematicIntroTrack() {
+    this.initContext();
+    if (!this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      
+      // 1. Deep Sub Bass Drone Riser
+      const subOsc = this.ctx.createOscillator();
+      const subGain = this.ctx.createGain();
+      subOsc.type = 'sawtooth';
+      subOsc.frequency.setValueAtTime(45, now);
+      subOsc.frequency.linearRampToValueAtTime(65, now + 8.5);
+
+      const subFilter = this.ctx.createBiquadFilter();
+      subFilter.type = 'lowpass';
+      subFilter.frequency.setValueAtTime(110, now);
+      subFilter.frequency.exponentialRampToValueAtTime(280, now + 8.0);
+      subFilter.Q.setValueAtTime(3.0, now);
+
+      subGain.gain.setValueAtTime(0.01, now);
+      subGain.gain.linearRampToValueAtTime(0.12, now + 3.0);
+      subGain.gain.linearRampToValueAtTime(0.2, now + 8.0);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 9.2);
+
+      subOsc.connect(subFilter);
+      subFilter.connect(subGain);
+      subGain.connect(this.ctx.destination);
+
+      subOsc.start(now);
+      subOsc.stop(now + 9.2);
+
+      // 2. Cyber Rhythmic Sonar / Tech Glitch Pulses
+      const pulseNotes = [110, 165, 220, 330, 440, 550, 660, 880];
+      for (let t = 0.5; t < 8.5; t += 0.45) {
+        const pOsc = this.ctx.createOscillator();
+        const pGain = this.ctx.createGain();
+        pOsc.type = 'sine';
+        const note = pulseNotes[Math.floor((t / 8.5) * pulseNotes.length)] || 220;
+        pOsc.frequency.setValueAtTime(note, now + t);
+        pOsc.frequency.exponentialRampToValueAtTime(note * 0.5, now + t + 0.15);
+
+        pGain.gain.setValueAtTime(0.03 + (t / 8.5) * 0.05, now + t);
+        pGain.gain.exponentialRampToValueAtTime(0.0001, now + t + 0.18);
+
+        pOsc.connect(pGain);
+        pGain.connect(this.ctx.destination);
+        pOsc.start(now + t);
+        pOsc.stop(now + t + 0.2);
+      }
+
+      // 3. Tension White-Noise / Filter Sweep Riser
+      const bufferSize = this.ctx.sampleRate * 4;
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+      const nFilter = this.ctx.createBiquadFilter();
+      nFilter.type = 'bandpass';
+      nFilter.frequency.setValueAtTime(300, now + 4.5);
+      nFilter.frequency.exponentialRampToValueAtTime(3500, now + 8.5);
+      nFilter.Q.setValueAtTime(4, now + 4.5);
+
+      const nGain = this.ctx.createGain();
+      nGain.gain.setValueAtTime(0.001, now + 4.5);
+      nGain.gain.exponentialRampToValueAtTime(0.08, now + 8.4);
+      nGain.gain.exponentialRampToValueAtTime(0.0001, now + 8.9);
+
+      noise.connect(nFilter);
+      nFilter.connect(nGain);
+      nGain.connect(this.ctx.destination);
+      noise.start(now + 4.5);
+      noise.stop(now + 9.0);
+
+    } catch (e) {
+      console.warn("Cinematic Intro Track error:", e);
+    }
+  }
 }
 
 export const soundFx = new AudioSynthesizer();
