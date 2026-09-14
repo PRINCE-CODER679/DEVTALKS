@@ -5,23 +5,23 @@ import { soundFx } from '../utils/audio';
 export default function IntroVideoOverlay({ onComplete }) {
   const [isExiting, setIsExiting] = useState(false);
   const videoRef = useRef(null);
+  const bgVideoRef = useRef(null);
 
   const startPlayback = () => {
-    const video = videoRef.current;
-    if (!video) return;
+    [videoRef.current, bgVideoRef.current].forEach((video) => {
+      if (!video) return;
+      video.defaultMuted = true;
+      video.muted = true;
+      video.playsInline = true;
 
-    video.defaultMuted = true;
-    video.muted = true;
-    video.playsInline = true;
-
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch((err) => {
-        // Force retry with muted DOM property
-        video.muted = true;
-        video.play().catch(() => {});
-      });
-    }
+      const p = video.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          video.muted = true;
+          video.play().catch(() => {});
+        });
+      }
+    });
   };
 
   const enableAudio = () => {
@@ -37,17 +37,16 @@ export default function IntroVideoOverlay({ onComplete }) {
   };
 
   useEffect(() => {
-    // 1. Immediate play on mount
     startPlayback();
 
-    // 2. Continuous watchdog check: ensure video is playing within 300ms without needing any click
+    // Watchdog check every 150ms for instant play
     const timer = setInterval(() => {
       if (videoRef.current && videoRef.current.paused) {
         startPlayback();
       }
     }, 150);
 
-    // 3. User interaction listener for audio unmuting
+    // Audio unlock gesture listeners
     const handleGesture = () => {
       enableAudio();
     };
@@ -84,10 +83,33 @@ export default function IntroVideoOverlay({ onComplete }) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.04, filter: 'blur(12px)' }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="fixed inset-0 w-screen h-[100dvh] z-[9999] bg-black flex items-center justify-center select-none overflow-hidden"
+          className="fixed inset-0 w-screen h-[100dvh] z-[9999] bg-[#000000] flex items-center justify-center select-none overflow-hidden touch-none"
           onClick={enableAudio}
         >
-          {/* Direct Autoplay Fullscreen Video */}
+          {/* Ambient Blurred Red Cyber Light Backdrop for Mobile Screens */}
+          <div className="absolute inset-0 overflow-hidden filter blur-3xl opacity-35 scale-125 pointer-events-none">
+            <video
+              ref={(el) => {
+                if (el) {
+                  el.defaultMuted = true;
+                  el.muted = true;
+                  el.playsInline = true;
+                  el.play().catch(() => {});
+                }
+                bgVideoRef.current = el;
+              }}
+              src="/devtalks-intro.mp4"
+              autoPlay
+              muted
+              defaultMuted
+              playsInline
+              webkit-playsinline="true"
+              x5-playsinline="true"
+              className="w-full h-full object-cover object-center"
+            />
+          </div>
+
+          {/* Main Full-Fidelity Video (object-contain on Mobile prevents cropping, object-cover on Desktop) */}
           <video
             ref={(el) => {
               if (el) {
@@ -109,10 +131,8 @@ export default function IntroVideoOverlay({ onComplete }) {
             onCanPlay={startPlayback}
             onLoadedData={startPlayback}
             onEnded={handleFinish}
-            onError={() => {
-              handleFinish();
-            }}
-            className="w-full h-full object-cover object-center"
+            onError={handleFinish}
+            className="relative z-10 w-full h-full max-h-[100dvh] object-contain md:object-cover object-center shadow-2xl"
           />
         </motion.div>
       )}
