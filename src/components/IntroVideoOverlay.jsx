@@ -84,10 +84,10 @@ export default function IntroVideoOverlay({ onComplete }) {
           className="fixed inset-0 w-full h-full w-screen h-[100dvh] z-[9999] bg-[#000000] flex items-center justify-center select-none overflow-hidden touch-none cursor-pointer"
           onClick={handleUserInteraction}
         >
-          {/* Ambient Glowing Radial Cyber Atmosphere */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(235,0,40,0.18)_0%,rgba(0,0,0,0.95)_75%)] pointer-events-none" />
+          {/* Ambient Glowing Cyber Backdrop with Radial Spotlight */}
+          <div className="absolute inset-0 bg-[#000000] bg-[radial-gradient(ellipse_at_center,rgba(235,0,40,0.22)_0%,rgba(15,0,0,0.85)_55%,#000000_100%)] pointer-events-none" />
 
-          {/* Single High-Performance Smooth Video Stream - Responsive Fullscreen Cover */}
+          {/* High-Performance Intro Video - 100% Complete Content Visibility without Cropping */}
           <video
             ref={(el) => {
               if (el) {
@@ -112,7 +112,7 @@ export default function IntroVideoOverlay({ onComplete }) {
             onStalled={startPlayback}
             onEnded={handleFinish}
             onError={handleFinish}
-            className="w-full h-full min-w-full min-h-full object-cover object-center pointer-events-none"
+            className="relative z-10 w-full h-full max-w-full max-h-[100dvh] object-contain object-center pointer-events-none"
           />
         </motion.div>
       )}
