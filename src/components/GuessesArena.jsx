@@ -62,27 +62,27 @@ export default function GuessesArena({ onJumpToSpeaker }) {
       id="guesses" 
       className="relative w-full min-h-screen bg-[#060606] text-white py-24 px-4 sm:px-8 lg:px-12 border-t border-[#222222] overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto w-full relative z-10 space-y-12">
+      <div className="max-w-7xl mx-auto w-full relative z-10 space-y-10">
         
         {/* ================= HEADER ================= */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#222222] pb-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#181818] border border-[#FF2A1A]/40 text-[#FF2A1A] font-mono text-xs tracking-widest uppercase">
-              <Trophy className="w-3.5 h-3.5" />
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#222222] pb-8">
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#181818] border border-[#EB0028]/40 text-[#EB0028] font-mono text-xs font-bold tracking-widest uppercase shadow-xs">
+              <Trophy className="w-4 h-4 text-[#EB0028]" />
               <span>THE GUESSING ARENA</span>
             </div>
 
-            <h2 className="font-display font-black text-4xl sm:text-6xl uppercase tracking-tight text-white">
-              DECODE ALL 3 SPEAKERS
+            <h2 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl uppercase tracking-tight text-white leading-tight">
+              DECODE ALL 3 <span className="text-[#EB0028]">SPEAKERS</span>
             </h2>
 
-            <p className="font-sans text-xs sm:text-sm text-neutral-300 max-w-xl">
-              Lock in your predictions, examine community theories, and see where you rank on the DEVTALKS '26 Detective Leaderboard.
+            <p className="font-sans text-sm sm:text-base text-neutral-300 max-w-2xl leading-relaxed">
+              Analyze the confidential dossiers, test your theories, and see if you can uncover our 3 mystery keynote titans before the official reveal.
             </p>
           </div>
 
           {/* Speaker Switcher Tabs */}
-          <div className="flex items-center gap-2 bg-[#111111] border border-[#262626] p-1.5 rounded-xl self-start md:self-auto">
+          <div className="flex items-center gap-2 bg-[#111111] border border-[#262626] p-1.5 rounded-2xl shadow-sm self-start md:self-auto">
             {speakersList.map((spk) => (
               <button
                 key={spk.id}
@@ -91,81 +91,94 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                   setSelectedSpeakerId(spk.id);
                   setFeedback(null);
                 }}
-                className={`px-3.5 py-2 rounded-lg font-mono text-xs font-semibold tracking-wider transition-all flex items-center gap-1.5 ${
+                className={`px-4 sm:px-5 py-2.5 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
                   selectedSpeakerId === spk.id
-                    ? 'bg-[#FF2A1A] text-white shadow-md'
+                    ? 'bg-[#EB0028] text-white shadow-md shadow-red-900/40'
                     : 'text-neutral-400 hover:text-white hover:bg-[#1C1C1C]'
                 }`}
               >
-                <span>SPK #{spk.num}</span>
+                <span>SPEAKER 0{spk.num}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* ================= MAIN ARENA (CENTERED GUESS SUBMISSION) ================= */}
-        <div className="max-w-3xl mx-auto w-full space-y-6">
+        {/* ================= MAIN ARENA GRID ================= */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Target Mystery Card */}
-          <div className="p-6 sm:p-8 bg-[#111111] border border-[#262626] rounded-2xl space-y-6 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#222222] pb-4">
-              <span className="font-mono text-xs text-[#FF2A1A] font-bold tracking-widest uppercase">
-                ACTIVE TARGET: SPEAKER #{activeSpeaker.num}
-              </span>
+          {/* LEFT 8 COLS: ACTIVE GUESS SUBMISSION CARD */}
+          <div className="lg:col-span-8 bg-[#111111] border border-[#262626] rounded-3xl p-6 sm:p-9 space-y-7 shadow-2xl">
+            
+            {/* Top Target Meta */}
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#222222] pb-5">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#EB0028] animate-ping" />
+                <span className="font-mono text-xs sm:text-sm text-[#EB0028] font-black tracking-widest uppercase">
+                  ACTIVE TARGET: SPEAKER #{activeSpeaker.num}
+                </span>
+                <span className="text-neutral-600">|</span>
+                <span className="font-mono text-xs text-neutral-400 font-semibold uppercase">{activeSpeaker.roleTag}</span>
+              </div>
               <button
                 onClick={() => {
                   soundFx.playEvidenceClick();
                   onJumpToSpeaker(activeSpeaker.id);
                 }}
-                className="font-mono text-[11px] text-neutral-400 hover:text-[#FF2A1A] flex items-center gap-1 hover:underline"
+                className="font-mono text-xs text-neutral-400 hover:text-[#EB0028] font-bold flex items-center gap-1.5 hover:underline cursor-pointer transition-colors"
               >
                 <span>View Full Clues</span>
-                <ArrowRight className="w-3 h-3" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <div>
-              <h3 className="font-display font-bold text-2xl sm:text-3xl uppercase text-white">
+            {/* Title & Short Clue */}
+            <div className="space-y-2">
+              <h3 className="font-display font-black text-2xl sm:text-4xl uppercase tracking-tight text-white">
                 {activeSpeaker.title}
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-300 pt-1">
+              <p className="font-sans text-sm sm:text-base text-neutral-300 leading-relaxed">
                 {activeSpeaker.shortClue}
               </p>
             </div>
 
-            {/* Sticky Note Preview */}
-            <div className="p-4 bg-[#FFFFFF] text-black rounded-sm border border-neutral-300 shadow-md">
-              <div className="font-handwritten font-bold text-xs tracking-wider text-black mb-1.5">
-                TOP CLUES FOR SPEAKER #{activeSpeaker.num}:
+            {/* Key Clues Summary Card */}
+            <div className="p-5 bg-[#181818] text-white rounded-2xl border border-[#2A2A2A] shadow-xs space-y-3">
+              <div className="flex items-center gap-2 font-mono text-xs font-bold text-[#FF2A1A] tracking-wider uppercase">
+                <Sparkles className="w-4 h-4 text-[#FF2A1A]" />
+                <span>TOP EVIDENCE SUMMARY:</span>
               </div>
-              <ul className="space-y-1 text-xs font-sans text-neutral-900">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 {activeSpeaker.hints.slice(0, 3).map((h, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <span className="text-sm">{h.icon}</span> <span className="font-medium">{h.title} — {h.detail}</span>
-                  </li>
+                  <div key={i} className="p-3 bg-[#111111] rounded-xl border border-[#262626] shadow-xs space-y-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-base">{h.icon}</span>
+                      <span className="font-mono text-xs font-bold text-white">{h.title}</span>
+                    </div>
+                    <p className="font-sans text-xs text-neutral-300 leading-tight">{h.detail}</p>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
 
             {/* Guess Submission Form */}
-            <form onSubmit={handleGlobalGuess} className="space-y-3 pt-2">
-              <label className="font-mono text-xs text-neutral-300 block uppercase tracking-wider">
-                Enter Your Guess for Speaker #{activeSpeaker.num}:
+            <form onSubmit={handleGlobalGuess} className="space-y-3.5 pt-2">
+              <label className="font-mono text-xs sm:text-sm font-bold text-neutral-200 block uppercase tracking-wider">
+                Enter Your Prediction for Speaker #{activeSpeaker.num}:
               </label>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input 
                   type="text"
                   value={guessInput}
                   onChange={(e) => setGuessInput(e.target.value)}
-                  placeholder="Type person name or company name..."
-                  className="flex-1 px-4 py-3.5 bg-black border border-[#333333] focus:border-[#FF2A1A] rounded-xl text-xs sm:text-sm font-mono text-white placeholder-neutral-500 focus:outline-none"
+                  placeholder="e.g. Kunal Shah, Anupam Mittal, Andrej Karpathy..."
+                  className="flex-1 px-5 py-4 bg-black border border-[#333333] focus:border-[#EB0028] focus:bg-black rounded-2xl text-sm sm:text-base font-sans font-medium text-white placeholder-neutral-500 focus:outline-none transition-all shadow-xs"
                 />
                 <button
                   type="submit"
-                  className="px-6 sm:px-8 py-3.5 bg-[#FF2A1A] hover:bg-[#D91C1C] text-white font-mono text-xs font-bold tracking-wider uppercase rounded-xl transition-all shadow-md flex items-center gap-1.5"
+                  className="px-8 py-4 bg-[#EB0028] hover:bg-[#D40024] text-white font-display font-black text-xs sm:text-sm tracking-widest uppercase rounded-2xl transition-all shadow-md shadow-red-950/40 hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer transform hover:scale-[1.02] active:scale-95 whitespace-nowrap"
                 >
-                  <span>GUESS</span>
-                  <Send className="w-3.5 h-3.5" />
+                  <span>SUBMIT GUESS</span>
+                  <Send className="w-4 h-4" />
                 </button>
               </div>
             </form>
@@ -173,19 +186,74 @@ export default function GuessesArena({ onJumpToSpeaker }) {
             {/* Feedback Alert */}
             {feedback && (
               <motion.div 
-                initial={{ opacity: 0, y: 5 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`p-4 rounded-xl border text-xs font-mono flex items-center gap-2.5 ${
+                className={`p-4 sm:p-5 rounded-2xl border flex items-start gap-3.5 ${
                   feedback.type === 'success'
                     ? 'bg-[#181818] border-white text-white'
-                    : 'bg-[#2B0E0E] border-[#FF2A1A] text-white'
+                    : 'bg-[#2B0E0E] border-[#EB0028] text-white'
                 }`}
               >
-                <Sparkles className={`w-4 h-4 shrink-0 ${feedback.type === 'success' ? 'text-white' : 'text-[#FF2A1A]'}`} />
-                <span>{feedback.text}</span>
+                {feedback.type === 'success' ? (
+                  <CheckCircle2 className="w-6 h-6 text-white shrink-0 mt-0.5" />
+                ) : (
+                  <Sparkles className="w-6 h-6 text-[#EB0028] shrink-0 mt-0.5" />
+                )}
+                <div className="space-y-0.5">
+                  <div className="font-mono text-xs font-black uppercase tracking-wider text-white">
+                    {feedback.type === 'success' ? 'DECODE VERIFIED ✓' : 'CLUE NOT MATCHED'}
+                  </div>
+                  <p className="font-sans text-sm font-medium text-neutral-200 leading-relaxed">{feedback.text}</p>
+                </div>
               </motion.div>
             )}
 
+          </div>
+
+          {/* RIGHT 4 COLS: RECENT DETECTIVE GUESSES FEED */}
+          <div className="lg:col-span-4 bg-[#111111] border border-[#262626] rounded-3xl p-6 sm:p-7 space-y-5 shadow-xl">
+            <div className="flex items-center justify-between border-b border-[#222222] pb-3">
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs font-black text-white tracking-wider uppercase">
+                  LIVE COMMUNITY FEED
+                </span>
+              </div>
+              <span className="flex items-center gap-1.5 font-mono text-[10px] text-green-400 font-bold bg-green-950/60 px-2 py-0.5 rounded-full border border-green-800/60">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> LIVE
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {guessesLog.slice(0, 5).map((log, idx) => (
+                <div 
+                  key={idx} 
+                  className="p-3.5 bg-[#181818] hover:bg-[#202020] border border-[#2A2A2A] rounded-xl space-y-1.5 transition-colors"
+                >
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <span className="font-bold text-neutral-200">{log.user}</span>
+                    <span className="text-neutral-500 text-[10px]">{log.time}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-sans text-sm font-semibold text-white">
+                      "{log.guess}"
+                    </span>
+                    <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                      log.verified 
+                        ? 'bg-green-900/60 text-green-300 border border-green-700/60' 
+                        : 'bg-[#262626] text-neutral-400'
+                    }`}>
+                      {log.verified ? 'SPK #' + log.speakerNum + ' ✓' : 'SPK #' + log.speakerNum}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-2 text-center">
+              <span className="font-mono text-[11px] text-neutral-500">
+                Join 1,200+ attendees decoding DEVTALKS '26
+              </span>
+            </div>
           </div>
 
         </div>

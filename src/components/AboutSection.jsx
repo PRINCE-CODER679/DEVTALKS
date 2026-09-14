@@ -43,16 +43,16 @@ export default function AboutSection({ onRegisterNow }) {
         {/* ================= HEADER ================= */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#222222] pb-8">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#181818] border border-[#FF2A1A]/40 text-[#FF2A1A] font-mono text-xs tracking-widest uppercase">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#181818] border border-[#EB0028]/40 text-[#EB0028] font-mono text-xs font-bold tracking-widest uppercase shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#EB0028]" />
               <span>THE VISION & CONFERENCE</span>
             </div>
             
             <h2 className="font-display font-black text-4xl sm:text-6xl uppercase tracking-tight text-white">
-              ABOUT DEVTALKS <span className="text-[#FF2A1A]">'26</span>
+              ABOUT DEVTALKS <span className="text-[#EB0028]">'26</span>
             </h2>
 
-            <p className="font-sans text-sm sm:text-base text-neutral-300 max-w-2xl">
+            <p className="font-sans text-sm sm:text-base text-neutral-300 max-w-2xl leading-relaxed">
               More than just slides and scripted presentations. A meeting of builders, pioneers, and innovators reshaping the modern digital economy.
             </p>
           </div>
@@ -62,7 +62,7 @@ export default function AboutSection({ onRegisterNow }) {
               soundFx.playEvidenceClick();
               onRegisterNow();
             }}
-            className="self-start md:self-auto inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FF2A1A] text-white hover:bg-[#D91C1C] font-mono text-xs font-bold tracking-wider uppercase transition-all shadow-md"
+            className="self-start md:self-auto inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#EB0028] text-white hover:bg-[#D40024] font-mono text-xs font-bold tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(235,0,40,0.4)] cursor-pointer"
           >
             <span>CLAIM FREE PASS</span>
             <ArrowUpRight className="w-4 h-4" />
@@ -72,8 +72,8 @@ export default function AboutSection({ onRegisterNow }) {
         {/* ================= 3 PILLARS GRID ================= */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          <div className="p-6 bg-[#111111] border border-[#262626] rounded-2xl space-y-4 hover:border-[#FF2A1A]/50 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#FF2A1A]/40 flex items-center justify-center text-[#FF2A1A]">
+          <div className="p-6 bg-[#111111] border border-[#262626] rounded-2xl space-y-4 hover:border-[#EB0028]/50 hover:bg-[#161616] transition-all shadow-md">
+            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#EB0028]/40 flex items-center justify-center text-[#EB0028]">
               <Zap className="w-6 h-6" />
             </div>
             <h3 className="font-display font-bold text-xl uppercase text-white">
@@ -84,8 +84,8 @@ export default function AboutSection({ onRegisterNow }) {
             </p>
           </div>
 
-          <div className="p-6 bg-[#111111] border border-[#262626] rounded-2xl space-y-4 hover:border-[#FF2A1A]/50 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#FF2A1A]/40 flex items-center justify-center text-[#FF2A1A]">
+          <div className="p-6 bg-[#111111] border border-[#262626] rounded-2xl space-y-4 hover:border-[#EB0028]/50 hover:bg-[#161616] transition-all shadow-md">
+            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#EB0028]/40 flex items-center justify-center text-[#EB0028]">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h3 className="font-display font-bold text-xl uppercase text-white">
@@ -96,8 +96,8 @@ export default function AboutSection({ onRegisterNow }) {
             </p>
           </div>
 
-          <div className="p-6 bg-[#111111] border border-[#262626] rounded-2xl space-y-4 hover:border-[#FF2A1A]/50 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#FF2A1A]/40 flex items-center justify-center text-[#FF2A1A]">
+          <div className="p-6 bg-[#111111] border border-[#262626] rounded-2xl space-y-4 hover:border-[#EB0028]/50 hover:bg-[#161616] transition-all shadow-md">
+            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#EB0028]/40 flex items-center justify-center text-[#EB0028]">
               <Users className="w-6 h-6" />
             </div>
             <h3 className="font-display font-bold text-xl uppercase text-white">
@@ -111,29 +111,29 @@ export default function AboutSection({ onRegisterNow }) {
         </div>
 
         {/* ================= STATS ROW ================= */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-6 sm:p-8 bg-[#111111] border border-[#262626] rounded-2xl">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-6 sm:p-8 bg-[#111111] border border-[#262626] rounded-2xl shadow-md">
           <div className="text-center space-y-1">
             <div className="font-display font-black text-3xl sm:text-5xl text-white">3</div>
-            <div className="font-mono text-xs text-[#FF2A1A] tracking-widest uppercase">Iconic Keynotes</div>
+            <div className="font-mono text-xs text-[#EB0028] font-bold tracking-widest uppercase">Iconic Keynotes</div>
           </div>
           <div className="text-center space-y-1">
             <div className="font-display font-black text-3xl sm:text-5xl text-white">1,500+</div>
-            <div className="font-mono text-xs text-[#FF2A1A] tracking-widest uppercase">Live Attendees</div>
+            <div className="font-mono text-xs text-[#EB0028] font-bold tracking-widest uppercase">Live Attendees</div>
           </div>
           <div className="text-center space-y-1">
             <div className="font-display font-black text-3xl sm:text-5xl text-white">2 DAYS</div>
-            <div className="font-mono text-xs text-[#FF2A1A] tracking-widest uppercase">Intensive Sessions</div>
+            <div className="font-mono text-xs text-[#EB0028] font-bold tracking-widest uppercase">Intensive Sessions</div>
           </div>
           <div className="text-center space-y-1">
             <div className="font-display font-black text-3xl sm:text-5xl text-white">100%</div>
-            <div className="font-mono text-xs text-[#FF2A1A] tracking-widest uppercase">Free Registration</div>
+            <div className="font-mono text-xs text-[#EB0028] font-bold tracking-widest uppercase">Free Registration</div>
           </div>
         </div>
 
         {/* ================= FAQ ACCORDION ================= */}
         <div className="space-y-6">
           <div className="flex items-center gap-2">
-            <HelpCircle className="w-5 h-5 text-[#FF2A1A]" />
+            <HelpCircle className="w-5 h-5 text-[#EB0028]" />
             <h3 className="font-display font-bold text-2xl uppercase text-white">
               FREQUENTLY ASKED QUESTIONS
             </h3>
@@ -143,19 +143,19 @@ export default function AboutSection({ onRegisterNow }) {
             {faqs.map((faq, idx) => (
               <div 
                 key={idx}
-                className="bg-[#111111] border border-[#262626] rounded-xl overflow-hidden transition-all"
+                className="bg-[#111111] border border-[#262626] rounded-xl overflow-hidden transition-all shadow-sm"
               >
                 <button
                   onClick={() => {
                     soundFx.playEvidenceClick();
                     setOpenFaq(openFaq === idx ? -1 : idx);
                   }}
-                  className="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-[#181818] transition-colors"
+                  className="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-[#181818] transition-colors cursor-pointer"
                 >
                   <span className="font-mono text-xs sm:text-sm font-semibold text-white">
                     {faq.q}
                   </span>
-                  <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform ${openFaq === idx ? 'rotate-180 text-[#FF2A1A]' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform ${openFaq === idx ? 'rotate-180 text-[#EB0028]' : ''}`} />
                 </button>
 
                 {openFaq === idx && (

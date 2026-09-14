@@ -56,7 +56,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#070707] text-white antialiased overflow-x-hidden selection:bg-brand-red selection:text-white font-sans">
+    <div className="relative min-h-screen bg-[#070707] text-white antialiased overflow-x-hidden selection:bg-[#EB0028] selection:text-white font-sans">
       
       {/* 3D Three.js Interactive Particle Dust / Volumetric Light Atmosphere */}
       <ThreeAtmosphere />

@@ -36,7 +36,7 @@ export default function RegisterModal({ isOpen, onClose }) {
             soundFx.playEvidenceClick();
             onClose();
           }}
-          className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-white rounded-lg hover:bg-[#222222] transition-colors"
+          className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-white rounded-lg hover:bg-[#222222] transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -111,7 +111,7 @@ export default function RegisterModal({ isOpen, onClose }) {
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-[#FF2A1A] hover:bg-[#D91C1C] text-white font-display font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-md transition-all"
+                className="w-full py-3.5 bg-[#EB0028] hover:bg-[#D40024] text-white font-display font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-[0_0_15px_rgba(235,0,40,0.5)] transition-all cursor-pointer"
               >
                 GENERATE INSTANT PASS →
               </button>
@@ -160,7 +160,7 @@ export default function RegisterModal({ isOpen, onClose }) {
 
             <button
               onClick={() => onClose()}
-              className="w-full py-3 bg-white text-black font-mono text-xs font-bold tracking-wider uppercase rounded-xl hover:bg-[#FF2A1A] hover:text-white transition-colors"
+              className="w-full py-3 bg-white text-black font-mono text-xs font-bold tracking-wider uppercase rounded-xl hover:bg-[#EB0028] hover:text-white transition-colors cursor-pointer"
             >
               DONE & RETURN TO STAGE
             </button>
