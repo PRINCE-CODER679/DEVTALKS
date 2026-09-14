@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   ArrowRight, 
@@ -7,44 +7,18 @@ import {
 import { soundFx } from '../utils/audio';
 
 export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister }) {
-  const [hoveredSpeaker, setHoveredSpeaker] = useState(null);
-
-  const speakerPins = [
-    {
-      id: 'speaker-1',
-      num: '01',
-      label: 'SPEAKER 01',
-      hint: 'Fintech Titan & Unicorn Builder',
-      pos: 'left-[22%] sm:left-[27%] top-[45%] sm:top-[48%]'
-    },
-    {
-      id: 'speaker-2',
-      num: '02',
-      label: 'SPEAKER 02',
-      hint: 'Shark Investor & D2C Pioneer',
-      pos: 'left-[50%] top-[38%] sm:top-[40%]'
-    },
-    {
-      id: 'speaker-3',
-      num: '03',
-      label: 'SPEAKER 03',
-      hint: 'AI Visionary & Deep Learning Pioneer',
-      pos: 'left-[78%] sm:left-[73%] top-[45%] sm:top-[48%]'
-    }
-  ];
-
   return (
     <section 
       id="hero"
       className="relative w-full min-h-screen bg-[#000000] text-white flex flex-col justify-between pt-16 sm:pt-20 pb-8 px-4 sm:px-8 overflow-hidden select-none"
     >
-      {/* ================= FULL-SCREEN BACKGROUND ARTWORK (SEAMLESS EDGE BLEND) ================= */}
+      {/* ================= FULL-SCREEN BACKGROUND ARTWORK: 3 KEYNOTE SPEAKERS IN PROFESSIONAL ATTIRE ================= */}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
-        {/* Full Screen Cinematic Hooded Keynote Figures Visual */}
+        {/* Full Screen Cinematic 3 Keynote Speakers on Stage with 3 Red Panels */}
         <img 
-          src="/hooded-council-bg.jpg" 
-          alt="DEVTALKS '26 Mystery Keynote Speakers" 
-          className="w-full h-full object-cover object-center max-w-[1400px] max-h-[1000px] opacity-95 filter brightness-105"
+          src="/red-stage-panels.jpg" 
+          alt="DEVTALKS '26 3 Mystery Keynote Speakers on Stage" 
+          className="w-full h-full object-cover object-center max-w-[1400px] max-h-[1000px] opacity-95 filter brightness-105 contrast-110"
         />
 
         {/* Seamless Vignette Fades to pure black */}
@@ -92,53 +66,9 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
 
       </div>
 
-      {/* ================= CENTER SECTION: INTERACTIVE SPEAKER PINS OVER SILHOUETTES ================= */}
-      <div className="relative z-30 max-w-4xl mx-auto w-full h-[220px] sm:h-[300px] flex items-center justify-center my-auto">
-        {speakerPins.map((spk) => (
-          <div 
-            key={spk.id}
-            onMouseEnter={() => {
-              setHoveredSpeaker(spk.id);
-              soundFx.playCardHover();
-            }}
-            onMouseLeave={() => setHoveredSpeaker(null)}
-            onClick={() => {
-              soundFx.playEvidenceClick();
-              onExploreSpeakers(spk.id);
-            }}
-            className={`absolute ${spk.pos} -translate-x-1/2 z-30 flex flex-col items-center cursor-pointer group/pin`}
-          >
-            {/* Pulsing Speaker Pill Badge */}
-            <motion.div 
-              animate={{ y: [0, -4, 0] }}
-              transition={{ duration: 2.2, repeat: Infinity, delay: spk.num * 0.4 }}
-              className={`px-3 py-1 rounded-full font-mono text-[10px] sm:text-xs font-bold tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(0,0,0,0.8)] flex items-center gap-1.5 ${
-                hoveredSpeaker === spk.id
-                  ? 'bg-[#EB0028] text-white shadow-[0_0_25px_rgba(235,0,40,1)] scale-110'
-                  : 'bg-black/90 border border-white/40 text-white hover:border-[#EB0028]'
-              }`}
-            >
-              <span>{spk.label}</span>
-              <span className="text-[#EB0028] font-bold text-sm">?</span>
-            </motion.div>
-
-            {/* Hover Clue Tooltip */}
-            {hoveredSpeaker === spk.id && (
-              <motion.div 
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="absolute top-8 w-44 p-2 rounded-lg bg-black/95 border border-[#EB0028] text-center shadow-2xl z-40"
-              >
-                <span className="font-mono text-[10px] text-white block font-semibold leading-tight">
-                  {spk.hint}
-                </span>
-                <span className="font-mono text-[8px] text-[#EB0028] block pt-0.5">
-                  Click to decode dossier →
-                </span>
-              </motion.div>
-            )}
-          </div>
-        ))}
+      {/* ================= CENTER SECTION: CINEMATIC SPACER FOR 3 SPEAKERS STAGE VISUAL ================= */}
+      <div className="relative z-30 max-w-4xl mx-auto w-full h-[180px] sm:h-[260px] flex items-center justify-center my-auto pointer-events-none">
+        {/* Clean visual focus on the 3 professional speakers seated on stage */}
       </div>
 
       {/* ================= BOTTOM SECTION: DEVTALKS '26 & ACTION BUTTONS ================= */}
@@ -181,7 +111,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
               soundFx.playEvidenceClick();
               onTakeGuess();
             }}
-            className="inline-flex items-center gap-2 px-7 py-3 bg-[#EB0028] hover:bg-[#D40024] text-white font-display font-black text-xs sm:text-sm tracking-wider uppercase rounded-full shadow-[0_0_25px_rgba(235,0,40,0.55)] transition-all transform hover:scale-105 active:scale-95"
+            className="inline-flex items-center gap-2 px-7 py-3 bg-[#EB0028] hover:bg-[#D40024] text-white font-display font-black text-xs sm:text-sm tracking-wider uppercase rounded-full shadow-[0_0_25px_rgba(235,0,40,0.55)] transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
           >
             <span>TAKE A GUESS 🎯</span>
             <ArrowRight className="w-4 h-4" />
@@ -192,7 +122,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
               soundFx.playEvidenceClick();
               onExploreSpeakers('speaker-1');
             }}
-            className="px-5 py-3 bg-[#111111] hover:bg-[#1C1C1C] border border-[#2E2E2E] hover:border-[#EB0028] text-white font-mono text-xs tracking-wider rounded-full transition-all"
+            className="px-5 py-3 bg-[#111111] hover:bg-[#1C1C1C] border border-[#2E2E2E] hover:border-[#EB0028] text-white font-mono text-xs tracking-wider rounded-full transition-all cursor-pointer"
           >
             EXPLORE DOSSIERS ↓
           </button>
@@ -202,7 +132,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
               soundFx.playEvidenceClick();
               onRegister();
             }}
-            className="inline-flex items-center gap-1.5 px-5 py-3 bg-transparent hover:bg-[#111111] border border-[#333333] text-neutral-300 hover:text-white font-mono text-xs tracking-wider rounded-full transition-all"
+            className="inline-flex items-center gap-1.5 px-5 py-3 bg-transparent hover:bg-[#111111] border border-[#333333] text-neutral-300 hover:text-white font-mono text-xs tracking-wider rounded-full transition-all cursor-pointer"
           >
             <Ticket className="w-3.5 h-3.5 text-[#EB0028]" />
             <span>FREE PASS</span>
@@ -214,3 +144,4 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     </section>
   );
 }
+
