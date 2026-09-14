@@ -5,65 +5,63 @@ import { soundFx } from '../utils/audio';
 export default function IntroVideoOverlay({ onComplete }) {
   const [isExiting, setIsExiting] = useState(false);
   const videoRef = useRef(null);
-  const bgVideoRef = useRef(null);
 
   const startPlayback = () => {
-    [videoRef.current, bgVideoRef.current].forEach((video) => {
-      if (!video) return;
-      video.defaultMuted = true;
-      video.muted = true;
-      video.playsInline = true;
+    const video = videoRef.current;
+    if (!video) return;
 
-      const p = video.play();
-      if (p !== undefined) {
-        p.catch(() => {
-          video.muted = true;
-          video.play().catch(() => {});
-        });
-      }
-    });
+    video.defaultMuted = true;
+    video.muted = true;
+    video.playsInline = true;
+
+    const p = video.play();
+    if (p !== undefined) {
+      p.catch(() => {
+        if (videoRef.current) {
+          videoRef.current.muted = true;
+          videoRef.current.play().catch(() => {});
+        }
+      });
+    }
   };
 
-  const enableAudio = () => {
-    soundFx.initContext();
+  const handleUserInteraction = () => {
     const video = videoRef.current;
     if (video) {
-      video.muted = false;
-      video.volume = 1.0;
-      if (video.paused) {
-        video.play().catch(() => {});
-      }
+      soundFx.initContext();
+      // Safely unmute on direct user click without interrupting playback
+      try {
+        video.muted = false;
+        video.volume = 1.0;
+      } catch (e) {}
     }
   };
 
   useEffect(() => {
     startPlayback();
 
-    // Watchdog check every 150ms for instant play
-    const timer = setInterval(() => {
-      if (videoRef.current && videoRef.current.paused) {
-        startPlayback();
+    // Safe recovery watchdog: check if video was accidentally paused and resume smoothly
+    const interval = setInterval(() => {
+      const video = videoRef.current;
+      if (video && video.paused && !video.ended) {
+        video.play().catch(() => {});
       }
-    }, 150);
+    }, 200);
 
-    // Audio unlock gesture listeners
-    const handleGesture = () => {
-      enableAudio();
+    // Only direct clicks / taps unlock sound safely (no passive mousemove triggers)
+    const handleSafeAudioUnlock = () => {
+      handleUserInteraction();
     };
 
-    window.addEventListener('pointerdown', handleGesture, { once: true, passive: true });
-    window.addEventListener('touchstart', handleGesture, { once: true, passive: true });
-    window.addEventListener('click', handleGesture, { once: true, passive: true });
-    window.addEventListener('keydown', handleGesture, { once: true, passive: true });
-    window.addEventListener('mousemove', handleGesture, { once: true, passive: true });
+    window.addEventListener('click', handleSafeAudioUnlock, { once: true });
+    window.addEventListener('touchstart', handleSafeAudioUnlock, { once: true });
+    window.addEventListener('keydown', handleSafeAudioUnlock, { once: true });
 
     return () => {
-      clearInterval(timer);
-      window.removeEventListener('pointerdown', handleGesture);
-      window.removeEventListener('touchstart', handleGesture);
-      window.removeEventListener('click', handleGesture);
-      window.removeEventListener('keydown', handleGesture);
-      window.removeEventListener('mousemove', handleGesture);
+      clearInterval(interval);
+      window.removeEventListener('click', handleSafeAudioUnlock);
+      window.removeEventListener('touchstart', handleSafeAudioUnlock);
+      window.removeEventListener('keydown', handleSafeAudioUnlock);
     };
   }, []);
 
@@ -83,33 +81,13 @@ export default function IntroVideoOverlay({ onComplete }) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.04, filter: 'blur(12px)' }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="fixed inset-0 w-screen h-[100dvh] z-[9999] bg-[#000000] flex items-center justify-center select-none overflow-hidden touch-none"
-          onClick={enableAudio}
+          className="fixed inset-0 w-screen h-[100dvh] z-[9999] bg-[#000000] flex items-center justify-center select-none overflow-hidden"
+          onClick={handleUserInteraction}
         >
-          {/* Ambient Blurred Red Cyber Light Backdrop for Mobile Screens */}
-          <div className="absolute inset-0 overflow-hidden filter blur-3xl opacity-35 scale-125 pointer-events-none">
-            <video
-              ref={(el) => {
-                if (el) {
-                  el.defaultMuted = true;
-                  el.muted = true;
-                  el.playsInline = true;
-                  el.play().catch(() => {});
-                }
-                bgVideoRef.current = el;
-              }}
-              src="/devtalks-intro.mp4"
-              autoPlay
-              muted
-              defaultMuted
-              playsInline
-              webkit-playsinline="true"
-              x5-playsinline="true"
-              className="w-full h-full object-cover object-center"
-            />
-          </div>
+          {/* Ambient Glowing Radial Cyber Atmosphere (Zero GPU Decoder Overhead) */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(235,0,40,0.18)_0%,rgba(0,0,0,0.95)_75%)] pointer-events-none" />
 
-          {/* Main Full-Fidelity Video (object-contain on Mobile prevents cropping, object-cover on Desktop) */}
+          {/* Single High-Performance Smooth Video Stream */}
           <video
             ref={(el) => {
               if (el) {
@@ -130,9 +108,11 @@ export default function IntroVideoOverlay({ onComplete }) {
             x5-playsinline="true"
             onCanPlay={startPlayback}
             onLoadedData={startPlayback}
+            onWaiting={startPlayback}
+            onStalled={startPlayback}
             onEnded={handleFinish}
             onError={handleFinish}
-            className="relative z-10 w-full h-full max-h-[100dvh] object-contain md:object-cover object-center shadow-2xl"
+            className="relative z-10 w-full h-full max-h-[100dvh] object-contain md:object-cover object-center"
           />
         </motion.div>
       )}
