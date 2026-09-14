@@ -233,53 +233,19 @@ export default function SpeakerCardSection({
                       ★
                     </div>
 
-                    {/* CENTER SILHOUETTE CUTOUT WITH GLOWING RED NEON RIM OUTLINE */}
-                    <div className="relative w-full h-[64%] flex items-end justify-center z-10 -mb-2 overflow-visible">
+                    {/* REALISTIC CENTER SILHOUETTE IMAGE WITH RED NEON RIM */}
+                    <div className="relative w-full h-[65%] flex items-end justify-center z-10 -mb-2 overflow-visible">
                       
                       {/* Red Neon Rim Aura behind head & shoulders */}
-                      <div className="absolute bottom-4 w-44 sm:w-52 h-44 sm:h-52 rounded-full bg-[#EB0028]/70 blur-2xl -z-10 animate-pulse-subtle" />
+                      <div className="absolute bottom-4 w-44 sm:w-52 h-44 sm:h-52 rounded-full bg-[#EB0028]/80 blur-2xl -z-10 animate-pulse-subtle" />
                       
-                      {/* Dynamic Cutout Silhouette of Person per Speaker */}
+                      {/* Realistic Silhouette Image with Clean Multiply Blend against White Card */}
                       <div className="relative z-10 w-full h-full flex items-end justify-center">
-                        <svg 
-                          viewBox="0 0 300 360" 
-                          className="w-full h-full max-h-[260px] filter drop-shadow-[0_0_10px_#EB0028] drop-shadow-[0_0_20px_rgba(235,0,40,0.8)] transform hover:scale-[1.02] transition-transform duration-300"
-                        >
-                          <defs>
-                            <filter id={`neonGlow-${speaker.num}`} x="-20%" y="-20%" width="140%" height="140%">
-                              <feGaussianBlur stdDeviation="3" result="blur" />
-                              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                            </filter>
-                          </defs>
-
-                          {/* Red Contour Glow Layer (Stroke) */}
-                          <path 
-                            d={
-                              speaker.id === 'speaker-1'
-                                ? "M 50 360 C 50 310, 75 275, 100 255 C 92 245, 88 230, 88 210 C 78 200, 78 180, 88 168 C 84 150, 88 120, 105 95 C 120 75, 145 68, 155 68 C 168 68, 190 75, 202 95 C 218 120, 222 150, 218 168 C 228 180, 228 200, 218 210 C 218 230, 212 245, 205 255 C 230 275, 255 310, 255 360 Z"
-                                : speaker.id === 'speaker-2'
-                                ? "M 45 360 C 45 305, 70 270, 98 250 C 92 240, 90 225, 90 205 C 82 195, 82 178, 90 165 C 88 142, 95 110, 115 88 C 130 72, 150 66, 160 66 C 172 66, 192 72, 205 88 C 225 110, 230 142, 228 165 C 236 178, 236 195, 228 205 C 228 225, 224 240, 218 250 C 245 270, 270 305, 270 360 Z"
-                                : "M 48 360 C 48 308, 72 272, 96 252 C 88 240, 85 220, 85 195 C 76 182, 78 160, 88 148 C 82 125, 90 92, 112 75 C 128 62, 152 58, 162 58 C 176 58, 198 64, 212 78 C 232 98, 236 128, 230 150 C 238 162, 238 182, 230 195 C 230 220, 226 240, 218 252 C 242 272, 268 308, 268 360 Z"
-                            }
-                            fill="#000000"
-                            stroke="#EB0028"
-                            strokeWidth="5"
-                            strokeLinejoin="round"
-                            strokeLinecap="round"
-                          />
-
-                          {/* Inner Pitch Black Core */}
-                          <path 
-                            d={
-                              speaker.id === 'speaker-1'
-                                ? "M 50 360 C 50 310, 75 275, 100 255 C 92 245, 88 230, 88 210 C 78 200, 78 180, 88 168 C 84 150, 88 120, 105 95 C 120 75, 145 68, 155 68 C 168 68, 190 75, 202 95 C 218 120, 222 150, 218 168 C 228 180, 228 200, 218 210 C 218 230, 212 245, 205 255 C 230 275, 255 310, 255 360 Z"
-                                : speaker.id === 'speaker-2'
-                                ? "M 45 360 C 45 305, 70 270, 98 250 C 92 240, 90 225, 90 205 C 82 195, 82 178, 90 165 C 88 142, 95 110, 115 88 C 130 72, 150 66, 160 66 C 172 66, 192 72, 205 88 C 225 110, 230 142, 228 165 C 236 178, 236 195, 228 205 C 228 225, 224 240, 218 250 C 245 270, 270 305, 270 360 Z"
-                                : "M 48 360 C 48 308, 72 272, 96 252 C 88 240, 85 220, 85 195 C 76 182, 78 160, 88 148 C 82 125, 90 92, 112 75 C 128 62, 152 58, 162 58 C 176 58, 198 64, 212 78 C 232 98, 236 128, 230 150 C 238 162, 238 182, 230 195 C 230 220, 226 240, 218 252 C 242 272, 268 308, 268 360 Z"
-                            }
-                            fill="#000000"
-                          />
-                        </svg>
+                        <img 
+                          src={speaker.silhouetteImg} 
+                          alt="Realistic Mystery Silhouette"
+                          className="w-full h-full max-h-[270px] object-contain object-bottom mix-blend-multiply filter contrast-125 transform hover:scale-[1.03] transition-transform duration-300 pointer-events-none select-none"
+                        />
                       </div>
                     </div>
 
