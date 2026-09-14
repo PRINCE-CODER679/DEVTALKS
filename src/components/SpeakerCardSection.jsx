@@ -77,7 +77,7 @@ export default function SpeakerCardSection({
           </div>
 
           {/* Tab Navigation Pill Group */}
-          <div className="flex items-center gap-1.5 bg-[#141414] border border-[#262626] p-1 rounded-lg self-start sm:self-auto overflow-x-auto max-w-full">
+          <div className="flex items-center gap-1.5 bg-[#141414] border border-[#262626] p-1 rounded-lg self-start sm:self-auto overflow-x-auto max-w-full scrollbar-none">
             {[
               { id: 'clues', label: 'CLUES' },
               { id: 'facts', label: 'FACTS DOSSIER' },
@@ -106,20 +106,20 @@ export default function SpeakerCardSection({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
           {/* ================= LEFT 5 COLS: "GUESS WHO IS COMING" 3D TRADING CARD POSTER ================= */}
-          <div className="lg:col-span-5 relative flex flex-col items-center justify-center p-4 sm:p-6 rounded-3xl overflow-hidden shadow-2xl border border-[#2B0E0E] bg-gradient-to-br from-[#2D0005] via-[#4D000B] to-[#120003]">
+          <div className="lg:col-span-5 relative flex flex-col items-center justify-center p-3 sm:p-6 rounded-3xl overflow-hidden shadow-2xl border border-[#2B0E0E] bg-gradient-to-br from-[#2D0005] via-[#4D000B] to-[#120003]">
             
             {/* Ambient Red Glow & Scattered Floating Question Marks */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#B80018]/30 via-black/40 to-transparent pointer-events-none" />
             
             {/* Floating Ambient ? marks like in the reference image */}
-            <div className="absolute top-12 left-4 text-white/40 font-display font-black text-2xl select-none pointer-events-none drop-shadow">?</div>
-            <div className="absolute top-44 left-3 text-white/60 font-display font-black text-3xl select-none pointer-events-none drop-shadow">?</div>
-            <div className="absolute bottom-16 left-5 text-white/50 font-display font-black text-2xl select-none pointer-events-none drop-shadow">?</div>
-            <div className="absolute top-36 right-4 text-white/60 font-display font-black text-3xl select-none pointer-events-none drop-shadow">?</div>
-            <div className="absolute bottom-28 right-4 text-white/50 font-display font-black text-3xl select-none pointer-events-none drop-shadow">?</div>
+            <div className="absolute top-12 left-4 text-white/40 font-display font-black text-xl sm:text-2xl select-none pointer-events-none drop-shadow">?</div>
+            <div className="absolute top-44 left-3 text-white/60 font-display font-black text-2xl sm:text-3xl select-none pointer-events-none drop-shadow">?</div>
+            <div className="absolute bottom-16 left-5 text-white/50 font-display font-black text-xl sm:text-2xl select-none pointer-events-none drop-shadow">?</div>
+            <div className="absolute top-36 right-4 text-white/60 font-display font-black text-2xl sm:text-3xl select-none pointer-events-none drop-shadow">?</div>
+            <div className="absolute bottom-28 right-4 text-white/50 font-display font-black text-2xl sm:text-3xl select-none pointer-events-none drop-shadow">?</div>
 
             {/* Poster Record Header */}
-            <div className="w-full relative z-20 flex items-center justify-between pb-3 mb-4 border-b border-white/10 font-mono text-[11px]">
+            <div className="w-full relative z-20 flex items-center justify-between pb-3 mb-3 sm:mb-4 border-b border-white/10 font-mono text-[10px] sm:text-[11px]">
               <span className="text-neutral-300 font-bold tracking-wider">CASE FILE #{speaker.num}</span>
               <span className="font-semibold uppercase tracking-widest text-[#FF4D3D] flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#FF2A1A] animate-ping" />
@@ -128,10 +128,10 @@ export default function SpeakerCardSection({
             </div>
 
             {/* 3D TRADING CARD WRAPPER */}
-            <div className="relative w-full max-w-[340px] sm:max-w-[360px] aspect-[1/1.35] my-2 select-none group">
+            <div className="relative w-full max-w-[300px] sm:max-w-[360px] aspect-[1/1.36] my-1 sm:my-2 select-none group">
               
               {/* 3D Red Extruded Depth Shadow (Left & Bottom 3D block like in the photo) */}
-              <div className="absolute inset-0 translate-x-[-10px] translate-y-[10px] rounded-[30px] bg-[#990014] border-2 border-[#73000F] shadow-[0_20px_40px_rgba(0,0,0,0.9)]" />
+              <div className="absolute inset-0 translate-x-[-8px] sm:translate-x-[-10px] translate-y-[8px] sm:translate-y-[10px] rounded-[26px] sm:rounded-[30px] bg-[#990014] border-2 border-[#73000F] shadow-[0_20px_40px_rgba(0,0,0,0.9)]" />
 
               <AnimatePresence mode="wait">
                 {!isRevealed ? (
@@ -142,11 +142,11 @@ export default function SpeakerCardSection({
                     animate={{ opacity: 1, rotateY: 0 }}
                     exit={{ opacity: 0, rotateY: -90 }}
                     transition={{ duration: 0.4 }}
-                    className="relative w-full h-full rounded-[28px] bg-white text-black p-5 sm:p-6 overflow-hidden flex flex-col justify-between shadow-[inset_0_2px_4px_rgba(255,255,255,0.8),_0_15px_35px_rgba(0,0,0,0.5)] border border-neutral-200"
+                    className="relative w-full h-full rounded-[24px] sm:rounded-[28px] bg-white text-black p-4 sm:p-6 overflow-hidden flex flex-col justify-between shadow-[inset_0_2px_4px_rgba(255,255,255,0.8),_0_15px_35px_rgba(0,0,0,0.5)] border border-neutral-200"
                   >
                     
                     {/* 3D Gold & Red Question Mark popping out top-right */}
-                    <div className="absolute -top-3 -right-2 z-40 w-16 h-20 pointer-events-none drop-shadow-[0_8px_12px_rgba(0,0,0,0.45)]">
+                    <div className="absolute -top-3 -right-2 z-40 w-13 h-16 sm:w-16 sm:h-20 pointer-events-none drop-shadow-[0_8px_12px_rgba(0,0,0,0.45)]">
                       <svg viewBox="0 0 100 120" className="w-full h-full transform rotate-12">
                         <defs>
                           <linearGradient id={`goldGrad-${speaker.num}`} x1="0%" y1="0%" x2="100%" y2="100%">
@@ -171,34 +171,34 @@ export default function SpeakerCardSection({
                     </div>
 
                     {/* Left Border Ticket Dashes */}
-                    <div className="absolute left-2.5 top-14 bottom-24 flex flex-col justify-between py-2 pointer-events-none opacity-80">
-                      <span className="font-mono text-[10px] tracking-tighter text-black font-extrabold rotate-90 origin-left">
+                    <div className="absolute left-2 sm:left-2.5 top-12 sm:top-14 bottom-20 sm:bottom-24 flex flex-col justify-between py-2 pointer-events-none opacity-80">
+                      <span className="font-mono text-[8px] sm:text-[10px] tracking-tighter text-black font-extrabold rotate-90 origin-left">
                         || ====== ||
                       </span>
                     </div>
 
                     {/* Right Border Ticket Dashes */}
-                    <div className="absolute right-2.5 top-28 bottom-24 flex flex-col justify-between py-2 pointer-events-none opacity-80">
-                      <span className="font-mono text-[10px] tracking-tighter text-black font-extrabold -rotate-90 origin-right">
+                    <div className="absolute right-2 sm:right-2.5 top-24 sm:top-28 bottom-20 sm:bottom-24 flex flex-col justify-between py-2 pointer-events-none opacity-80">
+                      <span className="font-mono text-[8px] sm:text-[10px] tracking-tighter text-black font-extrabold -rotate-90 origin-right">
                         || ====== ||
                       </span>
                     </div>
 
                     {/* CARD HEADER: "GueSS WHO IS COMING" */}
-                    <div className="relative z-20 flex flex-col items-center text-center mt-1">
+                    <div className="relative z-20 flex flex-col items-center text-center mt-0.5 sm:mt-1">
                       <div className="flex items-baseline justify-center tracking-tight leading-none font-display">
-                        <span className="text-4xl sm:text-5xl font-black text-black">Gue</span>
-                        <span className="text-5xl sm:text-6xl font-black text-[#EB0028] transform -translate-y-0.5">SS</span>
-                        <span className="text-4xl sm:text-5xl font-black text-black">?</span>
+                        <span className="text-3xl sm:text-5xl font-black text-black">Gue</span>
+                        <span className="text-4xl sm:text-6xl font-black text-[#EB0028] transform -translate-y-0.5">SS</span>
+                        <span className="text-3xl sm:text-5xl font-black text-black">?</span>
                       </div>
-                      <div className="font-display font-black text-xs sm:text-sm uppercase tracking-wider text-black mt-0.5">
+                      <div className="font-display font-black text-[10px] sm:text-sm uppercase tracking-wider text-black mt-0.5">
                         WHO IS COMING
                       </div>
                     </div>
 
                     {/* DOODLE: Lightning Bolt with Arrow pointing to silhouette */}
-                    <div className="absolute top-[21%] right-10 z-30 pointer-events-none">
-                      <svg width="28" height="42" viewBox="0 0 32 48" fill="none" className="transform rotate-6">
+                    <div className="absolute top-[20%] sm:top-[21%] right-6 sm:right-10 z-30 pointer-events-none">
+                      <svg width="24" height="36" viewBox="0 0 32 48" fill="none" className="transform rotate-6 w-5 h-8 sm:w-7 sm:h-10">
                         {/* Lightning Bolt */}
                         <path 
                           d="M18 2 L6 20 L15 20 L11 34 L26 16 L17 16 L22 2 Z" 
@@ -219,17 +219,17 @@ export default function SpeakerCardSection({
                     </div>
 
                     {/* DOODLE: Handwritten "Hint: [CLUE]" & Black Star on left */}
-                    <div className="absolute top-[44%] left-5 z-30 flex flex-col items-start pointer-events-none">
-                      <span className="font-display font-black text-[11px] text-black tracking-tight leading-none">
+                    <div className="absolute top-[42%] sm:top-[44%] left-4 sm:left-5 z-30 flex flex-col items-start pointer-events-none">
+                      <span className="font-display font-black text-[10px] sm:text-[11px] text-black tracking-tight leading-none">
                         Hint:
                       </span>
-                      <span className="font-handwritten text-lg sm:text-xl font-bold text-black transform -rotate-12 leading-tight tracking-wide border-b-2 border-black/40 pb-0.5">
+                      <span className="font-handwritten text-sm sm:text-xl font-bold text-black transform -rotate-12 leading-tight tracking-wide border-b-2 border-black/40 pb-0.5">
                         {speaker.posterHint || 'SPECIAL GUEST'}
                       </span>
                     </div>
 
                     {/* Black 5-pointed Star on lower left */}
-                    <div className="absolute bottom-[20%] left-6 z-30 text-black text-2xl select-none pointer-events-none">
+                    <div className="absolute bottom-[20%] left-4 sm:left-6 z-30 text-black text-xl sm:text-2xl select-none pointer-events-none">
                       ★
                     </div>
 
@@ -507,11 +507,11 @@ export default function SpeakerCardSection({
                       value={guessInput}
                       onChange={(e) => setGuessInput(e.target.value)}
                       placeholder="e.g. Kunal Shah, Anupam Mittal, Andrej Karpathy..."
-                      className="w-full px-5 py-4 bg-black border border-[#333333] focus:border-[#FF2A1A] rounded-xl text-sm font-mono text-white placeholder-neutral-500 focus:outline-none transition-colors"
+                      className="w-full pl-4 sm:pl-5 pr-28 sm:pr-32 py-3.5 sm:py-4 bg-black border border-[#333333] focus:border-[#FF2A1A] rounded-xl text-xs sm:text-sm font-mono text-white placeholder-neutral-500 focus:outline-none transition-colors"
                     />
                     <button
                       type="submit"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2.5 rounded-lg text-xs font-mono font-bold tracking-wider bg-[#FF2A1A] hover:bg-[#D91C1C] text-white shadow-md transition-all hover:scale-105 active:scale-95"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg text-xs font-mono font-bold tracking-wider bg-[#FF2A1A] hover:bg-[#D91C1C] text-white shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
                     >
                       SUBMIT
                     </button>
