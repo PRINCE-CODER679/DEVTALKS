@@ -100,7 +100,7 @@ export default function App() {
           onRegisterNow={() => setIsRegisterOpen(true)}
         />
 
-        {/* ================= 4. GUESSES HUB & COMMUNITY ARENA ================= */}
+        {/* ================= 4. GUESSES ARENA ================= */}
         <GuessesArena
           onJumpToSpeaker={(speakerId) => handleNavigate(speakerId)}
         />
