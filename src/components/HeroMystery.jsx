@@ -14,19 +14,19 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     >
       {/* ================= FULL-SCREEN BACKGROUND ARTWORK: 3 KEYNOTE SPEAKERS IN PROFESSIONAL ATTIRE ================= */}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
-        {/* Full Screen Cinematic 3 Keynote Speakers on Stage with 3 Red Panels */}
+        {/* Full Screen Cinematic 3 Keynote Speakers on Stage with 3 Red Panels (100% visible on all screens) */}
         <img 
           src="/red-stage-panels.jpg" 
           alt="DEVTALKS '26 3 Mystery Keynote Speakers on Stage" 
-          className="w-full h-full object-cover object-center max-w-[1440px] opacity-95 filter brightness-105 contrast-110"
+          className="w-full h-auto max-h-[52vh] sm:max-h-full object-contain sm:object-cover object-center max-w-[1440px] opacity-95 filter brightness-105 contrast-110"
         />
 
-        {/* Seamless Vignette Fades to pure black */}
-        <div className="absolute inset-0 bg-radial from-transparent via-black/40 to-black pointer-events-none" />
-        <div className="absolute top-0 inset-x-0 h-20 sm:h-32 bg-gradient-to-b from-black via-black/80 to-transparent pointer-events-none" />
-        <div className="absolute bottom-0 inset-x-0 h-28 sm:h-44 bg-gradient-to-t from-black via-black/95 to-transparent pointer-events-none" />
-        <div className="absolute inset-y-0 left-0 w-8 sm:w-24 bg-gradient-to-r from-black to-transparent pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-8 sm:w-24 bg-gradient-to-l from-black to-transparent pointer-events-none" />
+        {/* Subtle Edge Fades that preserve all 3 speakers */}
+        <div className="absolute inset-0 bg-radial from-transparent via-black/30 to-black/80 pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 h-16 sm:h-28 bg-gradient-to-b from-black via-black/70 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-24 sm:h-40 bg-gradient-to-t from-black via-black/85 to-transparent pointer-events-none" />
+        <div className="absolute inset-y-0 left-0 w-2 sm:w-12 bg-gradient-to-r from-black/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-2 sm:w-12 bg-gradient-to-l from-black/40 to-transparent pointer-events-none" />
 
         {/* Ambient Red Glow Pulse */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] sm:w-[550px] md:w-[750px] h-[280px] sm:h-[550px] md:h-[750px] bg-[#EB0028]/20 rounded-full blur-[90px] sm:blur-[150px] pointer-events-none" />
