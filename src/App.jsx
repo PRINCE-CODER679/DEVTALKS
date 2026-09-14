@@ -1,33 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import ThreeAtmosphere from './components/ThreeAtmosphere';
-import LandingHero from './components/LandingHero';
-import CaseFile from './components/CaseFile';
-import FactsSection from './components/FactsSection';
-import GuessSection from './components/GuessSection';
-import CountdownReveal from './components/CountdownReveal';
-import FullscreenMenu from './components/FullscreenMenu';
+import Navbar from './components/Navbar';
+import HeroMystery from './components/HeroMystery';
+import SpeakerCardSection from './components/SpeakerCardSection';
+import AboutSection from './components/AboutSection';
+import GuessesArena from './components/GuessesArena';
+import FooterSection from './components/FooterSection';
+import RegisterModal from './components/RegisterModal';
 
-import { speakerData } from './data/speaker';
+import { speakersList, eventMetadata } from './data/speakers';
 import { soundFx } from './utils/audio';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('hero');
   const [isAudioActive, setIsAudioActive] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isRevealed, setIsRevealed] = useState(speakerData.isRevealed);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
+  // Smooth Navigation Handler
   const handleNavigate = (sectionId) => {
     setActiveSection(sectionId);
-    let targetId = sectionId;
-    if (sectionId === 'clues' || sectionId === 'facts') {
-      targetId = 'fact-1';
-    } else if (sectionId === 'countdown') {
-      targetId = 'reveal';
-    }
-
-    const element = document.getElementById(targetId) || document.getElementById(sectionId);
+    const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
@@ -36,76 +30,94 @@ export default function App() {
     setIsAudioActive(newState);
   };
 
-  // Keyboard shortcut Ctrl+Shift+O to toggle reveal state in preview
+  // Intersection Observer to highlight current active navbar item during scroll
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'O') {
-        setIsRevealed(prev => !prev);
-      }
+    const sections = ['hero', 'speaker-1', 'speaker-2', 'speaker-3', 'about', 'guesses'];
+    const observerOptions = {
+      root: null,
+      rootMargin: '-30% 0px -40% 0px',
+      threshold: 0.1
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#070707] text-white antialiased overflow-x-hidden selection:bg-brand-red selection:text-white">
+    <div className="relative min-h-screen bg-[#070707] text-white antialiased overflow-x-hidden selection:bg-brand-red selection:text-white font-sans">
       
-      {/* 3D Three.js Interactive Volumetric Particle Atmosphere */}
+      {/* 3D Three.js Interactive Particle Dust / Volumetric Light Atmosphere */}
       <ThreeAtmosphere />
 
-      {/* Fullscreen Mobile Drawer Menu */}
-      <FullscreenMenu
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
+      {/* Top Sticky Navigation Bar (HOME, About, guesses) */}
+      <Navbar
         activeSection={activeSection}
         onNavigate={handleNavigate}
         isAudioActive={isAudioActive}
         onToggleAudio={handleToggleAudio}
+        onRegisterNow={() => setIsRegisterOpen(true)}
       />
 
       <main className="relative z-10 w-full">
         
-        {/* SLIDE 01: LANDING / MYSTERY (Page 2) */}
-        <LandingHero
-          onBeginInvestigation={() => handleNavigate('casefile')}
-          onNavigate={handleNavigate}
-          onOpenMenu={() => setIsMobileMenuOpen(true)}
+        {/* ================= 1. LANDING HERO (REPLICATING IMAGE 1 DESIGN) ================= */}
+        <HeroMystery
+          onTakeGuess={() => handleNavigate('guesses')}
+          onExploreSpeakers={(speakerId) => handleNavigate(speakerId || 'speaker-1')}
+          onRegister={() => setIsRegisterOpen(true)}
         />
 
-        {/* SLIDE 02: CASE FILE 001 (Page 3) */}
-        <CaseFile
-          onExploreClues={() => handleNavigate('fact-1')}
-          onNavigate={handleNavigate}
-          onOpenMenu={() => setIsMobileMenuOpen(true)}
+        {/* ================= 2. SEQUENTIAL SPEAKER SECTIONS ON SCROLL ================= */}
+        {speakersList.map((speaker, index) => {
+          const nextSpeakerId = index < speakersList.length - 1 ? speakersList[index + 1].id : null;
+          return (
+            <SpeakerCardSection
+              key={speaker.id}
+              speaker={speaker}
+              index={index}
+              totalSpeakers={speakersList.length}
+              isLast={index === speakersList.length - 1}
+              onNextSpeaker={() => nextSpeakerId && handleNavigate(nextSpeakerId)}
+              onOpenGuessesArena={() => handleNavigate('guesses')}
+            />
+          );
+        })}
+
+        {/* ================= 3. ABOUT DEVTALKS '26 SECTION ================= */}
+        <AboutSection 
+          onRegisterNow={() => setIsRegisterOpen(true)}
         />
 
-        {/* SLIDES 03..06: SPEAKER FACTS DOSSIER (FACT 01, FACT 02, FACT 03, FACT 04) */}
-        <FactsSection
-          onNavigateToGuess={() => handleNavigate('guess')}
-          onNavigate={handleNavigate}
-          onOpenMenu={() => setIsMobileMenuOpen(true)}
-        />
-
-        {/* SLIDE 07: GUESS THE SPEAKER (Page 8) */}
-        <GuessSection
-          validKeywords={speakerData.validKeywords}
-          onCorrectGuess={() => {}}
-          onJumpToReveal={() => handleNavigate('reveal')}
-          onNavigate={handleNavigate}
-          onOpenMenu={() => setIsMobileMenuOpen(true)}
-        />
-
-        {/* SLIDE 08 & 09: COUNTDOWN & REVEAL SECTION (Pages 9 & 10) */}
-        <CountdownReveal
-          targetDate={speakerData.revealCountdownTarget}
-          speaker={speakerData}
-          isRevealed={isRevealed}
-          onToggleRevealed={() => setIsRevealed(!isRevealed)}
-          onOpenMenu={() => setIsMobileMenuOpen(true)}
-          onNavigate={handleNavigate}
+        {/* ================= 4. GUESSES HUB & COMMUNITY ARENA ================= */}
+        <GuessesArena
+          onJumpToSpeaker={(speakerId) => handleNavigate(speakerId)}
         />
 
       </main>
+
+      {/* ================= PINTEREST-INSPIRED DEVTALKS '26 FOOTER ================= */}
+      <FooterSection 
+        onNavigate={handleNavigate}
+        onRegisterNow={() => setIsRegisterOpen(true)}
+      />
+
+      {/* Free Conference Pass Registration Modal */}
+      <RegisterModal
+        isOpen={isRegisterOpen}
+        onClose={() => setIsRegisterOpen(false)}
+      />
 
     </div>
   );
