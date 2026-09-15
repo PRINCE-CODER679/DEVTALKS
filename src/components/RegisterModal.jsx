@@ -23,12 +23,12 @@ export default function RegisterModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="relative w-full max-w-lg bg-[#111111] border border-[#333333] rounded-2xl shadow-2xl p-6 sm:p-8 text-white overflow-hidden"
+        className="relative w-full max-w-lg bg-[#111111] border border-[#333333] rounded-2xl shadow-[0_0_50px_rgba(255,85,0,0.25)] p-6 sm:p-8 text-white overflow-hidden"
       >
         {/* Close Button */}
         <button 
@@ -44,8 +44,8 @@ export default function RegisterModal({ isOpen, onClose }) {
         {!isRegistered ? (
           <div className="space-y-6">
             <div className="space-y-1">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#1A1A1A] border border-[#FF2A1A]/40 text-[#FF2A1A] font-mono text-[10px] tracking-widest uppercase">
-                <Ticket className="w-3 h-3" />
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#1A1A1A] border border-[#FF5500]/40 text-[#FFAA00] font-mono text-[10px] tracking-widest uppercase">
+                <Ticket className="w-3 h-3 text-[#FF5500]" />
                 <span>OFFICIAL ADMISSION</span>
               </div>
               <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight text-white">
@@ -65,7 +65,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Alex Rivera"
-                  className="w-full px-4 py-2.5 bg-black border border-[#333333] focus:border-[#FF2A1A] rounded-xl text-xs font-mono text-white placeholder-neutral-500 focus:outline-none"
+                  className="w-full px-4 py-2.5 bg-black border border-[#333333] focus:border-[#FF5500] rounded-xl text-xs font-mono text-white placeholder-neutral-500 focus:outline-none"
                 />
               </div>
 
@@ -77,7 +77,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="alex@example.com"
-                  className="w-full px-4 py-2.5 bg-black border border-[#333333] focus:border-[#FF2A1A] rounded-xl text-xs font-mono text-white placeholder-neutral-500 focus:outline-none"
+                  className="w-full px-4 py-2.5 bg-black border border-[#333333] focus:border-[#FF5500] rounded-xl text-xs font-mono text-white placeholder-neutral-500 focus:outline-none"
                 />
               </div>
 
@@ -111,7 +111,7 @@ export default function RegisterModal({ isOpen, onClose }) {
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-[#EB0028] hover:bg-[#D40024] text-white font-display font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-[0_0_15px_rgba(235,0,40,0.5)] transition-all cursor-pointer"
+                className="w-full py-3.5 bg-gradient-to-r from-[#FF5500] via-[#FF6A00] to-[#FF5500] hover:from-[#FF6A00] hover:to-[#FFAA00] text-white font-display font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-[0_0_20px_rgba(255,85,0,0.45)] transition-all cursor-pointer"
               >
                 GENERATE INSTANT PASS →
               </button>
@@ -119,7 +119,7 @@ export default function RegisterModal({ isOpen, onClose }) {
           </div>
         ) : (
           <div className="space-y-6 text-center">
-            <div className="w-14 h-14 mx-auto rounded-full bg-[#181818] border border-[#EB0028] flex items-center justify-center text-[#EB0028]">
+            <div className="w-14 h-14 mx-auto rounded-full bg-[#181818] border border-[#FF5500] flex items-center justify-center text-[#FF5500] shadow-[0_0_20px_rgba(255,85,0,0.5)]">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
@@ -133,10 +133,10 @@ export default function RegisterModal({ isOpen, onClose }) {
             </div>
 
             {/* Generated Ticket Badge */}
-            <div className="p-4 bg-black border border-[#FF2A1A] rounded-xl space-y-3 text-left">
+            <div className="p-4 bg-black border border-[#FF5500] rounded-xl space-y-3 text-left">
               <div className="flex items-center justify-between border-b border-[#262626] pb-2">
                 <span className="font-display font-bold text-sm text-white">DEVTALKS '26</span>
-                <span className="font-mono text-[10px] text-[#FF2A1A] font-bold">ALL-ACCESS PASS</span>
+                <span className="font-mono text-[10px] text-[#FFAA00] font-bold">ALL-ACCESS PASS</span>
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                 <div>
@@ -160,7 +160,7 @@ export default function RegisterModal({ isOpen, onClose }) {
 
             <button
               onClick={() => onClose()}
-              className="w-full py-3 bg-white text-black font-mono text-xs font-bold tracking-wider uppercase rounded-xl hover:bg-[#EB0028] hover:text-white transition-colors cursor-pointer"
+              className="w-full py-3 bg-white text-black font-mono text-xs font-bold tracking-wider uppercase rounded-xl hover:bg-[#FF5500] hover:text-white transition-colors cursor-pointer"
             >
               DONE & RETURN TO STAGE
             </button>

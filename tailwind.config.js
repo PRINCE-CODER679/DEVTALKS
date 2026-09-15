@@ -7,25 +7,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        void: '#060606',
+        void: '#080808',
         noir: '#0D0D0D',
         surface: '#141414',
         subtle: '#1C1C1C',
         elevated: '#242424',
         brand: {
-          red: '#EB0028',
-          crimson: '#B80018',
-          darkRed: '#7A0010',
-          lightRed: '#FF2A4A',
-          glow: 'rgba(235, 0, 40, 0.4)',
+          orange: '#FF5500',
+          amber: '#FFAA00',
+          darkOrange: '#CC4400',
+          lightOrange: '#FF7A00',
+          glow: 'rgba(255, 85, 0, 0.45)',
+          red: '#FF5500',
+          crimson: '#FF6A00',
         },
         editorial: {
           light: '#F5F5F7',
           muted: '#A1A1A6',
           dim: '#6E6E73',
           border: 'rgba(255, 255, 255, 0.1)',
-          borderHover: 'rgba(255, 255, 255, 0.25)',
-          redBorder: 'rgba(235, 0, 40, 0.3)',
+          borderHover: 'rgba(255, 85, 0, 0.35)',
+          orangeBorder: 'rgba(255, 85, 0, 0.3)',
         }
       },
       fontFamily: {

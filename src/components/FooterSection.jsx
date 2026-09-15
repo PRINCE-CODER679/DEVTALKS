@@ -18,27 +18,27 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
   };
 
   return (
-    <footer className="relative w-full bg-[#000000] text-white border-t border-[#1F1F1F] overflow-hidden select-none">
+    <footer className="relative w-full bg-[#080808] text-white border-t border-[#222222] overflow-hidden select-none">
       
       {/* ================= FULL-BLEED RED AUDIENCE CROWD BACKGROUND ================= */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center z-0">
         <img 
           src="/footer-crowd-red.jpg" 
-          alt="DevTalks Red Keynote Stadium Crowd" 
-          className="w-full h-full object-cover object-bottom filter brightness-95 contrast-125 opacity-80"
+          alt="DevTalks Keynote Stadium Crowd" 
+          className="w-full h-full object-cover object-bottom filter brightness-95 contrast-125 opacity-75 hue-rotate-[15deg] saturate-125"
         />
         
-        {/* Soft atmospheric radial & vertical gradients for contrast directly under texts */}
-        <div className="absolute inset-0 bg-black/60 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/90 pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black to-transparent pointer-events-none" />
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black to-transparent pointer-events-none" />
+        {/* Soft atmospheric gradients */}
+        <div className="absolute inset-0 bg-[#080808]/70 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-[#080808]/90 pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#080808] to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#080808] to-transparent pointer-events-none" />
       </div>
 
-      {/* ================= SEAMLESS 4-COLUMN FOOTER NAVIGATION (DIRECTLY IN THE IMAGE) ================= */}
+      {/* ================= SEAMLESS 4-COLUMN FOOTER NAVIGATION ================= */}
       <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-8 lg:px-12 pt-16 pb-10">
         
-        {/* Main 4-Column Grid directly over the image */}
+        {/* Main 4-Column Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-12">
           
           {/* Col 1: Brand / DEVTALKS '26 */}
@@ -47,7 +47,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               <img 
                 src="/devkraft-logo.png" 
                 alt="Devkraft Logo" 
-                className="h-8 sm:h-9 w-auto object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]" 
+                className="h-8 sm:h-9 w-auto object-contain drop-shadow-[0_2px_10px_rgba(255,85,0,0.5)]" 
               />
               <div className="h-7 w-px bg-white/30 hidden sm:block" />
               <div>
@@ -66,24 +66,24 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
 
             <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-mono text-white font-semibold">
               <span className="flex items-center gap-1.5 bg-black/80 px-3 py-1.5 rounded-lg border border-white/20 shadow-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
-                <Calendar className="w-3.5 h-3.5 text-[#EB0028]" /> 10-11 JAN 2026
+                <Calendar className="w-3.5 h-3.5 text-[#FF5500]" /> 10-11 JAN 2026
               </span>
               <span className="flex items-center gap-1.5 bg-black/80 px-3 py-1.5 rounded-lg border border-white/20 shadow-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
-                <Clock className="w-3.5 h-3.5 text-[#EB0028]" /> 6:00 PM IST
+                <Clock className="w-3.5 h-3.5 text-[#FF5500]" /> 6:00 PM IST
               </span>
             </div>
           </div>
 
           {/* Col 2: NAVIGATION */}
           <div className="lg:col-span-3 space-y-3">
-            <h4 className="font-mono text-xs font-bold tracking-widest uppercase text-[#EB0028] drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
+            <h4 className="font-mono text-xs font-bold tracking-widest uppercase text-[#FFAA00] drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
               NAVIGATION
             </h4>
             <ul className="space-y-2.5 font-mono text-xs text-white">
               <li>
                 <button 
                   onClick={() => onNavigate('hero')} 
-                  className="text-neutral-200 hover:text-white font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
+                  className="text-neutral-200 hover:text-[#FFAA00] font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
                 >
                   HOME
                 </button>
@@ -91,7 +91,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               <li>
                 <button 
                   onClick={() => onNavigate('speaker-1')} 
-                  className="text-neutral-200 hover:text-white font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
+                  className="text-neutral-200 hover:text-[#FFAA00] font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
                 >
                   SPEAKER 01 (FINTECH)
                 </button>
@@ -99,7 +99,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               <li>
                 <button 
                   onClick={() => onNavigate('speaker-2')} 
-                  className="text-neutral-200 hover:text-white font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
+                  className="text-neutral-200 hover:text-[#FFAA00] font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
                 >
                   SPEAKER 02 (SHARK / D2C)
                 </button>
@@ -107,7 +107,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               <li>
                 <button 
                   onClick={() => onNavigate('speaker-3')} 
-                  className="text-neutral-200 hover:text-white font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
+                  className="text-neutral-200 hover:text-[#FFAA00] font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
                 >
                   SPEAKER 03 (AI / TECH)
                 </button>
@@ -115,7 +115,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               <li>
                 <button 
                   onClick={() => onNavigate('about')} 
-                  className="text-neutral-200 hover:text-white font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
+                  className="text-neutral-200 hover:text-[#FFAA00] font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
                 >
                   ABOUT EVENT
                 </button>
@@ -123,7 +123,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               <li>
                 <button 
                   onClick={() => onNavigate('guesses')} 
-                  className="text-neutral-200 hover:text-white font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
+                  className="text-neutral-200 hover:text-[#FFAA00] font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
                 >
                   GUESSES ARENA
                 </button>
@@ -133,14 +133,14 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
 
           {/* Col 3: RESOURCES */}
           <div className="lg:col-span-3 space-y-3">
-            <h4 className="font-mono text-xs font-bold tracking-widest uppercase text-[#EB0028] drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
+            <h4 className="font-mono text-xs font-bold tracking-widest uppercase text-[#FFAA00] drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
               RESOURCES
             </h4>
             <ul className="space-y-2.5 font-mono text-xs text-white">
               <li>
                 <button 
                   onClick={onRegisterNow} 
-                  className="text-neutral-200 hover:text-white font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
+                  className="text-neutral-200 hover:text-[#FFAA00] font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
                 >
                   Claim Conference Pass
                 </button>
@@ -148,7 +148,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               <li>
                 <button 
                   onClick={() => onNavigate('about')} 
-                  className="text-neutral-200 hover:text-white font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
+                  className="text-neutral-200 hover:text-[#FFAA00] font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
                 >
                   Frequently Asked Questions
                 </button>
@@ -156,7 +156,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               <li>
                 <button 
                   onClick={() => onNavigate('guesses')} 
-                  className="text-neutral-200 hover:text-white font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
+                  className="text-neutral-200 hover:text-[#FFAA00] font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
                 >
                   Detective Leaderboard
                 </button>
@@ -176,7 +176,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
 
           {/* Col 4: CONNECT */}
           <div className="lg:col-span-2 space-y-3">
-            <h4 className="font-mono text-xs font-bold tracking-widest uppercase text-[#EB0028] drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
+            <h4 className="font-mono text-xs font-bold tracking-widest uppercase text-[#FFAA00] drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
               CONNECT
             </h4>
             <div className="flex flex-wrap gap-2.5">
@@ -184,7 +184,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
                 href="https://instagram.com" 
                 target="_blank" 
                 rel="noreferrer"
-                className="w-9 h-9 rounded-lg bg-black/90 border border-white/20 hover:border-[#EB0028] hover:text-[#EB0028] flex items-center justify-center text-white transition-colors shadow-lg"
+                className="w-9 h-9 rounded-lg bg-black/90 border border-white/20 hover:border-[#FF5500] hover:text-[#FF5500] flex items-center justify-center text-white transition-colors shadow-lg"
                 title="Instagram"
               >
                 <Instagram className="w-4 h-4" />
@@ -193,7 +193,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
                 href="https://x.com" 
                 target="_blank" 
                 rel="noreferrer"
-                className="w-9 h-9 rounded-lg bg-black/90 border border-white/20 hover:border-[#EB0028] hover:text-[#EB0028] flex items-center justify-center text-white transition-colors shadow-lg"
+                className="w-9 h-9 rounded-lg bg-black/90 border border-white/20 hover:border-[#FF5500] hover:text-[#FF5500] flex items-center justify-center text-white transition-colors shadow-lg"
                 title="Twitter / X"
               >
                 <Twitter className="w-4 h-4" />
@@ -202,7 +202,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
                 href="https://linkedin.com" 
                 target="_blank" 
                 rel="noreferrer"
-                className="w-9 h-9 rounded-lg bg-black/90 border border-white/20 hover:border-[#EB0028] hover:text-[#EB0028] flex items-center justify-center text-white transition-colors shadow-lg"
+                className="w-9 h-9 rounded-lg bg-black/90 border border-white/20 hover:border-[#FF5500] hover:text-[#FF5500] flex items-center justify-center text-white transition-colors shadow-lg"
                 title="LinkedIn"
               >
                 <Linkedin className="w-4 h-4" />
@@ -211,7 +211,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
                 href="https://youtube.com" 
                 target="_blank" 
                 rel="noreferrer"
-                className="w-9 h-9 rounded-lg bg-black/90 border border-white/20 hover:border-[#EB0028] hover:text-[#EB0028] flex items-center justify-center text-white transition-colors shadow-lg"
+                className="w-9 h-9 rounded-lg bg-black/90 border border-white/20 hover:border-[#FF5500] hover:text-[#FF5500] flex items-center justify-center text-white transition-colors shadow-lg"
                 title="YouTube"
               >
                 <Youtube className="w-4 h-4" />
@@ -220,7 +220,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
                 href="https://github.com" 
                 target="_blank" 
                 rel="noreferrer"
-                className="w-9 h-9 rounded-lg bg-black/90 border border-white/20 hover:border-[#EB0028] hover:text-[#EB0028] flex items-center justify-center text-white transition-colors shadow-lg"
+                className="w-9 h-9 rounded-lg bg-black/90 border border-white/20 hover:border-[#FF5500] hover:text-[#FF5500] flex items-center justify-center text-white transition-colors shadow-lg"
                 title="GitHub"
               >
                 <Github className="w-4 h-4" />
@@ -249,10 +249,10 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
 
           <button
             onClick={scrollToTop}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black/80 hover:bg-[#1A1A1A] border border-white/20 hover:border-[#EB0028] text-white transition-all text-xs font-semibold shadow-xl cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black/80 hover:bg-[#1A1A1A] border border-white/20 hover:border-[#FF5500] text-white transition-all text-xs font-semibold shadow-xl cursor-pointer"
           >
             <span>BACK TO TOP</span>
-            <ArrowUp className="w-3.5 h-3.5 text-[#EB0028]" />
+            <ArrowUp className="w-3.5 h-3.5 text-[#FF5500]" />
           </button>
         </div>
 

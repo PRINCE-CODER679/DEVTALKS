@@ -8,30 +8,30 @@
   }
 
   body {
-    background-color: #060606;
+    background-color: #080808;
     color: #FFFFFF;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.01em;
   }
 
-  /* Custom subtle scrollbar */
+  /* Custom subtle Devkraft Orange scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #060606;
+    background: #080808;
   }
   ::-webkit-scrollbar-thumb {
-    background: #262626;
+    background: #222222;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #EB0028;
+    background: #FF5500;
   }
 
   ::selection {
-    background-color: #EB0028;
+    background-color: #FF5500;
     color: #FFFFFF;
   }
 }
@@ -39,8 +39,8 @@
 .subtle-dossier-grid {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 85, 0, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 85, 0, 0.035) 1px, transparent 1px);
 }
 
 .scrollbar-none {
@@ -50,4 +50,3 @@
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
-

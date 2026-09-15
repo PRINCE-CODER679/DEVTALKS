@@ -179,6 +179,14 @@ class AudioSynthesizer {
     } catch (e) {}
   }
 
+  startCinematicTheme() {
+    this.isMuted = false;
+    this.initContext();
+    if (!this.ctx) return;
+    this.startDrone();
+    this.playCinematicIntroTrack();
+  }
+
   playCinematicIntroTrack() {
     this.initContext();
     if (!this.ctx) return;
@@ -190,37 +198,37 @@ class AudioSynthesizer {
       const subGain = this.ctx.createGain();
       subOsc.type = 'sawtooth';
       subOsc.frequency.setValueAtTime(45, now);
-      subOsc.frequency.linearRampToValueAtTime(65, now + 8.5);
+      subOsc.frequency.linearRampToValueAtTime(65, now + 15.0);
 
       const subFilter = this.ctx.createBiquadFilter();
       subFilter.type = 'lowpass';
-      subFilter.frequency.setValueAtTime(110, now);
-      subFilter.frequency.exponentialRampToValueAtTime(280, now + 8.0);
+      subFilter.frequency.setValueAtTime(120, now);
+      subFilter.frequency.exponentialRampToValueAtTime(320, now + 18.0);
       subFilter.Q.setValueAtTime(3.0, now);
 
       subGain.gain.setValueAtTime(0.01, now);
-      subGain.gain.linearRampToValueAtTime(0.12, now + 3.0);
-      subGain.gain.linearRampToValueAtTime(0.2, now + 8.0);
-      subGain.gain.exponentialRampToValueAtTime(0.001, now + 9.2);
+      subGain.gain.linearRampToValueAtTime(0.14, now + 3.0);
+      subGain.gain.linearRampToValueAtTime(0.22, now + 16.0);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 24.0);
 
       subOsc.connect(subFilter);
       subFilter.connect(subGain);
       subGain.connect(this.ctx.destination);
 
       subOsc.start(now);
-      subOsc.stop(now + 9.2);
+      subOsc.stop(now + 24.0);
 
-      // 2. Cyber Rhythmic Sonar / Tech Glitch Pulses
-      const pulseNotes = [110, 165, 220, 330, 440, 550, 660, 880];
-      for (let t = 0.5; t < 8.5; t += 0.45) {
+      // 2. Cyber Rhythmic Sonar / Tech Glitch Pulses across the full video
+      const pulseNotes = [110, 146.83, 164.81, 220, 293.66, 329.63, 440, 587.33];
+      for (let t = 0.4; t < 22.0; t += 0.45) {
         const pOsc = this.ctx.createOscillator();
         const pGain = this.ctx.createGain();
         pOsc.type = 'sine';
-        const note = pulseNotes[Math.floor((t / 8.5) * pulseNotes.length)] || 220;
+        const note = pulseNotes[Math.floor((t % 4) * 2)] || 220;
         pOsc.frequency.setValueAtTime(note, now + t);
-        pOsc.frequency.exponentialRampToValueAtTime(note * 0.5, now + t + 0.15);
+        pOsc.frequency.exponentialRampToValueAtTime(note * 0.5, now + t + 0.16);
 
-        pGain.gain.setValueAtTime(0.03 + (t / 8.5) * 0.05, now + t);
+        pGain.gain.setValueAtTime(0.03 + Math.min(t / 22.0, 1) * 0.04, now + t);
         pGain.gain.exponentialRampToValueAtTime(0.0001, now + t + 0.18);
 
         pOsc.connect(pGain);
@@ -241,13 +249,13 @@ class AudioSynthesizer {
       const nFilter = this.ctx.createBiquadFilter();
       nFilter.type = 'bandpass';
       nFilter.frequency.setValueAtTime(300, now + 4.5);
-      nFilter.frequency.exponentialRampToValueAtTime(3500, now + 8.5);
+      nFilter.frequency.exponentialRampToValueAtTime(3500, now + 18.0);
       nFilter.Q.setValueAtTime(4, now + 4.5);
 
       const nGain = this.ctx.createGain();
       nGain.gain.setValueAtTime(0.001, now + 4.5);
-      nGain.gain.exponentialRampToValueAtTime(0.08, now + 8.4);
-      nGain.gain.exponentialRampToValueAtTime(0.0001, now + 8.9);
+      nGain.gain.exponentialRampToValueAtTime(0.08, now + 18.0);
+      nGain.gain.exponentialRampToValueAtTime(0.0001, now + 20.0);
 
       noise.connect(nFilter);
       nFilter.connect(nGain);
@@ -258,6 +266,42 @@ class AudioSynthesizer {
     } catch (e) {
       console.warn("Cinematic Intro Track error:", e);
     }
+  }
+
+  playReactionPop(type = 'fire') {
+    this.initContext();
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const now = this.ctx.currentTime;
+
+      if (type === 'fire' || type === 'hype') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.exponentialRampToValueAtTime(740, now + 0.08);
+      } else if (type === 'zap' || type === 'bolt') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(200, now + 0.06);
+      } else if (type === 'heart') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(587.33, now + 0.1);
+      } else {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(500, now);
+        osc.frequency.exponentialRampToValueAtTime(900, now + 0.07);
+      }
+
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.12);
+    } catch (e) {}
   }
 }
 

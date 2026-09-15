@@ -37,12 +37,12 @@ export default function Navbar({
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       scrolled 
-        ? 'bg-[#0A0A0A]/95 backdrop-blur-md border-b border-[#1F1F1F] py-3 shadow-2xl' 
-        : 'bg-[#060606]/85 backdrop-blur-sm border-b border-white/5 py-4 sm:py-5'
+        ? 'bg-[#080808]/95 backdrop-blur-md border-b border-[#222222] py-3 shadow-2xl' 
+        : 'bg-[#080808]/85 backdrop-blur-sm border-b border-white/5 py-4 sm:py-5'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
         
-        {/* Brand Logo / Left */}
+        {/* Brand Logo / Left (Original natural Devkraft logo) */}
         <button 
           onClick={() => handleNavClick('hero')}
           className="group flex items-center gap-3 text-left focus:outline-none"
@@ -50,15 +50,15 @@ export default function Navbar({
           <img 
             src="/devkraft-logo.png" 
             alt="Devkraft Logo" 
-            className="h-7 sm:h-8 w-auto object-contain drop-shadow-[0_2px_8px_rgba(235,0,40,0.5)] group-hover:scale-105 transition-transform" 
+            className="h-7 sm:h-8 w-auto object-contain drop-shadow-[0_2px_10px_rgba(255,85,0,0.5)] group-hover:scale-105 transition-transform" 
           />
           <div className="h-5 w-px bg-neutral-700 hidden sm:block" />
           <div className="flex flex-col">
-            <span className="font-display font-black text-xs sm:text-sm tracking-widest text-white group-hover:text-[#EB0028] transition-colors leading-tight">
+            <span className="font-display font-black text-xs sm:text-sm tracking-widest text-white group-hover:text-[#FF5500] transition-colors leading-tight">
               DEVTALKS '26
             </span>
             <span className="font-mono text-[8px] sm:text-[9px] tracking-widest text-neutral-400 uppercase">
-              DEVKRAFT
+              BY DEVKRAFT
             </span>
           </div>
         </button>
@@ -73,13 +73,13 @@ export default function Navbar({
                 item.id === 'hero' ? 'uppercase' : ''
               } ${
                 activeSection === item.id 
-                  ? 'text-[#EB0028] font-bold' 
+                  ? 'text-[#FF5500] font-bold drop-shadow-[0_0_8px_rgba(255,85,0,0.8)]' 
                   : 'text-neutral-400 hover:text-white'
               }`}
             >
               {item.label}
               {activeSection === item.id && (
-                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-[#EB0028] animate-fade-in shadow-[0_0_8px_rgba(235,0,40,0.8)]" />
+                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-[#FF5500] animate-fade-in shadow-[0_0_10px_#FF5500]" />
               )}
             </button>
           ))}
@@ -93,8 +93,8 @@ export default function Navbar({
                 onClick={() => handleNavClick(spkId)}
                 className={`px-2 py-0.5 rounded text-[10px] font-mono tracking-wider transition-colors ${
                   activeSection === spkId 
-                    ? 'bg-[#EB0028] text-white font-bold shadow-[0_0_8px_rgba(235,0,40,0.6)]' 
-                    : 'bg-[#181818] hover:bg-[#252525] text-neutral-400 hover:text-white'
+                    ? 'bg-[#FF5500] text-white font-bold shadow-[0_0_10px_rgba(255,85,0,0.6)]' 
+                    : 'bg-[#141414] hover:bg-[#202020] text-neutral-400 hover:text-white'
                 }`}
               >
                 0{idx + 1}
@@ -106,13 +106,13 @@ export default function Navbar({
         {/* Right Controls: REGISTER NOW CTA button */}
         <div className="flex items-center gap-3">
           
-          {/* REGISTER NOW -> CTA button (TEDx Red) */}
+          {/* REGISTER NOW -> CTA button (Devkraft Orange) */}
           <button
             onClick={() => {
               soundFx.playEvidenceClick();
               onRegisterNow();
             }}
-            className="hidden sm:inline-flex items-center gap-2 px-5 py-2 rounded-full border border-[#EB0028] bg-[#EB0028] hover:bg-[#D40024] text-white font-mono text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-[0_0_15px_rgba(235,0,40,0.4)]"
+            className="hidden sm:inline-flex items-center gap-2 px-5 py-2 rounded-full border border-[#FF5500] bg-gradient-to-r from-[#FF5500] via-[#FF6A00] to-[#FF5500] hover:from-[#FF6A00] hover:to-[#FFAA00] text-white font-mono text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-[0_0_15px_rgba(255,85,0,0.45)] hover:scale-105 active:scale-95"
           >
             <span>REGISTER NOW</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -140,7 +140,7 @@ export default function Navbar({
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
                 className={`text-left font-mono text-sm tracking-wider py-1 ${
-                  activeSection === item.id ? 'text-[#EB0028] font-bold' : 'text-neutral-400 hover:text-white'
+                  activeSection === item.id ? 'text-[#FF5500] font-bold' : 'text-neutral-400 hover:text-white'
                 }`}
               >
                 {item.label}
@@ -154,7 +154,7 @@ export default function Navbar({
                   <button
                     key={spkId}
                     onClick={() => handleNavClick(spkId)}
-                    className="p-2 rounded bg-[#181818] border border-[#282828] font-mono text-xs text-center text-neutral-300 hover:border-[#EB0028] hover:text-[#EB0028]"
+                    className="p-2 rounded bg-[#181818] border border-[#282828] font-mono text-xs text-center text-neutral-300 hover:border-[#FF5500] hover:text-[#FF5500]"
                   >
                     Speaker 0{idx + 1}
                   </button>
@@ -167,7 +167,7 @@ export default function Navbar({
                 setMobileMenuOpen(false);
                 onRegisterNow();
               }}
-              className="w-full py-3 mt-2 rounded-xl bg-[#EB0028] hover:bg-[#D40024] text-white font-mono text-xs font-bold tracking-wider uppercase text-center shadow-[0_0_15px_rgba(235,0,40,0.5)]"
+              className="w-full py-3 mt-2 rounded-xl bg-[#FF5500] hover:bg-[#FF6A00] text-white font-mono text-xs font-bold tracking-wider uppercase text-center shadow-[0_0_15px_rgba(255,85,0,0.5)]"
             >
               REGISTER NOW →
             </button>

@@ -70,7 +70,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#070707] text-white antialiased overflow-x-hidden selection:bg-[#EB0028] selection:text-white font-sans">
+    <div className="relative min-h-screen bg-[#080808] text-white antialiased overflow-x-hidden selection:bg-[#FF5500] selection:text-white font-sans">
       
       {/* ================= 0. CINEMATIC VIDEO INTRO ON FIRST LINK CLICK ================= */}
       {showIntroVideo && (
