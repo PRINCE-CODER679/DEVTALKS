@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { soundFx } from '../utils/audio';
 
 const SCENES = [
-  { id: 'scene-three-minds', type: 'image', src: '/best-scene-1.jpg', duration: 3400 },
-  { id: 'scene-revealing-soon', type: 'image', src: '/best-scene-2.jpg', duration: 3400 },
-  { id: 'scene-dossier-cards', type: 'image', src: '/best-scene-3.jpg', duration: 3400 },
-  { id: 'scene-speakers-coming', type: 'image', src: '/best-scene-4.jpg', duration: 3600 },
-  { id: 'scene-grand-climax', type: 'image', src: '/best-scene-5.jpg', duration: 4000 },
+  { id: 'hd-guess-01', type: 'image', src: '/guess-speaker-1.jpg', duration: 3500 },
+  { id: 'hd-guess-02', type: 'image', src: '/guess-speaker-2.jpg', duration: 3500 },
+  { id: 'hd-guess-03', type: 'image', src: '/guess-speaker-3.jpg', duration: 3500 },
+  { id: 'hd-architects', type: 'image', src: '/theme-mystery-architects.jpg', duration: 3800 },
+  { id: 'hd-arena-climax', type: 'image', src: '/pro-stage-climax.jpg', duration: 4200 },
 ];
 
 export default function IntroVideoOverlay({ onComplete }) {
