@@ -143,74 +143,37 @@ export default function IntroVideoOverlay({ onComplete }) {
           {/* ========================================================================= */}
           {/* 1. TRUE MOBILE & DESKTOP CINEMATIC FULLSCREEN MEDIA CONTAINER             */}
           {/* ========================================================================= */}
-          <div className="absolute inset-0 top-0 left-0 w-full h-full overflow-hidden bg-[#080808] flex items-center justify-center">
+          <div className="absolute inset-0 top-0 left-0 right-0 bottom-0 w-full h-full overflow-hidden bg-[#080808]">
             <AnimatePresence mode="sync">
               {activeScene.type === 'video' ? (
-                <div key={activeScene.id} className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden">
-                  {/* Atmospheric Ambient Edge Fill (Prevents any black/white gaps on mobile 9:16 / 19.5:9 / 20:9) */}
-                  <motion.video
-                    src={activeScene.src}
-                    autoPlay
-                    muted={isMuted}
-                    defaultMuted
-                    preload="auto"
-                    playsInline
-                    webkit-playsinline="true"
-                    x5-playsinline="true"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.65 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="absolute inset-0 w-full h-full object-cover object-center filter blur-3xl scale-125 saturate-150 contrast-125 opacity-70 pointer-events-none md:hidden"
-                  />
-
-                  {/* Main Sharp Video Layer (Preserves crisp aspect ratio without excessive cropping on mobile) */}
-                  <motion.video
-                    ref={videoRef}
-                    src={activeScene.src}
-                    autoPlay
-                    muted={isMuted}
-                    defaultMuted
-                    preload="auto"
-                    playsInline
-                    webkit-playsinline="true"
-                    x5-playsinline="true"
-                    initial={{ opacity: 0, scale: 1.02 }}
-                    animate={{ opacity: 1, scale: 1.0 }}
-                    exit={{ opacity: 0, scale: 0.99 }}
-                    transition={{ duration: 0.75, ease: 'easeInOut' }}
-                    className="relative z-10 w-full h-full max-h-[100dvh] object-contain sm:object-cover object-center filter contrast-125 brightness-105 saturate-140 hue-rotate-[-15deg] sepia-[0.2] drop-shadow-[0_0_40px_rgba(255,85,0,0.3)]"
-                  />
-                </div>
+                <motion.video
+                  key={activeScene.id}
+                  ref={videoRef}
+                  src={activeScene.src}
+                  autoPlay
+                  muted={isMuted}
+                  defaultMuted
+                  preload="auto"
+                  playsInline
+                  webkit-playsinline="true"
+                  x5-playsinline="true"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.75, ease: 'easeInOut' }}
+                  className="absolute inset-0 top-0 left-0 w-full h-full object-cover object-center filter contrast-125 brightness-105 saturate-140 hue-rotate-[-15deg] sepia-[0.2]"
+                />
               ) : (
-                <div key={activeScene.id} className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden">
-                  {/* Atmospheric Ambient Edge Fill (Eliminates gaps on vertical mobile viewports) */}
-                  <motion.img
-                    src={activeScene.src}
-                    alt=""
-                    aria-hidden="true"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.7 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="absolute inset-0 w-full h-full object-cover object-center filter blur-3xl scale-125 saturate-150 contrast-125 opacity-70 pointer-events-none md:hidden"
-                  />
-
-                  {/* Main Sharp Keynote Mystery Scene (Preserves full composition & mystery silhouettes) */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 1.04 }}
-                    animate={{ opacity: 1, scale: 1.0 }}
-                    exit={{ opacity: 0, scale: 1.02 }}
-                    transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                    className="relative z-10 w-full h-full max-h-[100dvh] flex items-center justify-center"
-                  >
-                    <img
-                      src={activeScene.src}
-                      alt="Mystery Keynote Reveal"
-                      className="w-full h-full object-contain sm:object-cover object-center filter contrast-120 brightness-100 saturate-125 drop-shadow-[0_0_50px_rgba(255,85,0,0.35)]"
-                    />
-                  </motion.div>
-                </div>
+                <motion.img
+                  key={activeScene.id}
+                  src={activeScene.src}
+                  alt="Mystery Keynote Reveal"
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1.0 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0 top-0 left-0 w-full h-full object-cover object-center filter contrast-120 brightness-100 saturate-125"
+                />
               )}
             </AnimatePresence>
           </div>
