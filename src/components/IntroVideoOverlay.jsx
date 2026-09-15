@@ -70,6 +70,7 @@ export default function IntroVideoOverlay({ onComplete }) {
     window.addEventListener('keydown', handleFirstGesture, { once: true });
 
     return () => {
+      soundFx.stopCinematicTheme();
       window.removeEventListener('pointerdown', handleFirstGesture);
       window.removeEventListener('touchstart', handleFirstGesture);
       window.removeEventListener('keydown', handleFirstGesture);
@@ -121,6 +122,7 @@ export default function IntroVideoOverlay({ onComplete }) {
   const handleFinish = () => {
     if (isExiting) return;
     setIsExiting(true);
+    soundFx.stopCinematicTheme();
     soundFx.playCinematicImpact();
     setTimeout(() => {
       onComplete();

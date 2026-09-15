@@ -77,7 +77,8 @@ export default function App() {
         <IntroVideoOverlay
           onComplete={() => {
             setShowIntroVideo(false);
-            // Optionally enable atmospheric drone if desired
+            soundFx.stopCinematicTheme();
+            setIsAudioActive(false);
           }}
         />
       )}

@@ -187,6 +187,11 @@ class AudioSynthesizer {
     this.playCinematicIntroTrack();
   }
 
+  stopCinematicTheme() {
+    this.stopDrone();
+    this.isMuted = true;
+  }
+
   playCinematicIntroTrack() {
     this.initContext();
     if (!this.ctx) return;
