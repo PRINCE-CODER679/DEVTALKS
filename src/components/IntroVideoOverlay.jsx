@@ -3,17 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { soundFx } from '../utils/audio';
 
 const SCENES = [
-  { id: 'scene-title', type: 'image', src: '/devtalks-scene-12.jpg', duration: 2600 },
-  { id: 'scene-global-radar', type: 'image', src: '/devtalks-scene-10.jpg', duration: 2800 },
-  { id: 'scene-radar-trio', type: 'image', src: '/devtalks-scene-4.jpg', duration: 2800 },
-  { id: 'scene-revealing-soon', type: 'image', src: '/devtalks-scene-2.jpg', duration: 3000 },
-  { id: 'scene-dossier-cards', type: 'image', src: '/devtalks-scene-6.jpg', duration: 3000 },
-  { id: 'scene-who-will-they-be', type: 'image', src: '/devtalks-scene-8.jpg', duration: 3000 },
-  { id: 'scene-speakers-coming', type: 'image', src: '/devtalks-scene-5.jpg', duration: 3200 },
-  { id: 'scene-pedestals', type: 'image', src: '/devtalks-scene-7.jpg', duration: 2800 },
-  { id: 'scene-perspectives', type: 'image', src: '/devtalks-scene-3.jpg', duration: 2800 },
-  { id: 'scene-stage-three-minds', type: 'image', src: '/devtalks-scene-1.jpg', duration: 3200 },
-  { id: 'scene-grand-climax', type: 'image', src: '/devtalks-scene-11.jpg', duration: 3600 },
+  { id: 'scene-three-minds', type: 'image', src: '/best-scene-1.jpg', duration: 3400 },
+  { id: 'scene-revealing-soon', type: 'image', src: '/best-scene-2.jpg', duration: 3400 },
+  { id: 'scene-dossier-cards', type: 'image', src: '/best-scene-3.jpg', duration: 3400 },
+  { id: 'scene-speakers-coming', type: 'image', src: '/best-scene-4.jpg', duration: 3600 },
+  { id: 'scene-grand-climax', type: 'image', src: '/best-scene-5.jpg', duration: 4000 },
 ];
 
 export default function IntroVideoOverlay({ onComplete }) {
