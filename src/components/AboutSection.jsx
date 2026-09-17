@@ -25,11 +25,11 @@ export default function AboutSection({ onRegisterNow }) {
             </div>
             
             <h2 className="font-display font-black text-4xl sm:text-6xl uppercase tracking-tight text-white">
-              ABOUT DEVTALKS <span className="text-[#FF5500]">'26</span>
+              ABOUT DEVTALKS <span className="bg-gradient-to-r from-[#FFFFFF] via-[#FFAA00] to-[#FF5500] bg-clip-text text-transparent">'26</span>
             </h2>
 
-            <p className="font-sans text-sm sm:text-base text-neutral-300 max-w-2xl leading-relaxed">
-              More than just slides and scripted presentations. A meeting of builders, pioneers, and innovators reshaping the modern digital economy.
+            <p className="font-sans text-sm sm:text-base text-neutral-200 max-w-2xl leading-relaxed font-normal">
+              More than just slides and scripted presentations. A meeting of <span className="text-[#FFAA00] font-semibold">builders, pioneers, and innovators</span> reshaping the modern digital economy.
             </p>
           </div>
 
@@ -38,7 +38,7 @@ export default function AboutSection({ onRegisterNow }) {
               soundFx.playEvidenceClick();
               onRegisterNow();
             }}
-            className="self-start md:self-auto inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#FF5500] via-[#FF6A00] to-[#FF5500] hover:from-[#FF6A00] hover:to-[#FFAA00] text-white font-mono text-xs font-bold tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(255,85,0,0.45)] hover:scale-105 cursor-pointer"
+            className="self-start md:self-auto inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#FF5500] via-[#FF6A00] to-[#FF5500] hover:from-[#FF6A00] hover:to-[#FFAA00] text-white font-mono text-xs font-bold tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(255,85,0,0.5)] hover:scale-105 cursor-pointer"
           >
             <span>CLAIM FREE PASS</span>
             <ArrowUpRight className="w-4 h-4" />
@@ -48,60 +48,69 @@ export default function AboutSection({ onRegisterNow }) {
         {/* ================= 3 PILLARS GRID ================= */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          <div className="p-6 sm:p-8 bg-[#111111] border border-[#262626] rounded-2xl space-y-4 hover:border-[#FF5500]/50 hover:bg-[#161616] transition-all shadow-md">
-            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#FF5500]/40 flex items-center justify-center text-[#FF5500]">
+          <div className="p-6 sm:p-8 bg-gradient-to-b from-[#141414] to-[#0D0D0D] border border-[#262626] rounded-2xl space-y-4 hover:border-[#FF5500]/60 hover:shadow-[0_10px_30px_rgba(255,85,0,0.15)] transition-all shadow-md group">
+            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#FF5500]/40 flex items-center justify-center text-[#FF5500] group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,85,0,0.2)]">
               <Zap className="w-6 h-6" />
             </div>
-            <h3 className="font-display font-bold text-xl uppercase text-white">
-              01. Raw & Unfiltered
-            </h3>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
-              No generic corporate fluff. Real architecture stories, massive failures, and the exact engineering breakthroughs that scaled unicorns.
+            <div className="space-y-1">
+              <span className="font-mono text-[11px] font-bold text-[#FFAA00] tracking-widest uppercase">PILLAR 01</span>
+              <h3 className="font-display font-black text-xl sm:text-2xl uppercase text-white tracking-wide">
+                Raw & Unfiltered
+              </h3>
+            </div>
+            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
+              No generic corporate fluff. <span className="text-white font-medium">Real architecture stories</span>, massive failures, and the exact engineering breakthroughs that scaled unicorns.
             </p>
           </div>
 
-          <div className="p-6 sm:p-8 bg-[#111111] border border-[#262626] rounded-2xl space-y-4 hover:border-[#FF5500]/50 hover:bg-[#161616] transition-all shadow-md">
-            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#FF5500]/40 flex items-center justify-center text-[#FF5500]">
+          <div className="p-6 sm:p-8 bg-gradient-to-b from-[#141414] to-[#0D0D0D] border border-[#262626] rounded-2xl space-y-4 hover:border-[#FF5500]/60 hover:shadow-[0_10px_30px_rgba(255,85,0,0.15)] transition-all shadow-md group">
+            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#FF5500]/40 flex items-center justify-center text-[#FF5500] group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,85,0,0.2)]">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h3 className="font-display font-bold text-xl uppercase text-white">
-              02. High-Trust Network
-            </h3>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
-              Connect with fellow developers, founders, angels, and creators in an intimate, high-impact environment built for lasting collaborations.
+            <div className="space-y-1">
+              <span className="font-mono text-[11px] font-bold text-[#FFAA00] tracking-widest uppercase">PILLAR 02</span>
+              <h3 className="font-display font-black text-xl sm:text-2xl uppercase text-white tracking-wide">
+                High-Trust Network
+              </h3>
+            </div>
+            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
+              Connect with fellow <span className="text-white font-medium">developers, founders, angels, and creators</span> in an intimate, high-impact environment built for lasting collaborations.
             </p>
           </div>
 
-          <div className="p-6 sm:p-8 bg-[#111111] border border-[#262626] rounded-2xl space-y-4 hover:border-[#FF5500]/50 hover:bg-[#161616] transition-all shadow-md">
-            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#FF5500]/40 flex items-center justify-center text-[#FF5500]">
+          <div className="p-6 sm:p-8 bg-gradient-to-b from-[#141414] to-[#0D0D0D] border border-[#262626] rounded-2xl space-y-4 hover:border-[#FF5500]/60 hover:shadow-[0_10px_30px_rgba(255,85,0,0.15)] transition-all shadow-md group">
+            <div className="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-[#FF5500]/40 flex items-center justify-center text-[#FF5500] group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,85,0,0.2)]">
               <Users className="w-6 h-6" />
             </div>
-            <h3 className="font-display font-bold text-xl uppercase text-white">
-              03. Next-Gen Frontier
-            </h3>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
-              Deep dives into AI systems, autonomous agents, distributed fintech, and sustainable computing architectures.
+            <div className="space-y-1">
+              <span className="font-mono text-[11px] font-bold text-[#FFAA00] tracking-widest uppercase">PILLAR 03</span>
+              <h3 className="font-display font-black text-xl sm:text-2xl uppercase text-white tracking-wide">
+                Next-Gen Frontier
+              </h3>
+            </div>
+            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
+              Deep dives into <span className="text-white font-medium">AI systems, autonomous agents</span>, distributed fintech, and sustainable computing architectures.
             </p>
           </div>
 
         </div>
 
         {/* ================= STATS ROW ================= */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-6 sm:p-8 bg-[#111111] border border-[#262626] rounded-2xl shadow-md">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-6 sm:p-8 bg-[#111111] border border-[#262626] rounded-2xl shadow-xl">
           <div className="text-center space-y-1">
-            <div className="font-display font-black text-3xl sm:text-5xl text-white">3</div>
+            <div className="font-display font-black text-3xl sm:text-5xl bg-gradient-to-b from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent">3</div>
             <div className="font-mono text-xs text-[#FFAA00] font-bold tracking-widest uppercase">Iconic Keynotes</div>
           </div>
           <div className="text-center space-y-1">
-            <div className="font-display font-black text-3xl sm:text-5xl text-white">1,500+</div>
+            <div className="font-display font-black text-3xl sm:text-5xl bg-gradient-to-b from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent">1,500+</div>
             <div className="font-mono text-xs text-[#FFAA00] font-bold tracking-widest uppercase">Live Attendees</div>
           </div>
           <div className="text-center space-y-1">
-            <div className="font-display font-black text-3xl sm:text-5xl text-white">2 DAYS</div>
+            <div className="font-display font-black text-3xl sm:text-5xl bg-gradient-to-b from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent">2 DAYS</div>
             <div className="font-mono text-xs text-[#FFAA00] font-bold tracking-widest uppercase">Intensive Sessions</div>
           </div>
           <div className="text-center space-y-1">
-            <div className="font-display font-black text-3xl sm:text-5xl text-white">100%</div>
+            <div className="font-display font-black text-3xl sm:text-5xl bg-gradient-to-r from-[#FFAA00] to-[#FF5500] bg-clip-text text-transparent">100%</div>
             <div className="font-mono text-xs text-[#FFAA00] font-bold tracking-widest uppercase">Free Registration</div>
           </div>
         </div>

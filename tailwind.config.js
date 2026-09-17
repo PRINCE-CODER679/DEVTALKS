@@ -31,12 +31,13 @@ export default {
         }
       },
       fontFamily: {
-        display: ['"Syne"', 'sans-serif'],
+        display: ['"Syne"', '"Outfit"', 'sans-serif'],
+        accent: ['"Outfit"', 'sans-serif'],
         serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
         handwritten: ['"Caveat"', 'cursive'],
-        sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', '"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['"Space Mono"', '"JetBrains Mono"', 'monospace'],
-        editorial: ['"Syne"', '"Cabinet Grotesk"', 'sans-serif'],
+        editorial: ['"Syne"', '"Outfit"', 'sans-serif'],
       },
       letterSpacing: {
         widest: '0.25em',

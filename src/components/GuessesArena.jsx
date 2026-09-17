@@ -103,7 +103,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
         
         {/* ================= HEADER ================= */}
         <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#181818] border border-[#FF5500]/40 text-[#FFAA00] font-mono text-xs font-bold tracking-widest uppercase shadow-xs">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#181818] border border-[#FF5500]/50 text-[#FFAA00] font-mono text-xs font-bold tracking-widest uppercase shadow-md backdrop-blur-md">
             <Trophy className="w-4 h-4 text-[#FF5500]" />
             <span>COMMUNITY PREDICTION CHALLENGE</span>
           </div>
@@ -112,8 +112,8 @@ export default function GuessesArena({ onJumpToSpeaker }) {
             GUESS THE <span className="bg-gradient-to-r from-white via-[#FFAA00] to-[#FF5500] bg-clip-text text-transparent">SPEAKERS</span>
           </h2>
 
-          <p className="font-sans text-sm sm:text-base text-neutral-300 max-w-2xl mx-auto leading-relaxed">
-            Select each speaker below, enter your prediction along with your details, and take a shot at winning exclusive VIP passes!
+          <p className="font-sans text-sm sm:text-base text-neutral-200 max-w-2xl mx-auto leading-relaxed">
+            Select each keynote speaker below, submit your prediction with your <span className="text-[#FFAA00] font-semibold">Name, Instagram ID & Department</span>, and claim your chance to win exclusive VIP access!
           </p>
         </div>
 
@@ -142,23 +142,23 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                       SPEAKER 0{spk.num}
                     </span>
                   </div>
-                  <span className="font-mono text-[10px] text-neutral-400 uppercase">
+                  <span className="font-mono text-[10px] text-neutral-400 uppercase tracking-wider">
                     {idx === 0 ? 'TECH' : idx === 1 ? 'VENTURE' : 'AI & SCALE'}
                   </span>
                 </div>
 
                 <div>
-                  <h4 className="font-display font-black text-lg text-white uppercase leading-tight">
+                  <h4 className="font-display font-black text-lg text-white uppercase leading-tight tracking-wide">
                     {spk.title}
                   </h4>
-                  <p className="font-sans text-xs text-neutral-400 line-clamp-2 mt-1 italic">
+                  <p className="font-sans text-xs text-neutral-300 line-clamp-2 mt-1 italic font-normal">
                     "{spk.shortClue}"
                   </p>
                 </div>
 
                 <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono">
-                  <span className={isSelected ? 'text-[#FF5500] font-bold' : 'text-neutral-500'}>
-                    {isSelected ? '● CURRENT TARGET' : 'SELECT SPEAKER'}
+                  <span className={isSelected ? 'text-[#FF5500] font-bold tracking-wider' : 'text-neutral-500'}>
+                    {isSelected ? '● ACTIVE TARGET' : 'SELECT SPEAKER'}
                   </span>
                   <span className="text-[11px] text-neutral-400">#0{spk.num}</span>
                 </div>
@@ -178,9 +178,9 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                   PREDICTING: SPEAKER #{activeSpeaker.num}
                 </span>
                 <span className="text-neutral-600">|</span>
-                <span className="font-mono text-xs text-neutral-400 uppercase">{activeSpeaker.roleTag}</span>
+                <span className="font-mono text-xs text-neutral-400 uppercase tracking-wider">{activeSpeaker.roleTag}</span>
               </div>
-              <h3 className="font-display font-black text-xl sm:text-2xl text-white uppercase">
+              <h3 className="font-display font-black text-xl sm:text-2xl text-white uppercase tracking-wide">
                 {activeSpeaker.title}
               </h3>
             </div>
@@ -191,7 +191,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 soundFx.playEvidenceClick();
                 onJumpToSpeaker(activeSpeaker.id);
               }}
-              className="font-mono text-xs text-[#FF5500] hover:text-[#FFAA00] font-bold flex items-center gap-1 hover:underline cursor-pointer"
+              className="font-mono text-xs text-[#FF5500] hover:text-[#FFAA00] font-bold flex items-center gap-1 hover:underline cursor-pointer tracking-wider"
             >
               <span>Clues Dossier</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -199,9 +199,9 @@ export default function GuessesArena({ onJumpToSpeaker }) {
           </div>
 
           {/* Quick Clue Banner */}
-          <div className="p-4 rounded-2xl bg-[#161616] border border-[#242424] flex items-center gap-3.5">
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-[#181109] to-[#120B04] border border-[#FF5500]/30 flex items-center gap-3.5 shadow-inner">
             <Sparkles className="w-4 h-4 text-[#FF5500] shrink-0" />
-            <p className="font-sans text-xs sm:text-sm text-neutral-300 italic leading-snug">
+            <p className="font-sans text-xs sm:text-sm text-neutral-200 italic leading-snug font-medium">
               "{activeSpeaker.shortClue}"
             </p>
           </div>

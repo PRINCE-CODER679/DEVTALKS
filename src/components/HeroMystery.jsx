@@ -56,8 +56,8 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
           {/* Electric Orange Accent Line */}
           <div className="flex items-center justify-center gap-2 pt-0.5">
             <div className="h-[2px] w-6 sm:w-12 bg-gradient-to-r from-transparent to-[#FF5500]" />
-            <span className="font-mono text-[8px] sm:text-[10px] tracking-[0.25em] text-[#FFAA00] font-bold uppercase drop-shadow-[0_0_8px_rgba(255,85,0,0.8)]">
-              DEVTALKS '26 BY DEVKRAFT
+            <span className="font-mono text-[9px] sm:text-[11px] tracking-[0.28em] text-[#FFAA00] font-bold uppercase drop-shadow-[0_0_10px_rgba(255,85,0,0.9)]">
+              DEVTALKS '26 • BY DEVKRAFT
             </span>
             <div className="h-[2px] w-6 sm:w-12 bg-gradient-to-l from-transparent to-[#FF5500]" />
           </div>
@@ -76,7 +76,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="space-y-1.5 sm:space-y-2 flex flex-col items-center"
+          className="space-y-2 flex flex-col items-center"
         >
           <h2 className="font-display font-black tracking-tight uppercase text-2xl xs:text-3xl sm:text-5xl md:text-6xl text-white drop-shadow-[0_4px_20px_rgba(0,0,0,1)] leading-tight flex items-center justify-center flex-wrap">
             <span className="bg-gradient-to-b from-white via-neutral-100 to-neutral-300 bg-clip-text text-transparent filter drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
@@ -88,13 +88,15 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
           </h2>
 
           {/* High-Contrast Frosted Badge for "GUESS THE SPEAKERS" */}
-          <div className="inline-flex items-center gap-2 px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full bg-[#0D0D0D]/90 border border-[#FF5500]/80 text-[#FFAA00] font-mono font-black tracking-[0.22em] text-[10px] sm:text-xs uppercase shadow-[0_4px_20px_rgba(0,0,0,0.95),_0_0_15px_rgba(255,85,0,0.4)] backdrop-blur-md select-none">
+          <div className="inline-flex items-center gap-2.5 px-4 sm:px-6 py-1 sm:py-1.5 rounded-full bg-[#110904]/90 border border-[#FF5500]/70 text-[#FFAA00] font-mono font-bold tracking-[0.24em] text-[10px] sm:text-xs uppercase shadow-[0_4px_25px_rgba(255,85,0,0.25)] backdrop-blur-lg select-none">
             <span className="w-1.5 h-1.5 rounded-full bg-[#FF5500] animate-ping" />
-            <span>GUESS THE SPEAKERS</span>
+            <span className="bg-gradient-to-r from-[#FFFFFF] via-[#FFAA00] to-[#FF5500] bg-clip-text text-transparent font-black">
+              GUESS THE MYSTERY SPEAKERS
+            </span>
           </div>
 
-          <p className="font-sans text-[10px] xs:text-[11px] sm:text-xs md:text-sm text-neutral-200 max-w-sm sm:max-w-md mx-auto px-2 leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,1)] font-medium">
-            3 Industry Titans. 1 Confidential Stage. Who Will Take The Spotlight?
+          <p className="font-sans text-[11px] xs:text-xs sm:text-sm text-neutral-200 max-w-sm sm:max-w-lg mx-auto px-2 leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,1)] font-medium">
+            <span className="text-[#FFAA00] font-bold">3 Industry Titans.</span> 1 Confidential Stage. <span className="text-white font-semibold">Who Will Take The Spotlight?</span>
           </p>
         </motion.div>
 
