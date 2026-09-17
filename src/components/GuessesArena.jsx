@@ -94,13 +94,72 @@ export default function GuessesArena({ onJumpToSpeaker }) {
   return (
     <section 
       id="guesses" 
-      className="relative w-full min-h-screen bg-[#080808] text-[#f4f0e8] py-24 px-4 sm:px-8 lg:px-12 border-t border-white/10 overflow-hidden select-none"
+      className="relative w-full min-h-screen bg-[#080808] text-[#f4f0e8] py-20 sm:py-24 px-4 sm:px-8 lg:px-12 border-t border-white/10 overflow-hidden select-none"
     >
-      <div className="max-w-5xl mx-auto w-full relative z-10 space-y-10">
+      {/* ================= DISTINCT SPEAKER-SPECIFIC ATMOSPHERIC BACKGROUND IMAGES (HERO-SILHOUETTE STYLE) ================= */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {speakersList.map((spk) => {
+          const isCurrent = selectedSpeakerId === spk.id;
+          const bgImageSrc = spk.id === 'speaker-1' 
+            ? '/speaker1-guess-silhouette.jpg' 
+            : spk.id === 'speaker-2' 
+            ? '/hero-silhouette.jpg' 
+            : '/speaker3-guess-silhouette.jpg';
+
+          return (
+            <img 
+              key={spk.id}
+              src={bgImageSrc} 
+              alt={`DevTalks Guess Silhouette - ${spk.title}`} 
+              className={`absolute inset-0 w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-120 transition-opacity duration-700 ease-in-out ${
+                isCurrent ? 'opacity-90 scale-100' : 'opacity-0 scale-105'
+              }`}
+            />
+          );
+        })}
+        
+        {/* Subtle Dark Overlays & Gradient Blends for Clean Contrast & 100% Text Readability */}
+        <div className="absolute inset-0 bg-[#080808]/40 pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#080808] via-[#080808]/75 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#080808] via-[#080808]/75 to-transparent pointer-events-none" />
+      </div>
+
+      {/* ================= ATMOSPHERIC EMBER PARTICLES & LIGHT GLOWS ================= */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-1">
+        {/* Soft Radial Ambient Glows */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#ff5a1f]/12 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-[450px] h-[350px] bg-[#ff7a45]/10 rounded-full blur-[120px] pointer-events-none" />
+        
+        {/* Dispersed Floating Ember Particles (Matching Uploaded Screenshot) */}
+        {[
+          { top: '8%', left: '12%', size: 'w-1.5 h-1.5', opacity: 'opacity-70', anim: 'animate-pulse' },
+          { top: '15%', left: '78%', size: 'w-2 h-2', opacity: 'opacity-80', anim: 'animate-bounce' },
+          { top: '22%', left: '35%', size: 'w-1 h-1', opacity: 'opacity-60', anim: 'animate-pulse' },
+          { top: '30%', left: '88%', size: 'w-1.5 h-1.5', opacity: 'opacity-75', anim: 'animate-pulse' },
+          { top: '42%', left: '8%', size: 'w-2 h-2', opacity: 'opacity-70', anim: 'animate-pulse' },
+          { top: '48%', left: '92%', size: 'w-1 h-1', opacity: 'opacity-90', anim: 'animate-ping' },
+          { top: '55%', left: '22%', size: 'w-1.5 h-1.5', opacity: 'opacity-65', anim: 'animate-pulse' },
+          { top: '65%', left: '75%', size: 'w-2 h-2', opacity: 'opacity-80', anim: 'animate-pulse' },
+          { top: '72%', left: '15%', size: 'w-1 h-1', opacity: 'opacity-60', anim: 'animate-pulse' },
+          { top: '80%', left: '85%', size: 'w-1.5 h-1.5', opacity: 'opacity-85', anim: 'animate-bounce' },
+          { top: '88%', left: '40%', size: 'w-2 h-2', opacity: 'opacity-75', anim: 'animate-pulse' },
+          { top: '92%', left: '60%', size: 'w-1 h-1', opacity: 'opacity-70', anim: 'animate-pulse' },
+          { top: '18%', left: '50%', size: 'w-1.5 h-1.5', opacity: 'opacity-60', anim: 'animate-pulse' },
+          { top: '60%', left: '50%', size: 'w-2 h-2', opacity: 'opacity-70', anim: 'animate-pulse' },
+        ].map((ember, i) => (
+          <div
+            key={i}
+            className={`absolute rounded-full bg-[#ff5a1f] shadow-[0_0_8px_#ff5a1f] ${ember.size} ${ember.opacity} ${ember.anim} pointer-events-none`}
+            style={{ top: ember.top, left: ember.left }}
+          />
+        ))}
+      </div>
+
+      <div className="max-w-4xl mx-auto w-full relative z-10 space-y-10">
         
         {/* ================= HEADER ================= */}
         <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#111111] border border-[#ff5a1f]/30 text-[#ff5a1f] font-mono text-xs font-bold tracking-widest uppercase shadow-xs">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 border border-[#ff5a1f]/30 text-[#ff5a1f] font-mono text-xs font-bold tracking-widest uppercase shadow-xs">
             <Trophy className="w-4 h-4 text-[#ff5a1f]" />
             <span>COMMUNITY PREDICTION CHALLENGE</span>
           </div>
@@ -128,13 +187,13 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 }}
                 className={`p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 border flex flex-col justify-between gap-3 cursor-pointer ${
                   isSelected
-                    ? 'bg-[#111111] border-2 border-[#ff5a1f] shadow-[0_12px_30px_rgba(255,90,31,0.18)] scale-[1.02]'
-                    : 'bg-[#111111] border-white/10 hover:border-[#ff5a1f]/40 shadow-xs'
+                    ? 'bg-black/60 border-2 border-[#ff5a1f] shadow-[0_8px_25px_rgba(255,90,31,0.2)] scale-[1.02]'
+                    : 'bg-black/30 border-white/15 hover:border-[#ff5a1f]/50 hover:bg-black/50 shadow-xs'
                 }`}
               >
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-[#ff5a1f] animate-ping' : 'bg-white/10'}`} />
+                    <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-[#ff5a1f] animate-ping' : 'bg-white/20'}`} />
                     <span className="font-mono text-xs font-black tracking-widest text-[#ff5a1f]">
                       SPEAKER 0{spk.num}
                     </span>
@@ -164,20 +223,22 @@ export default function GuessesArena({ onJumpToSpeaker }) {
           })}
         </div>
 
-        {/* ================= PREDICTION SUBMISSION FORM CARD ================= */}
-        <div className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-10 space-y-6 shadow-md max-w-3xl mx-auto w-full">
+        {/* ================= PREDICTION SUBMISSION FORM (MATCHING EXACT SCREENSHOT - NO GLASSMORPHISM) ================= */}
+        <div className="w-full space-y-6 pt-4">
           
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          {/* Header row: Speaker badge & Dossier link */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
             <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#ff5a1f] animate-ping" />
-                <span className="font-mono text-xs font-black text-[#ff5a1f] uppercase tracking-widest">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <span className="font-mono text-xs sm:text-sm font-black text-[#ff5a1f] uppercase tracking-widest">
                   PREDICTING: SPEAKER #{activeSpeaker.num}
                 </span>
-                <span className="text-white/10">|</span>
-                <span className="font-mono text-xs text-[#817b73] uppercase tracking-wider font-semibold">{activeSpeaker.roleTag}</span>
+                <span className="text-white/20 hidden sm:inline">|</span>
+                <span className="font-mono text-[11px] sm:text-xs text-[#817b73] uppercase tracking-wider font-semibold">
+                  {activeSpeaker.roleTag}
+                </span>
               </div>
-              <h3 className="font-display font-black text-xl sm:text-2xl text-[#f4f0e8] uppercase tracking-wide">
+              <h3 className="font-display font-black text-2xl sm:text-4xl text-[#f4f0e8] uppercase tracking-wider mt-1">
                 {activeSpeaker.title}
               </h3>
             </div>
@@ -188,16 +249,16 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 soundFx.playEvidenceClick();
                 onJumpToSpeaker(activeSpeaker.id);
               }}
-              className="font-mono text-xs text-[#ff5a1f] hover:text-[#ff8a3d] font-bold flex items-center gap-1 hover:underline cursor-pointer tracking-wider"
+              className="font-mono text-xs sm:text-sm text-[#ff5a1f] hover:text-[#ff8a3d] font-bold flex items-center gap-1.5 hover:underline cursor-pointer tracking-wider self-start sm:self-center"
             >
               <span>Clues Dossier</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Quick Clue Banner */}
-          <div className="p-4 rounded-2xl bg-[#080808] border border-[#ff5a1f]/30 flex items-center gap-3.5 shadow-xs">
-            <Sparkles className="w-4 h-4 text-[#ff5a1f] shrink-0" />
+          {/* Quick Clue Banner (Rounded border pill with sparkle icon directly on background) */}
+          <div className="p-4 sm:p-5 rounded-2xl border border-[#ff5a1f]/35 bg-black/40 flex items-center gap-3.5 shadow-sm">
+            <Sparkles className="w-5 h-5 text-[#ff5a1f] shrink-0" />
             <p className="font-sans text-xs sm:text-sm text-[#f4f0e8] italic leading-snug font-medium">
               "{activeSpeaker.shortClue}"
             </p>
@@ -210,10 +271,10 @@ export default function GuessesArena({ onJumpToSpeaker }) {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               
               {/* Full Name */}
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
                   <User className="w-3.5 h-3.5 text-[#ff5a1f]" />
-                  <span>Your Full Name *</span>
+                  <span>YOUR FULL NAME *</span>
                 </label>
                 <input 
                   type="text"
@@ -221,15 +282,15 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Rahul Sharma"
-                  className="w-full px-4 py-3 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
+                  className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
                 />
               </div>
 
               {/* Instagram Handle */}
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
                   <Instagram className="w-3.5 h-3.5 text-[#ff5a1f]" />
-                  <span>Instagram ID *</span>
+                  <span>INSTAGRAM ID *</span>
                 </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#817b73] font-mono text-sm">@</span>
@@ -239,16 +300,16 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                     value={instaId.replace(/^@/, '')}
                     onChange={(e) => setInstaId(e.target.value)}
                     placeholder="your_username"
-                    className="w-full pl-8 pr-4 py-3 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
+                    className="w-full pl-8 pr-4 py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
                   />
                 </div>
               </div>
 
               {/* Department */}
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
                   <GraduationCap className="w-3.5 h-3.5 text-[#ff5a1f]" />
-                  <span>Your Department *</span>
+                  <span>YOUR DEPARTMENT *</span>
                 </label>
                 <input 
                   type="text"
@@ -256,17 +317,17 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                   placeholder="e.g. CSE / IT / AI & DS"
-                  className="w-full px-4 py-3 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
+                  className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
                 />
               </div>
 
             </div>
 
             {/* Row 2: Speaker Guess Prediction */}
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
                 <Flame className="w-3.5 h-3.5 text-[#ff5a1f]" />
-                <span>Who is Speaker #{activeSpeaker.num}? (Your Guess) *</span>
+                <span>WHO IS SPEAKER #{activeSpeaker.num}? (YOUR GUESS) *</span>
               </label>
               <input 
                 type="text"
@@ -274,21 +335,21 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 value={guessInput}
                 onChange={(e) => setGuessInput(e.target.value)}
                 placeholder="e.g. Kunal Shah, Anupam Mittal, Andrej Karpathy..."
-                className="w-full px-4 py-3.5 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
+                className="w-full px-4 py-3.5 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
               />
             </div>
 
             {/* Row 3: Reason / Clue Theory (Optional) */}
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label className="font-mono text-xs font-bold text-[#817b73] flex items-center gap-1.5 uppercase tracking-wider">
-                <span>Why do you think so? (Optional Clue Theory)</span>
+                <span>WHY DO YOU THINK SO? (OPTIONAL CLUE THEORY)</span>
               </label>
               <input 
                 type="text"
                 value={reasonInput}
                 onChange={(e) => setReasonInput(e.target.value)}
                 placeholder="e.g. The 100M+ users clue and CRED venture match perfectly!"
-                className="w-full px-4 py-2.5 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-xs font-sans text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all"
+                className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-sm font-sans text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all"
               />
             </div>
 
@@ -296,9 +357,9 @@ export default function GuessesArena({ onJumpToSpeaker }) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 px-6 bg-[#ff5a1f] hover:bg-[#ff7a45] text-[#080808] font-display font-black text-xs sm:text-sm tracking-widest uppercase rounded-xl transition-all shadow-[0_4px_16px_rgba(255,90,31,0.25)] hover:scale-[1.01] active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-4 px-6 bg-[#ff5a1f] hover:bg-[#ff7a45] text-[#080808] font-display font-black text-xs sm:text-sm tracking-widest uppercase rounded-xl transition-all shadow-[0_4px_20px_rgba(255,90,31,0.35)] hover:scale-[1.01] active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-3"
             >
-              <span>{isSubmitting ? 'RECORDING PREDICTION...' : 'SUBMIT PREDICTION & ENTER GIVEAWAY 🎯'}</span>
+              <span>{isSubmitting ? 'RECORDING PREDICTION...' : 'SUBMIT PREDICTION & ENTER GIVEAWAY'}</span>
               <Send className="w-4 h-4" />
             </button>
 

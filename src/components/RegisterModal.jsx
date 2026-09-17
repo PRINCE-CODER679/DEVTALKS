@@ -81,7 +81,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="font-mono text-[11px] text-[#f4f0e8] uppercase font-bold">Your Role</label>
                   <select 
