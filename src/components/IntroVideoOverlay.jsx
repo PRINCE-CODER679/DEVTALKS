@@ -5,31 +5,41 @@ export default function IntroVideoOverlay({ onComplete }) {
   const [isExiting, setIsExiting] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
-  const videoRef = useRef(null);
+  const mainVideoRef = useRef(null);
+  const bgVideoRef = useRef(null);
 
   // Initialize playback with autoPlay & sound unlock
   useEffect(() => {
-    const vid = videoRef.current;
-    if (vid) {
-      vid.currentTime = 0;
-      vid.muted = true;
-      vid.defaultMuted = true;
-      const playPromise = vid.play();
+    const mainVid = mainVideoRef.current;
+    const bgVid = bgVideoRef.current;
+
+    if (mainVid) {
+      mainVid.currentTime = 0;
+      mainVid.muted = true;
+      mainVid.defaultMuted = true;
+      const playPromise = mainVid.play();
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
             setIsPlaying(true);
           })
           .catch(() => {
-            vid.muted = true;
-            vid.play().catch(() => {});
+            mainVid.muted = true;
+            mainVid.play().catch(() => {});
           });
       }
     }
 
+    if (bgVid) {
+      bgVid.currentTime = 0;
+      bgVid.muted = true;
+      bgVid.defaultMuted = true;
+      bgVid.play().catch(() => {});
+    }
+
     // First user interaction immediately enables full audio
     const unlockAudio = () => {
-      const v = videoRef.current;
+      const v = mainVideoRef.current;
       if (v) {
         v.muted = false;
         v.volume = 1.0;
@@ -48,12 +58,21 @@ export default function IntroVideoOverlay({ onComplete }) {
     };
   }, []);
 
+  // Sync background ambient video time with main foreground video
+  const handleTimeUpdate = () => {
+    const mainVid = mainVideoRef.current;
+    const bgVid = bgVideoRef.current;
+    if (mainVid && bgVid && Math.abs(mainVid.currentTime - bgVid.currentTime) > 0.25) {
+      bgVid.currentTime = mainVid.currentTime;
+    }
+  };
+
   const handleToggleMute = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    const vid = videoRef.current;
+    const vid = mainVideoRef.current;
     if (vid) {
       vid.muted = !vid.muted;
       setIsMuted(vid.muted);
@@ -62,13 +81,17 @@ export default function IntroVideoOverlay({ onComplete }) {
 
   const handleTogglePlay = (e) => {
     if (e) e.stopPropagation();
-    const vid = videoRef.current;
-    if (vid) {
-      if (vid.paused) {
-        vid.play();
+    const mainVid = mainVideoRef.current;
+    const bgVid = bgVideoRef.current;
+
+    if (mainVid) {
+      if (mainVid.paused) {
+        mainVid.play();
+        if (bgVid) bgVid.play().catch(() => {});
         setIsPlaying(true);
       } else {
-        vid.pause();
+        mainVid.pause();
+        if (bgVid) bgVid.pause();
         setIsPlaying(false);
       }
     }
@@ -90,10 +113,10 @@ export default function IntroVideoOverlay({ onComplete }) {
       onClick={handleTogglePlay}
     >
       {/* ========================================================================= */}
-      {/* TRUE FULLSCREEN COVER VIDEO (100% WIDTH & 100% HEIGHT ON ALL DEVICES)     */}
+      {/* 1. AMBIENT ATMOSPHERIC BACKGROUND VIDEO LAYER (ELIMINATES EMPTY BARS)     */}
       {/* ========================================================================= */}
       <video
-        ref={videoRef}
+        ref={bgVideoRef}
         src="/official-teaser.mp4"
         autoPlay
         muted
@@ -102,14 +125,32 @@ export default function IntroVideoOverlay({ onComplete }) {
         playsInline
         webkit-playsinline="true"
         x5-playsinline="true"
+        className="intro-bg-ambient-video"
+        aria-hidden="true"
+      />
+
+      {/* ========================================================================= */}
+      {/* 2. SHARP FOREGROUND CINEMATIC VIDEO (100% UN-CROPPED TEXT & VISUALS)      */}
+      {/* ========================================================================= */}
+      <video
+        ref={mainVideoRef}
+        src="/official-teaser.mp4"
+        autoPlay
+        muted
+        defaultMuted
+        preload="auto"
+        playsInline
+        webkit-playsinline="true"
+        x5-playsinline="true"
+        onTimeUpdate={handleTimeUpdate}
         onEnded={handleFinish}
         onError={handleFinish}
-        className="intro-video-element"
+        className="intro-main-focused-video"
       />
 
       {/* Centered Play icon overlay when paused */}
       {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-xs pointer-events-none z-20">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-xs pointer-events-none z-30">
           <div className="w-16 h-16 rounded-full bg-[#FF5500]/90 text-white flex items-center justify-center shadow-[0_0_30px_rgba(255,85,0,0.8)]">
             <Play className="w-8 h-8 ml-1 text-white fill-white" />
           </div>
@@ -117,7 +158,7 @@ export default function IntroVideoOverlay({ onComplete }) {
       )}
 
       {/* ========================================================================= */}
-      {/* MINIMAL OVERLAY CONTROLS (UNMUTE & SKIP BUTTON)                           */}
+      {/* 3. MINIMAL OVERLAY CONTROLS (UNMUTE AUDIO & SKIP BUTTON)                  */}
       {/* ========================================================================= */}
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 flex items-center gap-2.5 pointer-events-auto">
         {/* Audio Toggle */}
