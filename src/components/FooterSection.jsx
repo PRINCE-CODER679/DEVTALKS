@@ -216,11 +216,8 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               </a>
             </div>
 
-            {/* Event Coordinators Contact Info */}
+            {/* Contact Numbers */}
             <div className="space-y-1.5 pt-2 border-t border-white/10">
-              <span className="font-mono text-[10px] text-[#817b73] block uppercase font-bold tracking-wider">
-                EVENT COORDINATORS:
-              </span>
               <div className="grid grid-cols-1 gap-1.5 font-mono text-xs">
                 <div className="flex items-center justify-between text-[#c8c1b7] bg-black/30 px-2.5 py-1 rounded-md border border-white/5">
                   <span className="font-medium text-[#f4f0e8]">Tejas</span>
