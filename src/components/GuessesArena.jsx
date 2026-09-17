@@ -111,7 +111,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
               key={spk.id}
               src={bgImageSrc} 
               alt={`DevTalks Guess Silhouette - ${spk.title}`} 
-              className={`absolute inset-0 w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-120 transition-opacity duration-700 ease-in-out ${
+              className={`absolute inset-0 w-full h-full object-cover object-[50%_10%] sm:object-[50%_20%] md:object-center filter brightness-115 contrast-125 saturate-120 transition-all duration-700 ease-in-out ${
                 isCurrent ? 'opacity-90 scale-100' : 'opacity-0 scale-105'
               }`}
             />
