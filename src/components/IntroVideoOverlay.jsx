@@ -130,17 +130,17 @@ export default function IntroVideoOverlay({ onComplete }) {
         <button
           type="button"
           onClick={handleToggleMute}
-          className="px-3.5 py-1.5 rounded-full bg-black/75 hover:bg-black/95 border border-white/25 hover:border-[#FF5500] text-white font-mono text-[11px] font-bold tracking-wider uppercase transition-all backdrop-blur-md cursor-pointer flex items-center gap-1.5 shadow-xl"
+          className="px-3.5 py-1.5 rounded-full bg-[#080808]/80 hover:bg-[#080808] border border-white/10 hover:border-[#ff5a1f] text-[#f4f0e8] font-mono text-[11px] font-bold tracking-wider uppercase transition-all backdrop-blur-md cursor-pointer flex items-center gap-1.5 shadow-xl"
         >
           {isMuted ? (
             <>
-              <VolumeX className="w-3.5 h-3.5 text-[#FF5500]" />
-              <span className="text-neutral-300">UNMUTE</span>
+              <VolumeX className="w-3.5 h-3.5 text-[#817b73]" />
+              <span className="text-[#817b73]">UNMUTE</span>
             </>
           ) : (
             <>
-              <Volume2 className="w-3.5 h-3.5 text-[#FFAA00]" />
-              <span className="text-white">SOUND ON</span>
+              <Volume2 className="w-3.5 h-3.5 text-[#ff5a1f]" />
+              <span className="text-[#f4f0e8]">SOUND ON</span>
             </>
           )}
         </button>
@@ -152,7 +152,7 @@ export default function IntroVideoOverlay({ onComplete }) {
             e.stopPropagation();
             handleFinish();
           }}
-          className="px-4 py-1.5 rounded-full bg-[#FF5500] hover:bg-[#FF6A00] text-white font-display font-black text-[11px] tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(255,85,0,0.6)] cursor-pointer flex items-center gap-1.5 hover:scale-105 active:scale-95"
+          className="px-4 py-1.5 rounded-full bg-[#ff5a1f] hover:bg-[#ff7a45] text-[#080808] font-display font-black text-[11px] tracking-wider uppercase transition-all shadow-[0_4px_16px_rgba(255,90,31,0.35)] cursor-pointer flex items-center gap-1.5 hover:scale-105 active:scale-95"
         >
           <span>ENTER SITE</span>
           <ArrowRight className="w-3.5 h-3.5" />

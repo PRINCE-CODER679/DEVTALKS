@@ -21,11 +21,11 @@ export default function FullscreenMenu({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#070707]/98 backdrop-blur-xl flex flex-col justify-between p-6 sm:p-12 animate-fade-in select-none">
+    <div className="fixed inset-0 z-50 bg-[#080808]/98 backdrop-blur-xl flex flex-col justify-between p-6 sm:p-12 animate-fade-in select-none">
       
       {/* Top Header */}
       <div className="flex items-center justify-between border-b border-white/10 pb-6">
-        <span className="font-display font-black text-sm tracking-widest text-white uppercase">
+        <span className="font-display font-black text-sm tracking-widest text-[#f4f0e8] uppercase">
           DEVKRAFT
         </span>
 
@@ -34,7 +34,7 @@ export default function FullscreenMenu({
             soundFx.playEvidenceClick();
             onClose();
           }}
-          className="p-2 text-white/80 hover:text-white transition-colors focus:outline-none"
+          className="p-2 text-[#817b73] hover:text-[#f4f0e8] transition-colors focus:outline-none"
           aria-label="Close"
         >
           <X className="w-6 h-6" />
@@ -53,25 +53,25 @@ export default function FullscreenMenu({
             }}
             className={`group text-left py-3 border-b border-white/10 flex items-center justify-between transition-all ${
               activeSection === item.id 
-                ? 'text-brand-red pl-2 border-brand-red' 
-                : 'text-white/80 hover:text-white hover:pl-2'
+                ? 'text-[#ff5a1f] pl-2 border-[#ff5a1f]' 
+                : 'text-[#817b73] hover:text-[#f4f0e8] hover:pl-2'
             }`}
           >
             <span className="font-display font-black text-2xl sm:text-3xl tracking-tight uppercase">
               {item.label}
             </span>
-            <ArrowRight className="w-5 h-5 text-white/30 group-hover:text-brand-red group-hover:translate-x-1 transition-all" />
+            <ArrowRight className="w-5 h-5 text-white/30 group-hover:text-[#ff5a1f] group-hover:translate-x-1 transition-all" />
           </button>
         ))}
       </div>
 
       {/* Bottom Footer Action */}
-      <div className="pt-6 border-t border-white/10 flex items-center justify-between font-mono text-xs text-white/40">
+      <div className="pt-6 border-t border-white/10 flex items-center justify-between font-mono text-xs text-[#817b73]">
         <button
           onClick={onToggleAudio}
-          className="flex items-center gap-2 hover:text-white transition-colors"
+          className="flex items-center gap-2 hover:text-[#f4f0e8] transition-colors"
         >
-          {isAudioActive ? <Volume2 className="w-4 h-4 text-brand-red" /> : <VolumeX className="w-4 h-4" />}
+          {isAudioActive ? <Volume2 className="w-4 h-4 text-[#ff5a1f]" /> : <VolumeX className="w-4 h-4" />}
           <span>ATMOSPHERE AUDIO {isAudioActive ? 'ON' : 'MUTED'}</span>
         </button>
 

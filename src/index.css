@@ -5,16 +5,55 @@
 @layer base {
   :root {
     color-scheme: dark;
+
+    --color-app-bg: #080808;
+    --color-app-bg-primary: #0b0b0b;
+    --color-app-bg-secondary: #111111;
+    --color-app-bg-elevated: #181818;
+
+    --color-primary: #ff5a1f;
+    --color-primary-light: #ff7a45;
+    --color-primary-dark: #c83f12;
+
+    --color-accent: #ff8a3d;
+    --color-accent-light: #ffb27a;
+
+    --color-text-primary: #f4f0e8;
+    --color-text-secondary: #c8c1b7;
+    --color-text-muted: #817b73;
+    --color-text-dark: #111111;
+
+    --color-surface: rgba(18, 18, 18, 0.72);
+    --color-surface-light: rgba(244, 240, 232, 0.06);
+    --color-surface-hover: rgba(244, 240, 232, 0.1);
+    --color-surface-orange: rgba(255, 90, 31, 0.12);
+
+    --color-border: rgba(244, 240, 232, 0.1);
+    --color-border-light: rgba(244, 240, 232, 0.06);
+    --color-border-orange: rgba(255, 90, 31, 0.4);
+
+    --color-success: #a8c686;
+    --color-error: #d96c4f;
+    --color-warning: #ff9b4a;
+    --color-info: #b8b0a4;
+
+    --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.45);
+    --shadow-orange: 0 0 40px rgba(255, 90, 31, 0.2);
+
+    --color-bg: #080808;
+    --color-bg-primary: #0b0b0b;
+    --color-bg-secondary: #111111;
+    --color-bg-elevated: #181818;
   }
 
   body {
     background-color: #080808;
-    color: #FFFFFF;
+    color: #f4f0e8;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.01em;
   }
 
-  /* Custom subtle Devkraft Orange scrollbar */
+  /* Custom subtle scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -23,24 +62,24 @@
     background: #080808;
   }
   ::-webkit-scrollbar-thumb {
-    background: #222222;
+    background: rgba(244, 240, 232, 0.15);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #FF5500;
+    background: #ff5a1f;
   }
 
   ::selection {
-    background-color: #FF5500;
-    color: #FFFFFF;
+    background-color: #ff5a1f;
+    color: #080808;
   }
 }
 
 .subtle-dossier-grid {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(255, 85, 0, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 85, 0, 0.035) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 90, 31, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 90, 31, 0.04) 1px, transparent 1px);
 }
 
 .scrollbar-none {

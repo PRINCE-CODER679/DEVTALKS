@@ -37,15 +37,15 @@ export default function ThreeAtmosphere() {
       return;
     }
 
-    // Subtle Particle Cloud (Devkraft Orange + Amber + Dim Stardust)
-    const particleCount = 800;
+    // Subtle Particle Cloud (Warm Orange + Soft Accent + Muted Stardust)
+    const particleCount = 600;
     geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
 
-    const orangeColor = new THREE.Color('#FF5500');
-    const amberColor = new THREE.Color('#FFAA00');
-    const dimWhite = new THREE.Color('#555555');
+    const primaryColor = new THREE.Color('#ff5a1f');
+    const accentColor = new THREE.Color('#ff8a3d');
+    const softMuted = new THREE.Color('#817b73');
 
     for (let i = 0; i < particleCount; i++) {
       const x = (Math.random() - 0.5) * 220;
@@ -58,12 +58,12 @@ export default function ThreeAtmosphere() {
 
       const rand = Math.random();
       let chosenColor;
-      if (rand < 0.35) {
-        chosenColor = orangeColor;
-      } else if (rand < 0.65) {
-        chosenColor = amberColor;
+      if (rand < 0.4) {
+        chosenColor = primaryColor;
+      } else if (rand < 0.7) {
+        chosenColor = accentColor;
       } else {
-        chosenColor = dimWhite;
+        chosenColor = softMuted;
       }
 
       colors[i * 3] = chosenColor.r;
@@ -80,20 +80,20 @@ export default function ThreeAtmosphere() {
     canvas.height = 32;
     const ctx = canvas.getContext('2d');
     const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
-    gradient.addColorStop(0, 'rgba(255,255,255,1)');
-    gradient.addColorStop(0.3, 'rgba(255,130,0,0.7)');
-    gradient.addColorStop(1, 'rgba(255,85,0,0)');
+    gradient.addColorStop(0, 'rgba(244, 240, 232, 1)');
+    gradient.addColorStop(0.3, 'rgba(255, 90, 31, 0.7)');
+    gradient.addColorStop(1, 'rgba(255, 90, 31, 0)');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 32, 32);
 
     texture = new THREE.CanvasTexture(canvas);
 
     particleMaterial = new THREE.PointsMaterial({
-      size: 1.8,
+      size: 1.6,
       vertexColors: true,
       map: texture,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.6,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
@@ -172,7 +172,7 @@ export default function ThreeAtmosphere() {
   return (
     <div 
       ref={mountRef} 
-      className="fixed inset-0 pointer-events-none z-[1] overflow-hidden" 
+      className="fixed inset-0 pointer-events-none z-[20] overflow-hidden" 
       aria-hidden="true" 
     />
   );

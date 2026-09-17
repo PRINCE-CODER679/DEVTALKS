@@ -84,7 +84,7 @@ export default function App() {
   }, [selectedSpeakerId]);
 
   return (
-    <div className="relative min-h-screen bg-[#080808] text-white antialiased overflow-x-hidden selection:bg-[#FF5500] selection:text-white font-sans">
+    <div className="relative min-h-screen bg-[#080808] text-[#f4f0e8] antialiased overflow-x-hidden selection:bg-[#ff5a1f] selection:text-[#080808] font-sans">
       
       {/* ================= 0. CINEMATIC VIDEO INTRO ON FIRST LINK CLICK ================= */}
       {showIntroVideo && (

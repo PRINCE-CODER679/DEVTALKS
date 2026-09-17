@@ -23,12 +23,12 @@ export default function RegisterModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="relative w-full max-w-lg bg-[#111111] border border-[#333333] rounded-2xl shadow-[0_0_50px_rgba(255,85,0,0.25)] p-6 sm:p-8 text-white overflow-hidden"
+        className="relative w-full max-w-lg bg-[#111111] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] p-6 sm:p-8 text-[#f4f0e8] overflow-hidden"
       >
         {/* Close Button */}
         <button 
@@ -36,7 +36,7 @@ export default function RegisterModal({ isOpen, onClose }) {
             soundFx.playEvidenceClick();
             onClose();
           }}
-          className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-white rounded-lg hover:bg-[#222222] transition-colors cursor-pointer"
+          className="absolute top-4 right-4 p-2 text-[#817b73] hover:text-[#f4f0e8] rounded-lg hover:bg-[#080808] transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -44,74 +44,74 @@ export default function RegisterModal({ isOpen, onClose }) {
         {!isRegistered ? (
           <div className="space-y-6">
             <div className="space-y-1">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#1A1A1A] border border-[#FF5500]/40 text-[#FFAA00] font-mono text-[10px] tracking-widest uppercase">
-                <Ticket className="w-3 h-3 text-[#FF5500]" />
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#080808] border border-[#ff5a1f]/40 text-[#ff5a1f] font-mono text-[10px] tracking-widest uppercase font-bold">
+                <Ticket className="w-3 h-3 text-[#ff5a1f]" />
                 <span>OFFICIAL ADMISSION</span>
               </div>
-              <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight text-white">
+              <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#f4f0e8]">
                 CLAIM YOUR DEVTALKS PASS
               </h3>
-              <p className="text-xs text-neutral-300">
+              <p className="text-xs text-[#817b73]">
                 100% Free pass to 3 keynote mystery talks, live Q&A, and networking.
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1">
-                <label className="font-mono text-[11px] text-neutral-300 uppercase">Full Name</label>
+                <label className="font-mono text-[11px] text-[#f4f0e8] uppercase font-bold">Full Name</label>
                 <input 
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Alex Rivera"
-                  className="w-full px-4 py-2.5 bg-black border border-[#333333] focus:border-[#FF5500] rounded-xl text-xs font-mono text-white placeholder-neutral-500 focus:outline-none"
+                  className="w-full px-4 py-2.5 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-xs font-mono text-[#f4f0e8] placeholder-[#817b73] focus:outline-none shadow-xs"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="font-mono text-[11px] text-neutral-300 uppercase">Work / College Email</label>
+                <label className="font-mono text-[11px] text-[#f4f0e8] uppercase font-bold">Work / College Email</label>
                 <input 
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="alex@example.com"
-                  className="w-full px-4 py-2.5 bg-black border border-[#333333] focus:border-[#FF5500] rounded-xl text-xs font-mono text-white placeholder-neutral-500 focus:outline-none"
+                  className="w-full px-4 py-2.5 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-xs font-mono text-[#f4f0e8] placeholder-[#817b73] focus:outline-none shadow-xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="font-mono text-[11px] text-neutral-300 uppercase">Your Role</label>
+                  <label className="font-mono text-[11px] text-[#f4f0e8] uppercase font-bold">Your Role</label>
                   <select 
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-black border border-[#333333] rounded-xl text-xs font-mono text-white focus:outline-none"
+                    className="w-full px-3 py-2.5 bg-[#080808] border border-white/10 rounded-xl text-xs font-mono text-[#f4f0e8] focus:outline-none shadow-xs"
                   >
-                    <option value="Developer / Engineer">Developer / Engineer</option>
-                    <option value="Student / Researcher">Student / Researcher</option>
-                    <option value="Founder / Operator">Founder / Operator</option>
-                    <option value="Designer / Product">Designer / Product</option>
+                    <option value="Developer / Engineer" className="bg-[#111111]">Developer / Engineer</option>
+                    <option value="Student / Researcher" className="bg-[#111111]">Student / Researcher</option>
+                    <option value="Founder / Operator" className="bg-[#111111]">Founder / Operator</option>
+                    <option value="Designer / Product" className="bg-[#111111]">Designer / Product</option>
                   </select>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-mono text-[11px] text-neutral-300 uppercase">Attendance Mode</label>
+                  <label className="font-mono text-[11px] text-[#f4f0e8] uppercase font-bold">Attendance Mode</label>
                   <select 
                     value={formData.attendance}
                     onChange={(e) => setFormData({ ...formData, attendance: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-black border border-[#333333] rounded-xl text-xs font-mono text-white focus:outline-none"
+                    className="w-full px-3 py-2.5 bg-[#080808] border border-white/10 rounded-xl text-xs font-mono text-[#f4f0e8] focus:outline-none shadow-xs"
                   >
-                    <option value="In-Person Auditorium">In-Person Auditorium</option>
-                    <option value="Live Worldwide Stream">Live Worldwide Stream</option>
+                    <option value="In-Person Auditorium" className="bg-[#111111]">In-Person Auditorium</option>
+                    <option value="Live Worldwide Stream" className="bg-[#111111]">Live Worldwide Stream</option>
                   </select>
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-gradient-to-r from-[#FF5500] via-[#FF6A00] to-[#FF5500] hover:from-[#FF6A00] hover:to-[#FFAA00] text-white font-display font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-[0_0_20px_rgba(255,85,0,0.45)] transition-all cursor-pointer"
+                className="w-full py-3.5 bg-[#ff5a1f] hover:bg-[#ff7a45] text-[#080808] font-display font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-[0_4px_16px_rgba(255,90,31,0.25)] transition-all cursor-pointer"
               >
                 GENERATE INSTANT PASS →
               </button>
@@ -119,48 +119,48 @@ export default function RegisterModal({ isOpen, onClose }) {
           </div>
         ) : (
           <div className="space-y-6 text-center">
-            <div className="w-14 h-14 mx-auto rounded-full bg-[#181818] border border-[#FF5500] flex items-center justify-center text-[#FF5500] shadow-[0_0_20px_rgba(255,85,0,0.5)]">
+            <div className="w-14 h-14 mx-auto rounded-full bg-[#080808] border border-[#ff5a1f] flex items-center justify-center text-[#ff5a1f] shadow-[0_4px_16px_rgba(255,90,31,0.2)]">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
             <div className="space-y-1">
-              <h3 className="font-display font-black text-2xl uppercase text-white">
+              <h3 className="font-display font-black text-2xl uppercase text-[#f4f0e8]">
                 PASS CONFIRMED!
               </h3>
-              <p className="text-xs text-neutral-300">
+              <p className="text-xs text-[#817b73]">
                 You're registered for DEVTALKS '26. See you at the keynote stage!
               </p>
             </div>
 
             {/* Generated Ticket Badge */}
-            <div className="p-4 bg-black border border-[#FF5500] rounded-xl space-y-3 text-left">
-              <div className="flex items-center justify-between border-b border-[#262626] pb-2">
-                <span className="font-display font-bold text-sm text-white">DEVTALKS '26</span>
-                <span className="font-mono text-[10px] text-[#FFAA00] font-bold">ALL-ACCESS PASS</span>
+            <div className="p-4 bg-[#080808] border border-[#ff5a1f]/40 rounded-xl space-y-3 text-left shadow-xs">
+              <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                <span className="font-display font-bold text-sm text-[#f4f0e8]">DEVTALKS '26</span>
+                <span className="font-mono text-[10px] text-[#ff5a1f] font-bold">ALL-ACCESS PASS</span>
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                 <div>
-                  <span className="text-neutral-500 block text-[10px]">NAME</span>
-                  <span className="text-white font-semibold">{formData.name}</span>
+                  <span className="text-[#817b73] block text-[10px]">NAME</span>
+                  <span className="text-[#f4f0e8] font-semibold">{formData.name}</span>
                 </div>
                 <div>
-                  <span className="text-neutral-500 block text-[10px]">TICKET ID</span>
-                  <span className="text-white font-semibold">DT26-{(Math.random() * 10000 | 0)}</span>
+                  <span className="text-[#817b73] block text-[10px]">TICKET ID</span>
+                  <span className="text-[#f4f0e8] font-semibold">DT26-{(Math.random() * 10000 | 0)}</span>
                 </div>
                 <div>
-                  <span className="text-neutral-500 block text-[10px]">DATE</span>
-                  <span className="text-white">JAN 10 & 11, 2026</span>
+                  <span className="text-[#817b73] block text-[10px]">DATE</span>
+                  <span className="text-[#f4f0e8]">JAN 10 & 11, 2026</span>
                 </div>
                 <div>
-                  <span className="text-neutral-500 block text-[10px]">ACCESS</span>
-                  <span className="text-white">{formData.attendance}</span>
+                  <span className="text-[#817b73] block text-[10px]">ACCESS</span>
+                  <span className="text-[#ff8a3d] font-semibold">{formData.attendance}</span>
                 </div>
               </div>
             </div>
 
             <button
               onClick={() => onClose()}
-              className="w-full py-3 bg-white text-black font-mono text-xs font-bold tracking-wider uppercase rounded-xl hover:bg-[#FF5500] hover:text-white transition-colors cursor-pointer"
+              className="w-full py-3 bg-[#ff5a1f] hover:bg-[#ff7a45] text-[#080808] font-mono text-xs font-bold tracking-wider uppercase rounded-xl transition-colors cursor-pointer shadow-md"
             >
               DONE & RETURN TO STAGE
             </button>

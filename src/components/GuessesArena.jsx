@@ -94,26 +94,23 @@ export default function GuessesArena({ onJumpToSpeaker }) {
   return (
     <section 
       id="guesses" 
-      className="relative w-full min-h-screen bg-[#080808] text-white py-24 px-4 sm:px-8 lg:px-12 border-t border-[#222222] overflow-hidden select-none"
+      className="relative w-full min-h-screen bg-[#080808] text-[#f4f0e8] py-24 px-4 sm:px-8 lg:px-12 border-t border-white/10 overflow-hidden select-none"
     >
-      {/* Ambient background glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[radial-gradient(ellipse_at_center,_rgba(255,85,0,0.12)_0%,_transparent_70%)] blur-[120px] pointer-events-none -z-10" />
-
       <div className="max-w-5xl mx-auto w-full relative z-10 space-y-10">
         
         {/* ================= HEADER ================= */}
         <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#181818] border border-[#FF5500]/50 text-[#FFAA00] font-mono text-xs font-bold tracking-widest uppercase shadow-md backdrop-blur-md">
-            <Trophy className="w-4 h-4 text-[#FF5500]" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#111111] border border-[#ff5a1f]/30 text-[#ff5a1f] font-mono text-xs font-bold tracking-widest uppercase shadow-xs">
+            <Trophy className="w-4 h-4 text-[#ff5a1f]" />
             <span>COMMUNITY PREDICTION CHALLENGE</span>
           </div>
 
-          <h2 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl uppercase tracking-tight text-white leading-tight">
-            GUESS THE <span className="bg-gradient-to-r from-white via-[#FFAA00] to-[#FF5500] bg-clip-text text-transparent">SPEAKERS</span>
+          <h2 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl uppercase tracking-tight text-[#f4f0e8] leading-tight">
+            GUESS THE <span className="text-[#ff5a1f]">SPEAKERS</span>
           </h2>
 
-          <p className="font-sans text-sm sm:text-base text-neutral-200 max-w-2xl mx-auto leading-relaxed">
-            Select each keynote speaker below, submit your prediction with your <span className="text-[#FFAA00] font-semibold">Name, Instagram ID & Department</span>, and claim your chance to win exclusive VIP access!
+          <p className="font-sans text-sm sm:text-base text-[#817b73] max-w-2xl mx-auto leading-relaxed font-medium">
+            Select each keynote speaker below, submit your prediction with your <span className="text-[#ff8a3d] font-semibold">Name, Instagram ID & Department</span>, and claim your chance to win exclusive VIP access!
           </p>
         </div>
 
@@ -131,36 +128,36 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 }}
                 className={`p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 border flex flex-col justify-between gap-3 cursor-pointer ${
                   isSelected
-                    ? 'bg-gradient-to-b from-[#240F03] to-[#120701] border-[#FF5500] shadow-[0_0_25px_rgba(255,85,0,0.35)] scale-[1.02]'
-                    : 'bg-[#111111] border-[#262626] hover:border-[#444444] hover:bg-[#161616]'
+                    ? 'bg-[#111111] border-2 border-[#ff5a1f] shadow-[0_12px_30px_rgba(255,90,31,0.18)] scale-[1.02]'
+                    : 'bg-[#111111] border-white/10 hover:border-[#ff5a1f]/40 shadow-xs'
                 }`}
               >
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-[#FF5500] animate-ping' : 'bg-neutral-600'}`} />
-                    <span className="font-mono text-xs font-black tracking-widest text-[#FFAA00]">
+                    <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-[#ff5a1f] animate-ping' : 'bg-white/10'}`} />
+                    <span className="font-mono text-xs font-black tracking-widest text-[#ff5a1f]">
                       SPEAKER 0{spk.num}
                     </span>
                   </div>
-                  <span className="font-mono text-[10px] text-neutral-400 uppercase tracking-wider">
+                  <span className="font-mono text-[10px] text-[#817b73] uppercase tracking-wider font-semibold">
                     {idx === 0 ? 'TECH' : idx === 1 ? 'VENTURE' : 'AI & SCALE'}
                   </span>
                 </div>
 
                 <div>
-                  <h4 className="font-display font-black text-lg text-white uppercase leading-tight tracking-wide">
+                  <h4 className="font-display font-black text-lg text-[#f4f0e8] uppercase leading-tight tracking-wide">
                     {spk.title}
                   </h4>
-                  <p className="font-sans text-xs text-neutral-300 line-clamp-2 mt-1 italic font-normal">
+                  <p className="font-sans text-xs text-[#817b73] line-clamp-2 mt-1 italic font-normal">
                     "{spk.shortClue}"
                   </p>
                 </div>
 
                 <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono">
-                  <span className={isSelected ? 'text-[#FF5500] font-bold tracking-wider' : 'text-neutral-500'}>
+                  <span className={isSelected ? 'text-[#ff5a1f] font-bold tracking-wider' : 'text-[#817b73]'}>
                     {isSelected ? '● ACTIVE TARGET' : 'SELECT SPEAKER'}
                   </span>
-                  <span className="text-[11px] text-neutral-400">#0{spk.num}</span>
+                  <span className="text-[11px] text-[#817b73]">#0{spk.num}</span>
                 </div>
               </button>
             );
@@ -168,19 +165,19 @@ export default function GuessesArena({ onJumpToSpeaker }) {
         </div>
 
         {/* ================= PREDICTION SUBMISSION FORM CARD ================= */}
-        <div className="bg-[#111111] border border-[#262626] rounded-3xl p-6 sm:p-10 space-y-6 shadow-2xl max-w-3xl mx-auto w-full">
+        <div className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-10 space-y-6 shadow-md max-w-3xl mx-auto w-full">
           
-          <div className="flex items-center justify-between border-b border-[#222222] pb-4">
+          <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#FF5500] animate-ping" />
-                <span className="font-mono text-xs font-black text-[#FFAA00] uppercase tracking-widest">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ff5a1f] animate-ping" />
+                <span className="font-mono text-xs font-black text-[#ff5a1f] uppercase tracking-widest">
                   PREDICTING: SPEAKER #{activeSpeaker.num}
                 </span>
-                <span className="text-neutral-600">|</span>
-                <span className="font-mono text-xs text-neutral-400 uppercase tracking-wider">{activeSpeaker.roleTag}</span>
+                <span className="text-white/10">|</span>
+                <span className="font-mono text-xs text-[#817b73] uppercase tracking-wider font-semibold">{activeSpeaker.roleTag}</span>
               </div>
-              <h3 className="font-display font-black text-xl sm:text-2xl text-white uppercase tracking-wide">
+              <h3 className="font-display font-black text-xl sm:text-2xl text-[#f4f0e8] uppercase tracking-wide">
                 {activeSpeaker.title}
               </h3>
             </div>
@@ -191,7 +188,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 soundFx.playEvidenceClick();
                 onJumpToSpeaker(activeSpeaker.id);
               }}
-              className="font-mono text-xs text-[#FF5500] hover:text-[#FFAA00] font-bold flex items-center gap-1 hover:underline cursor-pointer tracking-wider"
+              className="font-mono text-xs text-[#ff5a1f] hover:text-[#ff8a3d] font-bold flex items-center gap-1 hover:underline cursor-pointer tracking-wider"
             >
               <span>Clues Dossier</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -199,9 +196,9 @@ export default function GuessesArena({ onJumpToSpeaker }) {
           </div>
 
           {/* Quick Clue Banner */}
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-[#181109] to-[#120B04] border border-[#FF5500]/30 flex items-center gap-3.5 shadow-inner">
-            <Sparkles className="w-4 h-4 text-[#FF5500] shrink-0" />
-            <p className="font-sans text-xs sm:text-sm text-neutral-200 italic leading-snug font-medium">
+          <div className="p-4 rounded-2xl bg-[#080808] border border-[#ff5a1f]/30 flex items-center gap-3.5 shadow-xs">
+            <Sparkles className="w-4 h-4 text-[#ff5a1f] shrink-0" />
+            <p className="font-sans text-xs sm:text-sm text-[#f4f0e8] italic leading-snug font-medium">
               "{activeSpeaker.shortClue}"
             </p>
           </div>
@@ -214,8 +211,8 @@ export default function GuessesArena({ onJumpToSpeaker }) {
               
               {/* Full Name */}
               <div className="space-y-1.5">
-                <label className="font-mono text-xs font-bold text-neutral-300 flex items-center gap-1.5 uppercase tracking-wider">
-                  <User className="w-3.5 h-3.5 text-[#FF5500]" />
+                <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
+                  <User className="w-3.5 h-3.5 text-[#ff5a1f]" />
                   <span>Your Full Name *</span>
                 </label>
                 <input 
@@ -224,33 +221,33 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Rahul Sharma"
-                  className="w-full px-4 py-3 bg-black border border-[#333333] focus:border-[#FF5500] rounded-xl text-sm font-sans font-medium text-white placeholder-neutral-600 focus:outline-none transition-all"
+                  className="w-full px-4 py-3 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
                 />
               </div>
 
               {/* Instagram Handle */}
               <div className="space-y-1.5">
-                <label className="font-mono text-xs font-bold text-neutral-300 flex items-center gap-1.5 uppercase tracking-wider">
-                  <Instagram className="w-3.5 h-3.5 text-[#FFAA00]" />
+                <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
+                  <Instagram className="w-3.5 h-3.5 text-[#ff5a1f]" />
                   <span>Instagram ID *</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500 font-mono text-sm">@</span>
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#817b73] font-mono text-sm">@</span>
                   <input 
                     type="text"
                     required
                     value={instaId.replace(/^@/, '')}
                     onChange={(e) => setInstaId(e.target.value)}
                     placeholder="your_username"
-                    className="w-full pl-8 pr-4 py-3 bg-black border border-[#333333] focus:border-[#FF5500] rounded-xl text-sm font-sans font-medium text-white placeholder-neutral-600 focus:outline-none transition-all"
+                    className="w-full pl-8 pr-4 py-3 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
                   />
                 </div>
               </div>
 
               {/* Department */}
               <div className="space-y-1.5">
-                <label className="font-mono text-xs font-bold text-neutral-300 flex items-center gap-1.5 uppercase tracking-wider">
-                  <GraduationCap className="w-3.5 h-3.5 text-[#FF5500]" />
+                <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
+                  <GraduationCap className="w-3.5 h-3.5 text-[#ff5a1f]" />
                   <span>Your Department *</span>
                 </label>
                 <input 
@@ -259,7 +256,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                   placeholder="e.g. CSE / IT / AI & DS"
-                  className="w-full px-4 py-3 bg-black border border-[#333333] focus:border-[#FF5500] rounded-xl text-sm font-sans font-medium text-white placeholder-neutral-600 focus:outline-none transition-all"
+                  className="w-full px-4 py-3 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
                 />
               </div>
 
@@ -267,8 +264,8 @@ export default function GuessesArena({ onJumpToSpeaker }) {
 
             {/* Row 2: Speaker Guess Prediction */}
             <div className="space-y-1.5">
-              <label className="font-mono text-xs font-bold text-neutral-300 flex items-center gap-1.5 uppercase tracking-wider">
-                <Flame className="w-3.5 h-3.5 text-[#FF5500]" />
+              <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
+                <Flame className="w-3.5 h-3.5 text-[#ff5a1f]" />
                 <span>Who is Speaker #{activeSpeaker.num}? (Your Guess) *</span>
               </label>
               <input 
@@ -277,13 +274,13 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 value={guessInput}
                 onChange={(e) => setGuessInput(e.target.value)}
                 placeholder="e.g. Kunal Shah, Anupam Mittal, Andrej Karpathy..."
-                className="w-full px-4 py-3.5 bg-black border border-[#333333] focus:border-[#FF5500] rounded-xl text-sm font-sans font-medium text-white placeholder-neutral-600 focus:outline-none transition-all shadow-inner"
+                className="w-full px-4 py-3.5 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
               />
             </div>
 
             {/* Row 3: Reason / Clue Theory (Optional) */}
             <div className="space-y-1.5">
-              <label className="font-mono text-xs font-bold text-neutral-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <label className="font-mono text-xs font-bold text-[#817b73] flex items-center gap-1.5 uppercase tracking-wider">
                 <span>Why do you think so? (Optional Clue Theory)</span>
               </label>
               <input 
@@ -291,7 +288,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 value={reasonInput}
                 onChange={(e) => setReasonInput(e.target.value)}
                 placeholder="e.g. The 100M+ users clue and CRED venture match perfectly!"
-                className="w-full px-4 py-2.5 bg-black/60 border border-[#2A2A2A] focus:border-[#FF5500] rounded-xl text-xs font-sans text-neutral-200 placeholder-neutral-600 focus:outline-none transition-all"
+                className="w-full px-4 py-2.5 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-xs font-sans text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all"
               />
             </div>
 
@@ -299,7 +296,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 px-6 bg-gradient-to-r from-[#FF5500] via-[#FF6A00] to-[#FF5500] hover:from-[#FF6A00] hover:to-[#FFAA00] text-white font-display font-black text-xs sm:text-sm tracking-widest uppercase rounded-xl transition-all shadow-[0_0_20px_rgba(255,85,0,0.5)] hover:scale-[1.01] active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-4 px-6 bg-[#ff5a1f] hover:bg-[#ff7a45] text-[#080808] font-display font-black text-xs sm:text-sm tracking-widest uppercase rounded-xl transition-all shadow-[0_4px_16px_rgba(255,90,31,0.25)] hover:scale-[1.01] active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               <span>{isSubmitting ? 'RECORDING PREDICTION...' : 'SUBMIT PREDICTION & ENTER GIVEAWAY 🎯'}</span>
               <Send className="w-4 h-4" />
@@ -314,64 +311,64 @@ export default function GuessesArena({ onJumpToSpeaker }) {
       {/* ================= SUCCESS / "YOUR ANSWER MIGHT BE CORRECT!" POP-UP MODAL ================= */}
       <AnimatePresence>
         {modalData && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
             
             <motion.div
               initial={{ opacity: 0, scale: 0.88, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 10 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="relative w-full max-w-lg bg-gradient-to-b from-[#1C1208] via-[#120B04] to-[#0A0502] border-2 border-[#FF5500] rounded-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(255,85,0,0.4)] text-white space-y-6 select-none"
+              className="relative w-full max-w-lg bg-[#111111] border-2 border-[#ff5a1f] rounded-3xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(255,90,31,0.2)] text-[#f4f0e8] space-y-6 select-none"
             >
               {/* Close Button */}
               <button
                 type="button"
                 onClick={() => setModalData(null)}
-                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                className="absolute top-4 right-4 p-2 rounded-full bg-[#080808] hover:bg-[#181818] text-[#f4f0e8] transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
 
               {/* Glowing Icon & Header */}
               <div className="text-center space-y-2 pt-2">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF5500] to-[#FFAA00] flex items-center justify-center mx-auto shadow-[0_0_25px_rgba(255,85,0,0.7)]">
-                  <Sparkles className="w-9 h-9 text-white animate-pulse" />
+                <div className="w-16 h-16 rounded-full bg-[#ff5a1f] flex items-center justify-center mx-auto shadow-[0_4px_20px_rgba(255,90,31,0.3)]">
+                  <Sparkles className="w-9 h-9 text-[#080808] animate-pulse" />
                 </div>
 
-                <div className="font-mono text-xs font-black uppercase tracking-[0.25em] text-[#FFAA00]">
+                <div className="font-mono text-xs font-black uppercase tracking-[0.25em] text-[#ff5a1f]">
                   PREDICTION RECORDED!
                 </div>
 
-                <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight text-white">
-                  YOUR ANSWER MIGHT BE <span className="bg-gradient-to-r from-[#FFAA00] to-[#FF5500] bg-clip-text text-transparent">CORRECT!</span> 🔥
+                <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#f4f0e8]">
+                  YOUR ANSWER MIGHT BE <span className="text-[#ff5a1f]">CORRECT!</span> 🔥
                 </h3>
               </div>
 
               {/* Submission Summary Card */}
-              <div className="p-4 rounded-2xl bg-black/60 border border-[#2E2E2E] space-y-2.5 font-sans text-xs">
+              <div className="p-4 rounded-2xl bg-[#080808] border border-white/10 space-y-2.5 font-sans text-xs">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                  <span className="text-neutral-400 font-mono">TARGET SPEAKER:</span>
-                  <span className="font-bold text-[#FFAA00] font-mono">#{modalData.speakerNum} ({modalData.speakerTitle})</span>
+                  <span className="text-[#817b73] font-mono">TARGET SPEAKER:</span>
+                  <span className="font-bold text-[#ff5a1f] font-mono">#{modalData.speakerNum} ({modalData.speakerTitle})</span>
                 </div>
                 
                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                  <span className="text-neutral-400 font-mono">YOUR GUESS:</span>
-                  <span className="font-bold text-white text-sm">"{modalData.guess}"</span>
+                  <span className="text-[#817b73] font-mono">YOUR GUESS:</span>
+                  <span className="font-bold text-[#f4f0e8] text-sm">"{modalData.guess}"</span>
                 </div>
 
-                <div className="flex items-center justify-between text-neutral-300">
+                <div className="flex items-center justify-between text-[#f4f0e8]">
                   <span>Candidate: <strong>{modalData.name}</strong></span>
-                  <span className="font-mono text-[#FFAA00]">{modalData.insta}</span>
+                  <span className="font-mono text-[#ff8a3d] font-bold">{modalData.insta}</span>
                 </div>
 
-                <div className="text-neutral-400 text-[11px]">
-                  Department: <span className="text-neutral-200">{modalData.department}</span>
+                <div className="text-[#817b73] text-[11px]">
+                  Department: <span className="text-[#f4f0e8] font-semibold">{modalData.department}</span>
                 </div>
               </div>
 
               {/* Encouragement note */}
-              <p className="font-sans text-xs sm:text-sm text-neutral-300 text-center leading-relaxed">
-                Stay tuned! If your guess is correct, you'll be featured on <strong className="text-[#FFAA00]">@devkraft</strong> and contacted via Instagram for the VIP Keynote Pass!
+              <p className="font-sans text-xs sm:text-sm text-[#817b73] text-center leading-relaxed font-medium">
+                Stay tuned! If your guess is correct, you'll be featured on <strong className="text-[#ff5a1f]">@devkraft</strong> and contacted via Instagram for the VIP Keynote Pass!
               </p>
 
               {/* Modal Buttons */}
@@ -379,14 +376,14 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 <button
                   type="button"
                   onClick={handleNextSpeakerFromModal}
-                  className="w-full sm:flex-1 py-3 px-4 bg-gradient-to-r from-[#FF5500] to-[#FFAA00] hover:from-[#FF6A00] hover:to-[#FFB700] text-white font-display font-black text-xs tracking-wider uppercase rounded-xl transition-all shadow-[0_0_15px_rgba(255,85,0,0.5)] cursor-pointer hover:scale-105"
+                  className="w-full sm:flex-1 py-3 px-4 bg-[#ff5a1f] hover:bg-[#ff7a45] text-[#080808] font-display font-black text-xs tracking-wider uppercase rounded-xl transition-all shadow-[0_4px_16px_rgba(255,90,31,0.25)] cursor-pointer hover:scale-105"
                 >
                   GUESS NEXT SPEAKER →
                 </button>
                 <button
                   type="button"
                   onClick={() => setModalData(null)}
-                  className="w-full sm:w-auto py-3 px-5 bg-[#1C1C1C] hover:bg-[#282828] border border-white/20 text-neutral-300 hover:text-white font-mono text-xs font-bold uppercase rounded-xl transition-all cursor-pointer"
+                  className="w-full sm:w-auto py-3 px-5 bg-[#080808] hover:bg-[#181818] border border-white/10 text-[#f4f0e8] font-mono text-xs font-bold uppercase rounded-xl transition-all cursor-pointer"
                 >
                   GOT IT
                 </button>
