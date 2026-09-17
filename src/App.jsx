@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ThreeAtmosphere from './components/ThreeAtmosphere';
 import Navbar from './components/Navbar';
 import HeroMystery from './components/HeroMystery';
-import SpeakerCardSection from './components/SpeakerCardSection';
+import SpeakerCoverflowRing from './components/SpeakerCoverflowRing';
 import AboutSection from './components/AboutSection';
 import GuessesArena from './components/GuessesArena';
 import FooterSection from './components/FooterSection';
@@ -15,6 +15,7 @@ import { soundFx } from './utils/audio';
 export default function App() {
   const [showIntroVideo, setShowIntroVideo] = useState(true);
   const [activeSection, setActiveSection] = useState('hero');
+  const [selectedSpeakerId, setSelectedSpeakerId] = useState('speaker-1');
   const [isAudioActive, setIsAudioActive] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
@@ -33,6 +34,15 @@ export default function App() {
   // Smooth Navigation Handler
   const handleNavigate = (sectionId) => {
     setActiveSection(sectionId);
+    if (['speaker-1', 'speaker-2', 'speaker-3'].includes(sectionId)) {
+      setSelectedSpeakerId(sectionId);
+      const spkSection = document.getElementById('speakers') || document.getElementById(sectionId);
+      if (spkSection) {
+        spkSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -46,7 +56,7 @@ export default function App() {
 
   // Intersection Observer to highlight current active navbar item during scroll
   useEffect(() => {
-    const sections = ['hero', 'speaker-1', 'speaker-2', 'speaker-3', 'about', 'guesses'];
+    const sections = ['hero', 'speakers', 'about', 'guesses'];
     const observerOptions = {
       root: null,
       rootMargin: '-30% 0px -40% 0px',
@@ -56,7 +66,11 @@ export default function App() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
+          if (entry.target.id === 'speakers') {
+            setActiveSection(selectedSpeakerId || 'speaker-1');
+          } else {
+            setActiveSection(entry.target.id);
+          }
         }
       });
     }, observerOptions);
@@ -67,7 +81,7 @@ export default function App() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [selectedSpeakerId]);
 
   return (
     <div className="relative min-h-screen bg-[#080808] text-white antialiased overflow-x-hidden selection:bg-[#FF5500] selection:text-white font-sans">
@@ -103,23 +117,18 @@ export default function App() {
           onTakeGuess={() => handleNavigate('guesses')}
           onExploreSpeakers={(speakerId) => handleNavigate(speakerId || 'speaker-1')}
           onRegister={() => setIsRegisterOpen(true)}
+          onWatchTeaser={() => setShowIntroVideo(true)}
         />
 
-        {/* ================= 2. SEQUENTIAL SPEAKER SECTIONS ON SCROLL ================= */}
-        {speakersList.map((speaker, index) => {
-          const nextSpeakerId = index < speakersList.length - 1 ? speakersList[index + 1].id : null;
-          return (
-            <SpeakerCardSection
-              key={speaker.id}
-              speaker={speaker}
-              index={index}
-              totalSpeakers={speakersList.length}
-              isLast={index === speakersList.length - 1}
-              onNextSpeaker={() => nextSpeakerId && handleNavigate(nextSpeakerId)}
-              onOpenGuessesArena={() => handleNavigate('guesses')}
-            />
-          );
-        })}
+        {/* ================= 2. 3D COVERFLOW RING CAROUSEL ================= */}
+        <SpeakerCoverflowRing
+          activeSpeakerId={selectedSpeakerId}
+          onSelectSpeaker={(spkId) => {
+            setSelectedSpeakerId(spkId);
+            setActiveSection(spkId);
+          }}
+          onOpenGuessesArena={() => handleNavigate('guesses')}
+        />
 
         {/* ================= 3. ABOUT DEVTALKS '26 SECTION ================= */}
         <AboutSection 

@@ -12,27 +12,34 @@ export default function ThreeAtmosphere() {
     const container = mountRef.current;
     if (!container) return;
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      60,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    camera.position.z = 80;
+    let scene, camera, renderer, particles, geometry, particleMaterial, texture;
 
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance'
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
+    try {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(
+        60,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.z = 80;
+
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+    } catch (err) {
+      console.warn('WebGL is not available or blocked on this device:', err);
+      return;
+    }
 
     // Subtle Particle Cloud (Devkraft Orange + Amber + Dim Stardust)
     const particleCount = 800;
-    const geometry = new THREE.BufferGeometry();
+    geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
 
@@ -79,9 +86,9 @@ export default function ThreeAtmosphere() {
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 32, 32);
 
-    const texture = new THREE.CanvasTexture(canvas);
+    texture = new THREE.CanvasTexture(canvas);
 
-    const particleMaterial = new THREE.PointsMaterial({
+    particleMaterial = new THREE.PointsMaterial({
       size: 1.8,
       vertexColors: true,
       map: texture,
@@ -91,7 +98,7 @@ export default function ThreeAtmosphere() {
       depthWrite: false
     });
 
-    const particles = new THREE.Points(geometry, particleMaterial);
+    particles = new THREE.Points(geometry, particleMaterial);
     scene.add(particles);
 
     // Mouse parallax
@@ -151,14 +158,14 @@ export default function ThreeAtmosphere() {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
 
-      if (container && renderer.domElement) {
+      if (container && renderer && renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
 
-      geometry.dispose();
-      particleMaterial.dispose();
-      texture.dispose();
-      renderer.dispose();
+      if (geometry) geometry.dispose();
+      if (particleMaterial) particleMaterial.dispose();
+      if (texture) texture.dispose();
+      if (renderer) renderer.dispose();
     };
   }, []);
 

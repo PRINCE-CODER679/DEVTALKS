@@ -6,11 +6,11 @@ import {
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
 
-export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister }) {
+export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister, onWatchTeaser }) {
   return (
     <section 
       id="hero"
-      className="relative w-full h-[100dvh] min-h-[600px] max-h-[1080px] bg-[#080808] text-white flex flex-col justify-between pt-24 sm:pt-28 md:pt-32 pb-5 sm:pb-8 px-3 sm:px-6 overflow-hidden select-none"
+      className="relative w-full min-h-[100dvh] h-auto md:h-[100dvh] max-h-[1200px] bg-[#080808] text-white flex flex-col justify-between pt-24 sm:pt-28 md:pt-32 pb-6 sm:pb-8 px-3 sm:px-6 overflow-hidden select-none"
     >
       {/* ================= FULL-SCREEN BACKGROUND ARTWORK: 3 KEYNOTE SPEAKERS ================= */}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
@@ -115,6 +115,18 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
             <span>TAKE A GUESS 🎯</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
+
+          {onWatchTeaser && (
+            <button
+              onClick={() => {
+                soundFx.playEvidenceClick();
+                onWatchTeaser();
+              }}
+              className="flex-1 xs:flex-none px-4 sm:px-5 py-2.5 sm:py-3 bg-[#1C1208] hover:bg-[#2A170A] border border-[#FF5500]/60 hover:border-[#FF5500] text-[#FFAA00] hover:text-white font-mono text-[11px] sm:text-xs tracking-wider rounded-full transition-all cursor-pointer text-center whitespace-nowrap shadow-[0_0_15px_rgba(255,85,0,0.25)]"
+            >
+              ▶ 3D TEASER VIDEO
+            </button>
+          )}
 
           <button
             onClick={() => {

@@ -147,10 +147,10 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               </li>
               <li>
                 <button 
-                  onClick={() => onNavigate('about')} 
+                  onClick={() => onNavigate('guesses')} 
                   className="text-neutral-200 hover:text-[#FFAA00] font-medium transition-colors hover:translate-x-1 inline-flex items-center transform transition-transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
                 >
-                  Frequently Asked Questions
+                  Guess Challenge (Win VIP Pass)
                 </button>
               </li>
               <li>
