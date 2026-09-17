@@ -98,30 +98,32 @@ export default function GuessesArena({ onJumpToSpeaker }) {
     >
       {/* ================= DISTINCT SPEAKER-SPECIFIC ATMOSPHERIC BACKGROUND IMAGES (HERO-SILHOUETTE STYLE) ================= */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {speakersList.map((spk) => {
-          const isCurrent = selectedSpeakerId === spk.id;
-          const bgImageSrc = spk.id === 'speaker-1' 
-            ? '/speaker1-guess-silhouette.jpg' 
-            : spk.id === 'speaker-2' 
-            ? '/hero-silhouette.jpg' 
-            : '/speaker3-guess-silhouette.jpg';
+        <div className="sticky top-0 left-0 w-full h-[100dvh] overflow-hidden">
+          {speakersList.map((spk) => {
+            const isCurrent = selectedSpeakerId === spk.id;
+            const bgImageSrc = spk.id === 'speaker-1' 
+              ? '/speaker1-guess-silhouette.jpg' 
+              : spk.id === 'speaker-2' 
+              ? '/hero-silhouette.jpg' 
+              : '/speaker3-guess-silhouette.jpg';
 
-          return (
-            <img 
-              key={spk.id}
-              src={bgImageSrc} 
-              alt={`DevTalks Guess Silhouette - ${spk.title}`} 
-              className={`absolute inset-0 w-full h-full object-cover object-[50%_10%] sm:object-[50%_20%] md:object-center filter brightness-115 contrast-125 saturate-120 transition-all duration-700 ease-in-out ${
-                isCurrent ? 'opacity-90 scale-100' : 'opacity-0 scale-105'
-              }`}
-            />
-          );
-        })}
-        
-        {/* Subtle Dark Overlays & Gradient Blends for Clean Contrast & 100% Text Readability */}
-        <div className="absolute inset-0 bg-[#080808]/40 pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#080808] via-[#080808]/75 to-transparent pointer-events-none" />
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#080808] via-[#080808]/75 to-transparent pointer-events-none" />
+            return (
+              <img 
+                key={spk.id}
+                src={bgImageSrc} 
+                alt={`DevTalks Guess Silhouette - ${spk.title}`} 
+                className={`absolute inset-0 w-full h-full object-cover object-center filter brightness-125 contrast-130 saturate-125 transition-all duration-700 ease-in-out ${
+                  isCurrent ? 'opacity-95 scale-100' : 'opacity-0 scale-105'
+                }`}
+              />
+            );
+          })}
+          
+          {/* Subtle Dark Overlays & Gradient Blends for Clean Contrast & 100% Text Readability */}
+          <div className="absolute inset-0 bg-[#080808]/30 pointer-events-none" />
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#080808] via-[#080808]/75 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#080808] via-[#080808]/75 to-transparent pointer-events-none" />
+        </div>
       </div>
 
       {/* ================= ATMOSPHERIC EMBER PARTICLES & LIGHT GLOWS ================= */}
