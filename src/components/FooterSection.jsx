@@ -5,9 +5,8 @@ import {
   Clock, 
   Instagram, 
   Twitter, 
-  Linkedin, 
-  Youtube, 
-  Github 
+  Mail, 
+  Phone 
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
 
@@ -34,14 +33,14 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
         <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#080808] to-transparent pointer-events-none" />
       </div>
 
-      {/* ================= SEAMLESS 4-COLUMN FOOTER NAVIGATION ================= */}
+      {/* ================= SEAMLESS 4-COLUMN FOOTER NAVIGATION & CONTACT ================= */}
       <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-8 lg:px-12 pt-16 pb-10">
         
         {/* Main 4-Column Grid: Text directly on background image */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-12">
           
           {/* Col 1: Brand / DEVTALKS '26 */}
-          <div className="lg:col-span-4 space-y-4">
+          <div className="lg:col-span-3 space-y-4">
             <div className="flex items-center gap-3">
               <img 
                 src="/devkraft-logo.png" 
@@ -74,7 +73,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
           </div>
 
           {/* Col 2: NAVIGATION */}
-          <div className="lg:col-span-3 space-y-3">
+          <div className="lg:col-span-2 space-y-3">
             <h4 className="font-mono text-xs font-bold tracking-widest uppercase text-[#ff5a1f] drop-shadow-sm">
               NAVIGATION
             </h4>
@@ -173,67 +172,77 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
             </ul>
           </div>
 
-          {/* Col 4: CONNECT */}
-          <div className="lg:col-span-2 space-y-3">
+          {/* Col 4: CONNECT & CONTACT */}
+          <div className="lg:col-span-4 space-y-4">
             <h4 className="font-mono text-xs font-bold tracking-widest uppercase text-[#ff5a1f] drop-shadow-sm">
-              CONNECT
+              CONNECT & CONTACT
             </h4>
-            <div className="flex flex-wrap gap-2.5">
+            
+            {/* Social Link Buttons */}
+            <div className="flex flex-wrap items-center gap-2.5">
               <a 
-                href="https://instagram.com" 
+                href="https://www.instagram.com/devkraft.dpu?stkn=aGhlYzNiaTZ1YXk3" 
                 target="_blank" 
                 rel="noreferrer"
-                className="w-9 h-9 rounded-lg border border-white/20 hover:border-[#ff5a1f] hover:text-[#ff5a1f] bg-black/40 flex items-center justify-center text-[#f4f0e8] transition-colors shadow-sm"
-                title="Instagram"
+                className="h-9 px-3 rounded-lg border border-white/20 hover:border-[#ff5a1f] hover:text-[#ff5a1f] bg-black/40 flex items-center gap-2 text-[#f4f0e8] transition-colors shadow-sm font-mono text-xs"
+                title="Instagram @devkraft.dpu"
               >
-                <Instagram className="w-4 h-4" />
+                <Instagram className="w-4 h-4 text-[#ff5a1f]" />
+                <span>@devkraft.dpu</span>
               </a>
               <a 
-                href="https://x.com" 
+                href="https://x.com/devkraftclub" 
                 target="_blank" 
                 rel="noreferrer"
-                className="w-9 h-9 rounded-lg border border-white/20 hover:border-[#ff5a1f] hover:text-[#ff5a1f] bg-black/40 flex items-center justify-center text-[#f4f0e8] transition-colors shadow-sm"
-                title="Twitter / X"
+                className="h-9 px-3 rounded-lg border border-white/20 hover:border-[#ff5a1f] hover:text-[#ff5a1f] bg-black/40 flex items-center gap-2 text-[#f4f0e8] transition-colors shadow-sm font-mono text-xs"
+                title="Twitter / X @devkraftclub"
               >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noreferrer"
-                className="w-9 h-9 rounded-lg border border-white/20 hover:border-[#ff5a1f] hover:text-[#ff5a1f] bg-black/40 flex items-center justify-center text-[#f4f0e8] transition-colors shadow-sm"
-                title="LinkedIn"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a 
-                href="https://youtube.com" 
-                target="_blank" 
-                rel="noreferrer"
-                className="w-9 h-9 rounded-lg border border-white/20 hover:border-[#ff5a1f] hover:text-[#ff5a1f] bg-black/40 flex items-center justify-center text-[#f4f0e8] transition-colors shadow-sm"
-                title="YouTube"
-              >
-                <Youtube className="w-4 h-4" />
-              </a>
-              <a 
-                href="https://github.com" 
-                target="_blank" 
-                rel="noreferrer"
-                className="w-9 h-9 rounded-lg border border-white/20 hover:border-[#ff5a1f] hover:text-[#ff5a1f] bg-black/40 flex items-center justify-center text-[#f4f0e8] transition-colors shadow-sm"
-                title="GitHub"
-              >
-                <Github className="w-4 h-4" />
+                <Twitter className="w-4 h-4 text-[#ff5a1f]" />
+                <span>@devkraftclub</span>
               </a>
             </div>
 
-            <div className="pt-2">
-              <span className="font-mono text-[9px] text-[#817b73] block uppercase font-bold">
-                COMMUNITY TAG:
+            {/* Official Email */}
+            <div className="space-y-1 pt-1">
+              <span className="font-mono text-[10px] text-[#817b73] block uppercase font-bold tracking-wider">
+                OFFICIAL EMAIL:
               </span>
-              <span className="font-mono text-xs text-[#f4f0e8] font-bold block pt-0.5 tracking-wider">
-                #DEVTALKS26
-              </span>
+              <a 
+                href="mailto:devkraftclub@gmail.com"
+                className="font-mono text-xs text-[#f4f0e8] hover:text-[#ff5a1f] flex items-center gap-2 transition-colors font-medium"
+              >
+                <Mail className="w-3.5 h-3.5 text-[#ff5a1f]" />
+                <span>devkraftclub@gmail.com</span>
+              </a>
             </div>
+
+            {/* Event Coordinators Contact Info */}
+            <div className="space-y-1.5 pt-2 border-t border-white/10">
+              <span className="font-mono text-[10px] text-[#817b73] block uppercase font-bold tracking-wider">
+                EVENT COORDINATORS:
+              </span>
+              <div className="grid grid-cols-1 gap-1.5 font-mono text-xs">
+                <div className="flex items-center justify-between text-[#c8c1b7] bg-black/30 px-2.5 py-1 rounded-md border border-white/5">
+                  <span className="font-medium text-[#f4f0e8]">Raj Thube</span>
+                  <a href="tel:7498049183" className="text-[#ff8a3d] hover:text-[#ff5a1f] font-semibold transition-colors flex items-center gap-1">
+                    <Phone className="w-3 h-3 text-[#ff5a1f]" /> 7498049183
+                  </a>
+                </div>
+                <div className="flex items-center justify-between text-[#c8c1b7] bg-black/30 px-2.5 py-1 rounded-md border border-white/5">
+                  <span className="font-medium text-[#f4f0e8]">Parth</span>
+                  <a href="tel:8411825686" className="text-[#ff8a3d] hover:text-[#ff5a1f] font-semibold transition-colors flex items-center gap-1">
+                    <Phone className="w-3 h-3 text-[#ff5a1f]" /> 8411825686
+                  </a>
+                </div>
+                <div className="flex items-center justify-between text-[#c8c1b7] bg-black/30 px-2.5 py-1 rounded-md border border-white/5">
+                  <span className="font-medium text-[#f4f0e8]">Asrar</span>
+                  <a href="tel:9699027295" className="text-[#ff8a3d] hover:text-[#ff5a1f] font-semibold transition-colors flex items-center gap-1">
+                    <Phone className="w-3 h-3 text-[#ff5a1f]" /> 9699027295
+                  </a>
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
