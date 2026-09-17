@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Volume2, VolumeX, ArrowRight, Play } from 'lucide-react';
+import { Volume2, VolumeX, ArrowRight } from 'lucide-react';
 
 export default function IntroVideoOverlay({ onComplete }) {
   const [isExiting, setIsExiting] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
   const mainVideoRef = useRef(null);
   const bgVideoRef = useRef(null);
 
@@ -19,14 +18,10 @@ export default function IntroVideoOverlay({ onComplete }) {
       mainVid.defaultMuted = true;
       const playPromise = mainVid.play();
       if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch(() => {
-            mainVid.muted = true;
-            mainVid.play().catch(() => {});
-          });
+        playPromise.catch(() => {
+          mainVid.muted = true;
+          mainVid.play().catch(() => {});
+        });
       }
     }
 
@@ -37,7 +32,7 @@ export default function IntroVideoOverlay({ onComplete }) {
       bgVid.play().catch(() => {});
     }
 
-    // First user interaction immediately enables full audio
+    // First user interaction immediately un-mutes with full audio without pausing
     const unlockAudio = () => {
       const v = mainVideoRef.current;
       if (v) {
@@ -79,24 +74,6 @@ export default function IntroVideoOverlay({ onComplete }) {
     }
   };
 
-  const handleTogglePlay = (e) => {
-    if (e) e.stopPropagation();
-    const mainVid = mainVideoRef.current;
-    const bgVid = bgVideoRef.current;
-
-    if (mainVid) {
-      if (mainVid.paused) {
-        mainVid.play();
-        if (bgVid) bgVid.play().catch(() => {});
-        setIsPlaying(true);
-      } else {
-        mainVid.pause();
-        if (bgVid) bgVid.pause();
-        setIsPlaying(false);
-      }
-    }
-  };
-
   const handleFinish = () => {
     if (isExiting) return;
     setIsExiting(true);
@@ -108,10 +85,7 @@ export default function IntroVideoOverlay({ onComplete }) {
   if (isExiting) return null;
 
   return (
-    <div 
-      className="intro-video-wrapper"
-      onClick={handleTogglePlay}
-    >
+    <div className="intro-video-wrapper">
       {/* ========================================================================= */}
       {/* 1. AMBIENT ATMOSPHERIC BACKGROUND VIDEO LAYER (ELIMINATES EMPTY BARS)     */}
       {/* ========================================================================= */}
@@ -147,15 +121,6 @@ export default function IntroVideoOverlay({ onComplete }) {
         onError={handleFinish}
         className="intro-main-focused-video"
       />
-
-      {/* Centered Play icon overlay when paused */}
-      {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-xs pointer-events-none z-30">
-          <div className="w-16 h-16 rounded-full bg-[#FF5500]/90 text-white flex items-center justify-center shadow-[0_0_30px_rgba(255,85,0,0.8)]">
-            <Play className="w-8 h-8 ml-1 text-white fill-white" />
-          </div>
-        </div>
-      )}
 
       {/* ========================================================================= */}
       {/* 3. MINIMAL OVERLAY CONTROLS (UNMUTE AUDIO & SKIP BUTTON)                  */}
