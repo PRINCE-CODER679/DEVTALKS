@@ -223,15 +223,9 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
               </span>
               <div className="grid grid-cols-1 gap-1.5 font-mono text-xs">
                 <div className="flex items-center justify-between text-[#c8c1b7] bg-black/30 px-2.5 py-1 rounded-md border border-white/5">
-                  <span className="font-medium text-[#f4f0e8]">Raj Thube</span>
-                  <a href="tel:7498049183" className="text-[#ff8a3d] hover:text-[#ff5a1f] font-semibold transition-colors flex items-center gap-1">
-                    <Phone className="w-3 h-3 text-[#ff5a1f]" /> 7498049183
-                  </a>
-                </div>
-                <div className="flex items-center justify-between text-[#c8c1b7] bg-black/30 px-2.5 py-1 rounded-md border border-white/5">
-                  <span className="font-medium text-[#f4f0e8]">Parth</span>
-                  <a href="tel:8411825686" className="text-[#ff8a3d] hover:text-[#ff5a1f] font-semibold transition-colors flex items-center gap-1">
-                    <Phone className="w-3 h-3 text-[#ff5a1f]" /> 8411825686
+                  <span className="font-medium text-[#f4f0e8]">Tejas</span>
+                  <a href="tel:9322272212" className="text-[#ff8a3d] hover:text-[#ff5a1f] font-semibold transition-colors flex items-center gap-1">
+                    <Phone className="w-3 h-3 text-[#ff5a1f]" /> 9322272212
                   </a>
                 </div>
                 <div className="flex items-center justify-between text-[#c8c1b7] bg-black/30 px-2.5 py-1 rounded-md border border-white/5">
