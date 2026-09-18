@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -22,8 +22,9 @@ export default function SpeakerCoverflowRing({
   const [flippedCards, setFlippedCards] = useState({ 0: false, 1: false, 2: false });
   const [revealedSpeakers, setRevealedSpeakers] = useState({ 0: false, 1: false, 2: false });
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
-  const touchStartXRef = React.useRef(0);
-  const touchEndXRef = React.useRef(0);
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const isSwipingRef = useRef(false);
 
   // Sync window width for responsive 3D transforms
   useEffect(() => {
@@ -90,18 +91,28 @@ export default function SpeakerCoverflowRing({
     }));
   };
 
-  // Touch Swipe Handlers for mobile
+  // Touch Swipe & Tap Handlers for mobile & desktop
   const handleTouchStart = (e) => {
     touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+    isSwipingRef.current = false;
   };
 
   const handleTouchMove = (e) => {
-    touchEndXRef.current = e.touches[0].clientX;
+    const deltaX = Math.abs(e.touches[0].clientX - touchStartXRef.current);
+    const deltaY = Math.abs(e.touches[0].clientY - touchStartYRef.current);
+    if (deltaX > 10 || deltaY > 10) {
+      isSwipingRef.current = true;
+    }
   };
 
-  const handleTouchEnd = () => {
-    const deltaX = touchStartXRef.current - touchEndXRef.current;
-    if (Math.abs(deltaX) > 45 && touchEndXRef.current !== 0) {
+  const handleTouchEnd = (e) => {
+    if (!e.changedTouches || e.changedTouches.length === 0) return;
+    const deltaX = touchStartXRef.current - e.changedTouches[0].clientX;
+    const deltaY = Math.abs(touchStartYRef.current - e.changedTouches[0].clientY);
+    
+    // Only trigger swipe if horizontal movement is significant and greater than vertical scroll
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > deltaY) {
       if (deltaX > 0) {
         handleNext();
       } else {
@@ -109,7 +120,7 @@ export default function SpeakerCoverflowRing({
       }
     }
     touchStartXRef.current = 0;
-    touchEndXRef.current = 0;
+    touchStartYRef.current = 0;
   };
 
   // Keyboard navigation
@@ -118,6 +129,9 @@ export default function SpeakerCoverflowRing({
       if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
       if (e.key === 'ArrowLeft') handlePrev();
       if (e.key === 'ArrowRight') handleNext();
+      if (e.key === ' ' || e.key === 'Enter') {
+        toggleFlip(currentIndex);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -155,7 +169,7 @@ export default function SpeakerCoverflowRing({
               CONFIDENTIAL <span className="text-[#ff5a1f]">SPEAKERS</span>
             </h2>
             <p className="font-sans text-xs sm:text-sm text-[#817b73] max-w-2xl font-medium">
-              Digital signals reconstructed in real time. Use arrows or click side nodes to rotate the orbital carousel. Tap to reveal or inspect confidential clues!
+              Digital signals reconstructed in real time. <span className="text-[#f4f0e8] font-semibold">Tap anywhere on the center card to flip for confidential clues</span>, or use arrows to rotate the ring.
             </p>
           </div>
 
@@ -216,7 +230,7 @@ export default function SpeakerCoverflowRing({
               <div 
                 style={{ 
                   transform: `rotateX(60deg) rotateZ(${-currentIndex * 120}deg)`,
-                  transition: 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)'
+                  transition: 'transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
                 className="w-full h-full rounded-full border-2 border-[#ff5a1f]/40 border-dashed flex items-center justify-center"
               >
@@ -279,6 +293,8 @@ export default function SpeakerCoverflowRing({
                   onClick={(e) => {
                     if (!isCenter) {
                       handleSelectCard(index, e);
+                    } else {
+                      toggleFlip(index, e);
                     }
                   }}
                   style={{
@@ -287,11 +303,13 @@ export default function SpeakerCoverflowRing({
                     zIndex: zIndex,
                     transformStyle: 'preserve-3d',
                     WebkitTransformStyle: 'preserve-3d',
-                    transition: 'transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s ease-out'
+                    transition: 'transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease-out',
+                    willChange: 'transform, opacity'
                   }}
-                  className={`absolute w-[285px] xs:w-[310px] sm:w-[360px] aspect-[1/1.44] select-none ${
-                    !isCenter ? 'cursor-pointer hover:opacity-95 hover:scale-[0.85] transition-transform' : ''
+                  className={`absolute w-[285px] xs:w-[310px] sm:w-[360px] aspect-[1/1.44] select-none cursor-pointer ${
+                    !isCenter ? 'hover:opacity-95 hover:scale-[0.85] transition-transform' : ''
                   }`}
+                  title={isCenter ? (isFlipped ? 'Click card to flip front' : 'Click card to flip for secret clues') : 'Click to bring to center'}
                 >
                   {/* Card Container */}
                   <div className={`relative w-full h-full rounded-3xl p-3.5 sm:p-4 transition-all duration-500 overflow-visible ${
@@ -336,11 +354,6 @@ export default function SpeakerCoverflowRing({
                     <div 
                       className="relative w-full h-[90%] select-none cursor-pointer"
                       style={{ perspective: 1200 }}
-                      onClick={(e) => {
-                        if (isCenter && !isFlipped) {
-                          // Allow clicking card to flip or reveal
-                        }
-                      }}
                     >
                       {/* THE 3D ROTATING INNER CONTAINER */}
                       <div
@@ -348,7 +361,8 @@ export default function SpeakerCoverflowRing({
                           transformStyle: 'preserve-3d',
                           WebkitTransformStyle: 'preserve-3d',
                           transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                          transition: 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)'
+                          transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
+                          willChange: 'transform'
                         }}
                         className="w-full h-full relative"
                       >
@@ -392,6 +406,16 @@ export default function SpeakerCoverflowRing({
                               onToggleReveal={(e) => toggleReveal(index, e)}
                             />
                           </div>
+
+                          {/* Flip Clues Tap Prompt Overlay */}
+                          {isCenter && !isFlipped && (
+                            <div className="absolute bottom-11 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
+                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#080808]/90 text-[#f4f0e8] font-mono text-[9px] font-bold tracking-wider shadow-lg border border-[#ff5a1f]/70 animate-bounce">
+                                <RotateCw className="w-2.5 h-2.5 text-[#ff5a1f]" />
+                                <span>TAP CARD TO FLIP FOR CLUES</span>
+                              </div>
+                            </div>
+                          )}
 
                           {/* Bottom Info Bar / Quick Action */}
                           <div className="relative z-30 flex items-center justify-between pt-1 border-t border-white/10 text-[10px] font-mono">
@@ -473,7 +497,7 @@ export default function SpeakerCoverflowRing({
                           {/* Flip back button */}
                           <div className="pt-2 border-t border-white/10 flex items-center justify-between">
                             <span className="font-mono text-[8px] text-[#817b73] uppercase font-semibold">
-                              CLICK TO RETURN FRONT
+                              TAP CARD TO RETURN FRONT
                             </span>
                             <button 
                               type="button"
@@ -519,7 +543,7 @@ export default function SpeakerCoverflowRing({
               <span className="hidden sm:inline text-white/10">•</span>
               <span className="flex items-center gap-1.5 text-[#f4f0e8] font-semibold">
                 <RotateCw className="w-3.5 h-3.5 text-[#ff5a1f]" />
-                <span>TAP TO FLIP CLUES OR REVEAL</span>
+                <span>TAP ANY CARD TO FLIP FOR CLUES</span>
               </span>
             </div>
 
