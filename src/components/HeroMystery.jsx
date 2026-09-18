@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { 
-  ArrowRight, 
   Calendar, 
   MapPin, 
   Ticket, 
@@ -359,49 +358,20 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
 
       </div>
 
-      {/* ================= 2. MAIN HERO CONTENT AREA (EDITORIAL + FEW ASSETS) ================= */}
-      <div className="relative z-20 max-w-7xl mx-auto w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-center my-auto py-3">
+      {/* ================= 2. MAIN HERO CONTENT AREA (OPEN STAGE FOR IMAGE REVEAL + COMMUNITY SPECS) ================= */}
+      <div className="relative z-20 max-w-7xl mx-auto w-full flex-1 flex flex-col justify-between lg:flex-row items-center lg:items-end gap-5 lg:gap-6 my-auto py-3">
         
-        {/* ================= LEFT COLUMN: PRIMARY ACTION ================= */}
-        <div className="lg:col-span-4 flex flex-col items-start space-y-2.5 sm:space-y-3 z-30 max-w-sm">
-          
-          {/* Primary Action Button */}
-          <div className="pt-1.5 flex items-center gap-2 w-full">
-            <button
-              onClick={() => {
-                soundFx.playEvidenceClick();
-                onTakeGuess();
-              }}
-              className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 bg-[#ff5a1f] hover:bg-[#ff7a45] text-[#070707] font-display font-black text-[11px] sm:text-xs tracking-wider uppercase rounded-full transition-all transform hover:scale-105 active:scale-95 cursor-pointer shadow-[0_4px_18px_rgba(255,90,31,0.35)]"
-            >
-              <span>TAKE A GUESS</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
+        {/* Interactive Mobile Cue (Fades once interacted) */}
+        <div className={`sm:hidden pointer-events-auto transition-opacity duration-700 ${hasInteracted ? 'opacity-30 hover:opacity-100' : 'opacity-90 animate-pulse'} self-center`}>
+          <span className="px-3 py-1 rounded-full bg-[#111111]/80 border border-[#ff5a1f]/30 text-[#f4f0e8]/80 font-mono text-[8px] tracking-wider uppercase backdrop-blur-sm">
+            ✨ DRAG / TOUCH TO UNMASK
+          </span>
         </div>
 
-        {/* ================= CENTER COLUMN: OPEN FOCAL STAGE (ALLOWS IMAGE REVEAL TO SHINE) ================= */}
-        <div className="lg:col-span-4 relative flex flex-col items-center justify-center min-h-[40px] xs:min-h-[60px] lg:min-h-[140px] pointer-events-none gap-2">
-          
-          {/* Subtle Chalk Stamp: SAME HINTS, DIFFERENT ANSWERS */}
-          <div className="transform rotate-2 pointer-events-auto">
-            <div className="px-3 py-0.5 sm:py-1 bg-[#111111]/85 border border-[#ff5a1f]/50 text-[#ff8a3d] font-mono text-[8px] sm:text-[9px] font-bold tracking-widest uppercase rounded-full backdrop-blur-md shadow-md">
-              SAME HINTS • DIFFERENT ANSWERS 🎯
-            </div>
-          </div>
-
-          {/* Interactive Mobile Cue (Fades once interacted) */}
-          <div className={`sm:hidden pointer-events-auto transition-opacity duration-700 ${hasInteracted ? 'opacity-40 hover:opacity-100' : 'opacity-90 animate-pulse'}`}>
-            <span className="px-2.5 py-0.5 rounded-full bg-[#111111]/80 border border-[#ff5a1f]/30 text-[#f4f0e8]/80 font-mono text-[7.5px] tracking-wider uppercase backdrop-blur-sm">
-              ✨ DRAG / TOUCH TO UNMASK
-            </span>
-          </div>
-
-        </div>
+        <div className="hidden lg:block flex-1" />
 
         {/* ================= RIGHT COLUMN: FEW COMMUNITY CHAT BUBBLES ================= */}
-        <div className="lg:col-span-4 flex flex-col items-start lg:items-end space-y-2 z-30 w-full">
+        <div className="flex flex-col items-start lg:items-end space-y-2 z-30 w-full lg:w-auto self-end">
           
           {/* Top-Right Tape Badge: THIS IS GONNA BE GOOD */}
           <div className="self-start lg:self-end transform rotate-2 hover:rotate-0 transition-transform mb-0.5">
