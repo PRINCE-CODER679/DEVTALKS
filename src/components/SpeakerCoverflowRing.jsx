@@ -22,9 +22,14 @@ export default function SpeakerCoverflowRing({
   const [flippedCards, setFlippedCards] = useState({ 0: false, 1: false, 2: false });
   const [revealedSpeakers, setRevealedSpeakers] = useState({ 0: false, 1: false, 2: false });
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
-  const touchStartXRef = useRef(0);
-  const touchStartYRef = useRef(0);
-  const isSwipingRef = useRef(false);
+  
+  const touchStateRef = useRef({
+    startX: 0,
+    startY: 0,
+    startTime: 0,
+    cardIndex: null,
+    isSwiping: false
+  });
 
   // Sync window width for responsive 3D transforms
   useEffect(() => {
@@ -91,36 +96,65 @@ export default function SpeakerCoverflowRing({
     }));
   };
 
-  // Touch Swipe & Tap Handlers for mobile & desktop
-  const handleTouchStart = (e) => {
-    touchStartXRef.current = e.touches[0].clientX;
-    touchStartYRef.current = e.touches[0].clientY;
-    isSwipingRef.current = false;
+  // Card Touch Start (Records coordinates for both tap-to-flip and swipe)
+  const handleCardTouchStart = (index, e) => {
+    const touch = e.touches[0];
+    touchStateRef.current = {
+      startX: touch.clientX,
+      startY: touch.clientY,
+      startTime: Date.now(),
+      cardIndex: index,
+      isSwiping: false
+    };
   };
 
-  const handleTouchMove = (e) => {
-    const deltaX = Math.abs(e.touches[0].clientX - touchStartXRef.current);
-    const deltaY = Math.abs(e.touches[0].clientY - touchStartYRef.current);
-    if (deltaX > 10 || deltaY > 10) {
-      isSwipingRef.current = true;
+  // Stage Touch Move
+  const handleStageTouchMove = (e) => {
+    if (!touchStateRef.current.startX) return;
+    const touch = e.touches[0];
+    const deltaX = Math.abs(touch.clientX - touchStateRef.current.startX);
+    const deltaY = Math.abs(touch.clientY - touchStateRef.current.startY);
+    if (deltaX > 20 && deltaX > deltaY) {
+      touchStateRef.current.isSwiping = true;
     }
   };
 
-  const handleTouchEnd = (e) => {
-    if (!e.changedTouches || e.changedTouches.length === 0) return;
-    const deltaX = touchStartXRef.current - e.changedTouches[0].clientX;
-    const deltaY = Math.abs(touchStartYRef.current - e.changedTouches[0].clientY);
-    
-    // Only trigger swipe if horizontal movement is significant and greater than vertical scroll
-    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > deltaY) {
+  // Card Touch End (Dispatches either flip, card select, or horizontal swipe)
+  const handleCardTouchEnd = (index, e) => {
+    const state = touchStateRef.current;
+    if (!state.startX) return;
+
+    const touch = e.changedTouches ? e.changedTouches[0] : null;
+    const endX = touch ? touch.clientX : state.startX;
+    const endY = touch ? touch.clientY : state.startY;
+    const deltaX = state.startX - endX;
+    const deltaY = Math.abs(state.startY - endY);
+    const elapsed = Date.now() - state.startTime;
+
+    // 1. Check for horizontal swipe gesture (> 35px movement)
+    if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > deltaY) {
       if (deltaX > 0) {
         handleNext();
       } else {
         handlePrev();
       }
+    } 
+    // 2. Otherwise, treat as a quick direct TAP
+    else if (Math.abs(deltaX) < 20 && deltaY < 20 && elapsed < 450) {
+      if (index === currentIndex) {
+        toggleFlip(index, e);
+      } else {
+        handleSelectCard(index, e);
+      }
     }
-    touchStartXRef.current = 0;
-    touchStartYRef.current = 0;
+
+    touchStateRef.current = {
+      startX: 0,
+      startY: 0,
+      startTime: 0,
+      cardIndex: null,
+      isSwiping: false
+    };
   };
 
   // Keyboard navigation
@@ -143,7 +177,7 @@ export default function SpeakerCoverflowRing({
       className="relative w-full min-h-screen bg-[#080808] text-[#f4f0e8] flex flex-col justify-center py-20 sm:py-28 px-4 sm:px-8 lg:px-12 border-t border-white/10 overflow-hidden select-none"
     >
       {/* Ambient 3D Ring Glow in Background */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] sm:w-[1100px] h-[450px] sm:h-[650px] bg-[radial-gradient(ellipse_at_center,_rgba(255,90,31,0.08)_0%,_transparent_70%)] blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] sm:w-[1100px] h-[450px] sm:h-[650px] bg-[radial-gradient(ellipse_at_center,_rgba(255,90,31,0.08)_0%,_transparent_70%)] blur-[100px] pointer-events-none -z-10" />
 
       {/* Anchor targets so #speaker-1, #speaker-2, #speaker-3 work smoothly */}
       <div id="speaker-1" className="absolute top-0 opacity-0 pointer-events-none" />
@@ -169,7 +203,7 @@ export default function SpeakerCoverflowRing({
               CONFIDENTIAL <span className="text-[#ff5a1f]">SPEAKERS</span>
             </h2>
             <p className="font-sans text-xs sm:text-sm text-[#817b73] max-w-2xl font-medium">
-              Digital signals reconstructed in real time. <span className="text-[#f4f0e8] font-semibold">Tap anywhere on the center card to flip for confidential clues</span>, or use arrows to rotate the ring.
+              Digital signals reconstructed in real time. <span className="text-[#f4f0e8] font-semibold">Tap anywhere on the center card to flip for secret clues</span>, or use arrows/swipes to rotate the ring.
             </p>
           </div>
 
@@ -202,42 +236,45 @@ export default function SpeakerCoverflowRing({
             type="button"
             onClick={handlePrev}
             aria-label="Previous Speaker"
-            className="absolute left-1 sm:left-4 z-50 p-3.5 sm:p-4 rounded-full bg-[#111111] hover:bg-[#181818] border-2 border-[#ff5a1f]/40 hover:border-[#ff5a1f] text-[#ff5a1f] hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer group"
+            className="absolute left-1 sm:left-4 z-50 p-3 sm:p-4 rounded-full bg-[#111111] hover:bg-[#181818] border-2 border-[#ff5a1f]/40 hover:border-[#ff5a1f] text-[#ff5a1f] hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer group"
           >
-            <ChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform text-[#ff5a1f]" />
+            <ChevronLeft className="w-5 sm:w-6 h-5 sm:h-6 group-hover:-translate-x-1 transition-transform text-[#ff5a1f]" />
           </button>
 
           <button
             type="button"
             onClick={handleNext}
             aria-label="Next Speaker"
-            className="absolute right-1 sm:right-4 z-50 p-3.5 sm:p-4 rounded-full bg-[#111111] hover:bg-[#181818] border-2 border-[#ff5a1f]/40 hover:border-[#ff5a1f] text-[#ff5a1f] hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer group"
+            className="absolute right-1 sm:right-4 z-50 p-3 sm:p-4 rounded-full bg-[#111111] hover:bg-[#181818] border-2 border-[#ff5a1f]/40 hover:border-[#ff5a1f] text-[#ff5a1f] hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer group"
           >
-            <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform text-[#ff5a1f]" />
+            <ChevronRight className="w-5 sm:w-6 h-5 sm:h-6 group-hover:translate-x-1 transition-transform text-[#ff5a1f]" />
           </button>
 
           {/* 3D Ring Stage with Perspective */}
           <div 
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            onTouchMove={handleStageTouchMove}
+            style={{ 
+              perspective: 1200, 
+              transformStyle: 'preserve-3d',
+              touchAction: 'pan-y'
+            }}
             className="relative w-full max-w-5xl h-[530px] sm:h-[600px] flex items-center justify-center overflow-visible"
-            style={{ perspective: 1400, transformStyle: 'preserve-3d' }}
           >
             {/* 3D Cylindrical Ring Base Platform */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[360px] sm:w-[620px] h-[100px] pointer-events-none -z-10 flex items-center justify-center">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[340px] sm:w-[620px] h-[95px] pointer-events-none -z-10 flex items-center justify-center">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#ff5a1f_0%,_transparent_72%)] opacity-20 blur-xl" />
               <div 
                 style={{ 
                   transform: `rotateX(60deg) rotateZ(${-currentIndex * 120}deg)`,
-                  transition: 'transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)'
+                  transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
+                  willChange: 'transform'
                 }}
                 className="w-full h-full rounded-full border-2 border-[#ff5a1f]/40 border-dashed flex items-center justify-center"
               >
                 <div className="w-[88%] h-[88%] rounded-full border border-white/15 border-dotted" />
                 <div className="w-[72%] h-[72%] rounded-full border border-[#ff5a1f]/20" />
-                <div className="absolute w-3.5 h-3.5 rounded-full bg-[#ff5a1f] -top-1.5 shadow-[0_0_10px_#ff5a1f]" />
-                <div className="absolute w-2 h-2 rounded-full bg-[#ff8a3d] -bottom-1 shadow-[0_0_6px_#ff8a3d]" />
+                <div className="absolute w-3.5 h-3.5 rounded-full bg-[#ff5a1f] -top-1.5 shadow-[0_0_8px_#ff5a1f]" />
+                <div className="absolute w-2 h-2 rounded-full bg-[#ff8a3d] -bottom-1 shadow-[0_0_5px_#ff8a3d]" />
               </div>
             </div>
 
@@ -253,8 +290,8 @@ export default function SpeakerCoverflowRing({
 
               const isMobile = windowWidth < 640;
               const isSmallMobile = windowWidth < 400;
-              const sideDistance = isSmallMobile ? 125 : isMobile ? 165 : 290;
-              const sideScale = isMobile ? 0.76 : 0.82;
+              const sideDistance = isSmallMobile ? 120 : isMobile ? 160 : 280;
+              const sideScale = isMobile ? 0.78 : 0.83;
               const centerScale = isSmallMobile ? 0.94 : 1.0;
 
               let rotateY = 0;
@@ -265,16 +302,16 @@ export default function SpeakerCoverflowRing({
               let zIndex = 30;
 
               if (offset === -1) {
-                rotateY = isMobile ? 26 : 32;
+                rotateY = isMobile ? 24 : 30;
                 translateX = -sideDistance;
-                translateZ = isMobile ? -90 : -130;
+                translateZ = isMobile ? -80 : -120;
                 scale = sideScale;
                 opacity = isMobile ? 0.55 : 0.72;
                 zIndex = 10;
               } else if (offset === 1) {
-                rotateY = isMobile ? -26 : -32;
+                rotateY = isMobile ? -24 : -30;
                 translateX = sideDistance;
-                translateZ = isMobile ? -90 : -130;
+                translateZ = isMobile ? -80 : -120;
                 scale = sideScale;
                 opacity = isMobile ? 0.55 : 0.72;
                 zIndex = 10;
@@ -290,6 +327,8 @@ export default function SpeakerCoverflowRing({
               return (
                 <div
                   key={speaker.id}
+                  onTouchStart={(e) => handleCardTouchStart(index, e)}
+                  onTouchEnd={(e) => handleCardTouchEnd(index, e)}
                   onClick={(e) => {
                     if (!isCenter) {
                       handleSelectCard(index, e);
@@ -303,23 +342,24 @@ export default function SpeakerCoverflowRing({
                     zIndex: zIndex,
                     transformStyle: 'preserve-3d',
                     WebkitTransformStyle: 'preserve-3d',
-                    transition: 'transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease-out',
-                    willChange: 'transform, opacity'
+                    transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease-out',
+                    willChange: 'transform, opacity',
+                    touchAction: 'pan-y'
                   }}
                   className={`absolute w-[285px] xs:w-[310px] sm:w-[360px] aspect-[1/1.44] select-none cursor-pointer ${
                     !isCenter ? 'hover:opacity-95 hover:scale-[0.85] transition-transform' : ''
                   }`}
-                  title={isCenter ? (isFlipped ? 'Click card to flip front' : 'Click card to flip for secret clues') : 'Click to bring to center'}
+                  title={isCenter ? (isFlipped ? 'Tap card to flip front' : 'Tap card to flip for secret clues') : 'Click to bring to center'}
                 >
                   {/* Card Container */}
-                  <div className={`relative w-full h-full rounded-3xl p-3.5 sm:p-4 transition-all duration-500 overflow-visible ${
+                  <div className={`relative w-full h-full rounded-3xl p-3.5 sm:p-4 transition-all duration-300 overflow-visible ${
                     isCenter 
-                      ? 'border-2 border-[#ff5a1f] shadow-[0_20px_60px_rgba(255,90,31,0.22)] bg-[#101010]' 
+                      ? 'border-2 border-[#ff5a1f] shadow-[0_15px_45px_rgba(255,90,31,0.22)] bg-[#101010]' 
                       : 'border border-white/10 bg-[#101010]/95 shadow-lg filter brightness-90 hover:brightness-100'
                   }`}>
                     
                     {/* Top Status Bar on Card */}
-                    <div className="w-full flex items-center justify-between pb-2 mb-1.5 border-b border-white/10 font-mono text-[10px] relative z-30">
+                    <div className="w-full flex items-center justify-between pb-2 mb-1.5 border-b border-white/10 font-mono text-[10px] relative z-30 pointer-events-auto">
                       <span className="text-[#f4f0e8] font-bold tracking-wider flex items-center gap-1.5">
                         <span className="w-2 h-2 rounded-full bg-[#ff5a1f]" />
                         <span>CASE #{speaker.num} • {speaker.roleTag.split('//')[1]?.trim() || 'TITAN'}</span>
@@ -329,7 +369,7 @@ export default function SpeakerCoverflowRing({
                           <button 
                             type="button"
                             onClick={(e) => toggleReveal(index, e)}
-                            className="font-bold uppercase tracking-wider text-[#ff8a3d] hover:text-[#f4f0e8] flex items-center gap-1 cursor-pointer transition-colors z-50 pointer-events-auto text-[9px]"
+                            className="font-bold uppercase tracking-wider text-[#ff8a3d] hover:text-[#f4f0e8] flex items-center gap-1 cursor-pointer transition-colors z-50 pointer-events-auto text-[9px] px-1.5 py-0.5 rounded bg-black/40 border border-[#ff5a1f]/30"
                             title={isRevealed ? 'Hide identity' : 'Instant identity reveal'}
                           >
                             {isRevealed ? <Lock className="w-2.5 h-2.5 text-[#ff5a1f]" /> : <Eye className="w-2.5 h-2.5 text-[#ff5a1f]" />}
@@ -339,7 +379,7 @@ export default function SpeakerCoverflowRing({
                           <button 
                             type="button"
                             onClick={(e) => toggleFlip(index, e)}
-                            className="font-bold uppercase tracking-wider text-[#ff5a1f] hover:text-[#ff7a45] flex items-center gap-1 cursor-pointer transition-colors z-50 pointer-events-auto text-[9px]"
+                            className="font-bold uppercase tracking-wider text-[#ff5a1f] hover:text-[#ff7a45] flex items-center gap-1 cursor-pointer transition-colors z-50 pointer-events-auto text-[9px] px-1.5 py-0.5 rounded bg-black/40 border border-[#ff5a1f]/30"
                           >
                             <RotateCw className="w-2.5 h-2.5 text-[#ff5a1f]" />
                             <span>{isFlipped ? 'FRONT' : 'CLUES'}</span>
@@ -361,7 +401,7 @@ export default function SpeakerCoverflowRing({
                           transformStyle: 'preserve-3d',
                           WebkitTransformStyle: 'preserve-3d',
                           transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                          transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
+                          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
                           willChange: 'transform'
                         }}
                         className="w-full h-full relative"
@@ -407,10 +447,10 @@ export default function SpeakerCoverflowRing({
                             />
                           </div>
 
-                          {/* Flip Clues Tap Prompt Overlay */}
+                          {/* Flip Clues Tap Prompt Badge */}
                           {isCenter && !isFlipped && (
-                            <div className="absolute bottom-11 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
-                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#080808]/90 text-[#f4f0e8] font-mono text-[9px] font-bold tracking-wider shadow-lg border border-[#ff5a1f]/70 animate-bounce">
+                            <div className="absolute bottom-11 left-1/2 -translate-x-1/2 z-40 pointer-events-none whitespace-nowrap">
+                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#080808]/95 text-[#f4f0e8] font-mono text-[9px] font-bold tracking-wider shadow-lg border border-[#ff5a1f] animate-bounce">
                                 <RotateCw className="w-2.5 h-2.5 text-[#ff5a1f]" />
                                 <span>TAP CARD TO FLIP FOR CLUES</span>
                               </div>
@@ -454,7 +494,7 @@ export default function SpeakerCoverflowRing({
                             zIndex: isFlipped ? 20 : 0,
                             pointerEvents: isFlipped ? 'auto' : 'none'
                           }}
-                          className="absolute inset-0 w-full h-full rounded-[22px] bg-[#0c0c0c] text-[#f4f0e8] p-4 sm:p-5 overflow-hidden flex flex-col justify-between border-2 border-[#ff5a1f] shadow-xl"
+                          className="absolute inset-0 w-full h-full rounded-[22px] bg-[#0c0c0c] text-[#f4f0e8] p-4 sm:p-5 overflow-hidden flex flex-col justify-between border-2 border-[#ff5a1f] shadow-xl cursor-pointer"
                         >
                           {/* Dossier Header */}
                           <div className="flex items-center justify-between border-b border-white/10 pb-2">
@@ -538,12 +578,12 @@ export default function SpeakerCoverflowRing({
             <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-[#817b73]">
               <span className="flex items-center gap-1.5">
                 <Compass className="w-3.5 h-3.5 text-[#ff5a1f]" />
-                <span>USE ARROWS OR CLICK SIDE CARDS TO ROTATE</span>
+                <span>SWIPE OR USE ARROWS TO ROTATE</span>
               </span>
               <span className="hidden sm:inline text-white/10">•</span>
               <span className="flex items-center gap-1.5 text-[#f4f0e8] font-semibold">
                 <RotateCw className="w-3.5 h-3.5 text-[#ff5a1f]" />
-                <span>TAP ANY CARD TO FLIP FOR CLUES</span>
+                <span>TAP CENTER CARD TO FLIP FOR CLUES</span>
               </span>
             </div>
 
