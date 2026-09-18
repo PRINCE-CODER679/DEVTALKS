@@ -8,7 +8,6 @@ import {
   ChevronDown 
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
-import { speakersList } from '../data/speakers';
 
 /**
  * HeroMystery - Cinematic Editorial Landing Page with Curated Assets
@@ -18,12 +17,10 @@ import { speakersList } from '../data/speakers';
  *   IMAGE 1: /hero-speaker-base.png (default mysterious silhouette)
  *   IMAGE 2: /hero-speaker-reveal.png (alternate revealed speaker with orange-red arc ring)
  * - Curated authentic visual assets from reference:
- *   1. "WHO IS COMING?" / "GUESS THE SPEAKER?" heading
- *   2. Ripped-paper "HINTS ••" sticky note with confidential clues
- *   3. Playful tape stickers ("GUESS WHAT?!", "THIS IS GONNA BE GOOD")
- *   4. Clean "TAKE A GUESS →" primary action
- *   5. Compact community speculation chat pills on the right
- *   6. Bottom date/venue pills & scroll prompt
+ *   1. Playful tape stickers ("GUESS WHAT?!", "THIS IS GONNA BE GOOD")
+ *   2. Clean "TAKE A GUESS →" primary action
+ *   3. Compact community speculation chat pills on the right
+ *   4. Bottom date/venue pills & scroll prompt
  */
 export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister, onWatchTeaser }) {
   const containerRef = useRef(null);
@@ -41,8 +38,6 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
   const [hasInteracted, setHasInteracted] = useState(false);
 
   const [spotlightRadius, setSpotlightRadius] = useState(320);
-
-  const activeSpeaker = speakersList[0];
 
   const communityComments = [
     {
@@ -299,54 +294,9 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       {/* ================= 2. MAIN HERO CONTENT AREA (EDITORIAL + FEW ASSETS) ================= */}
       <div className="relative z-20 max-w-7xl mx-auto w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-center my-auto py-3">
         
-        {/* ================= LEFT COLUMN: HEADLINE + RIPPED PAPER HINT NOTE ================= */}
+        {/* ================= LEFT COLUMN: PRIMARY ACTION ================= */}
         <div className="lg:col-span-4 flex flex-col items-start space-y-2.5 sm:space-y-3 z-30 max-w-sm">
           
-          {/* RIPPED PAPER HEADLINE CARD */}
-          <div className="relative w-full max-w-[280px] xs:max-w-[310px] sm:max-w-[340px] pt-2 transform -rotate-2 hover:rotate-0 transition-transform duration-300 pointer-events-auto">
-            
-            {/* Top Tape Strip */}
-            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-20 sm:w-24 h-4 bg-white/45 backdrop-blur-md rounded-xs border border-white/70 rotate-1 shadow-sm z-20" />
-
-            {/* Torn Paper Body */}
-            <div 
-              className="relative p-4 sm:p-5 bg-[#f5ede2] text-[#1a1816] rounded-xs shadow-[0_18px_40px_rgba(0,0,0,0.85),_0_3px_12px_rgba(255,90,31,0.25)] font-sans border-t border-l border-white/80 text-left"
-              style={{
-                clipPath: 'polygon(0% 0%, 100% 0%, 98% 97%, 92% 95%, 85% 99%, 78% 96%, 68% 99%, 60% 95%, 50% 98%, 40% 96%, 30% 99%, 22% 96%, 12% 99%, 0% 97%)'
-              }}
-            >
-              {/* Paper Header */}
-              <div className="flex items-center justify-between border-b border-[#1a1816]/15 pb-1.5 mb-2 font-mono font-black text-[10px] sm:text-[11px] tracking-wider uppercase text-[#1a1816]">
-                <span className="flex items-center gap-1.5">
-                  <span>📌 DOSSIER 01</span>
-                  <span className="text-[#ff5a1f]">• •</span>
-                </span>
-                <span className="text-[8px] sm:text-[9px] text-[#1a1816]/50">CONFIDENTIAL</span>
-              </div>
-
-              {/* Main Headline on Paper */}
-              <div className="space-y-0.5 text-left">
-                <h1 className="font-display font-black uppercase text-2xl xs:text-3xl sm:text-4xl text-[#1a1816] leading-[0.95] tracking-tight">
-                  GUESS THE <br />
-                  <span className="text-[#ff5a1f] drop-shadow-[0_2px_10px_rgba(255,90,31,0.35)]">
-                    SPEAKER?
-                  </span>
-                </h1>
-                
-                <div className="pt-1.5 font-mono text-[9px] sm:text-[10px] text-[#ff5a1f] font-black tracking-widest uppercase">
-                  BIG IDEAS. BIGGER IMPACT.
-                </div>
-              </div>
-
-              {/* Bottom Watermark */}
-              <div className="pt-2.5 text-right">
-                <span className="font-mono text-[7.5px] sm:text-[8px] tracking-widest text-[#1a1816]/40 uppercase">
-                  DEVTALKS '26 // UNMASKING SOON
-                </span>
-              </div>
-            </div>
-          </div>
-
           {/* Primary Action Button */}
           <div className="pt-1.5 flex items-center gap-2 w-full">
             <button
