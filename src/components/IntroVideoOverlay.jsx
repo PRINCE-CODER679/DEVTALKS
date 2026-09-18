@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Volume2, VolumeX, ArrowRight, Sparkles } from 'lucide-react';
+import { Volume2, VolumeX, ArrowRight } from 'lucide-react';
 
 export default function IntroVideoOverlay({ onComplete }) {
   const [isExiting, setIsExiting] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
   const mainVideoRef = useRef(null);
   const bgVideoRef = useRef(null);
 
@@ -15,7 +14,6 @@ export default function IntroVideoOverlay({ onComplete }) {
       mainVid.muted = false;
       mainVid.volume = 1.0;
       setIsMuted(false);
-      setHasInteracted(true);
       const playPromise = mainVid.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {});
@@ -23,7 +21,7 @@ export default function IntroVideoOverlay({ onComplete }) {
     }
   }, []);
 
-  // Initialize playback with autoPlay & attempt unmuted sound immediately
+  // Initialize playback with autoPlay & attempt unmuted sound immediately from start
   useEffect(() => {
     const mainVid = mainVideoRef.current;
     const bgVid = bgVideoRef.current;
@@ -32,19 +30,18 @@ export default function IntroVideoOverlay({ onComplete }) {
       mainVid.currentTime = 0;
       mainVid.volume = 1.0;
       
-      // Attempt to play with sound first
+      // Attempt unmuted sound playback right from the start
       mainVid.muted = false;
       const playPromise = mainVid.play();
       
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
-            // Unmuted autoplay succeeded!
+            // Unmuted autoplay succeeded
             setIsMuted(false);
-            setHasInteracted(true);
           })
           .catch(() => {
-            // Autoplay with sound restricted by browser policy: play muted and await touch/gesture
+            // If browser autoplay policy requires gesture, start playing muted and unlock on first interaction
             if (mainVid) {
               mainVid.muted = true;
               setIsMuted(true);
@@ -60,8 +57,8 @@ export default function IntroVideoOverlay({ onComplete }) {
       bgVid.play().catch(() => {});
     }
 
-    // Global touch/pointer listener to unmute instantly on first touch
-    const handleFirstGesture = (e) => {
+    // Global touch/pointer listener to unmute instantly on touch/interaction
+    const handleFirstGesture = () => {
       enableAudioAndPlay();
     };
 
@@ -108,11 +105,10 @@ export default function IntroVideoOverlay({ onComplete }) {
         vid.play().catch(() => {});
       }
       setIsMuted(nextMuted);
-      setHasInteracted(true);
     }
   };
 
-  const handleWrapperTouch = (e) => {
+  const handleWrapperTouch = () => {
     // If touching anywhere on screen and video is muted, unmute it immediately without pausing
     if (isMuted) {
       enableAudioAndPlay();
@@ -189,7 +185,7 @@ export default function IntroVideoOverlay({ onComplete }) {
         >
           {isMuted ? (
             <>
-              <VolumeX className="w-3.5 h-3.5 text-[#ff8a3d] animate-pulse" />
+              <VolumeX className="w-3.5 h-3.5 text-[#ff8a3d]" />
               <span className="text-[#ff8a3d]">UNMUTE</span>
             </>
           ) : (
@@ -213,20 +209,6 @@ export default function IntroVideoOverlay({ onComplete }) {
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
-
-      {/* ========================================================================= */}
-      {/* 4. TAP ANYWHERE FOR SOUND PROMPT (DISAPPEARS ONCE AUDIO IS ACTIVE)       */}
-      {/* ========================================================================= */}
-      {isMuted && !hasInteracted && (
-        <div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 pointer-events-none animate-bounce"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#080808]/90 border border-[#ff5a1f]/60 text-[#f4f0e8] font-mono text-[10px] sm:text-xs font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(255,90,31,0.4)] backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-[#ff5a1f] animate-ping" />
-            <span>🔊 TAP ANYWHERE TO UNMUTE AUDIO</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
