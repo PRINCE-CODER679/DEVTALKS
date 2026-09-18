@@ -9,11 +9,9 @@ import {
   Instagram,
   User,
   Flame,
-  Award,
   GraduationCap,
   X,
-  HelpCircle,
-  PartyPopper
+  AlertCircle
 } from 'lucide-react';
 import { speakersList } from '../data/speakers';
 import { soundFx } from '../utils/audio';
@@ -26,6 +24,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
   const [guessInput, setGuessInput] = useState('');
   const [reasonInput, setReasonInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   
   // Modal Popup State
   const [modalData, setModalData] = useState(null);
@@ -33,41 +32,47 @@ export default function GuessesArena({ onJumpToSpeaker }) {
   const activeSpeaker = speakersList.find(s => s.id === selectedSpeakerId) || speakersList[0];
   const activeIndex = speakersList.findIndex(s => s.id === selectedSpeakerId);
 
-  const handleGuessSubmit = (e) => {
+  const handleGuessSubmit = async (e) => {
     e.preventDefault();
     if (!fullName.trim() || !instaId.trim() || !department.trim() || !guessInput.trim()) return;
 
     setIsSubmitting(true);
-    soundFx.playEvidenceClick();
+    setSubmitError(null);
+    try { soundFx.playEvidenceClick(); } catch (err) {}
 
-    const normalizedGuess = guessInput.toLowerCase().trim();
-    const isCorrect = activeSpeaker.validKeywords.some(k => normalizedGuess.includes(k.toLowerCase()));
     const cleanInsta = instaId.startsWith('@') ? instaId.trim() : `@${instaId.trim()}`;
 
-    const newGuessEntry = {
-      id: Date.now(),
-      speakerId: activeSpeaker.id,
-      speakerNum: activeSpeaker.num,
-      speakerTitle: activeSpeaker.title,
-      name: fullName.trim(),
-      insta: cleanInsta,
+    // Payload strictly supplying the website-controlled speaker number ("01", "02", or "03")
+    const payload = {
+      fullName: fullName.trim(),
+      instagramId: cleanInsta,
       department: department.trim(),
+      speakerNumber: activeSpeaker.num, // Strictly controlled by website
       guess: guessInput.trim(),
-      reason: reasonInput.trim(),
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      isCorrect
+      clueTheory: reasonInput.trim()
     };
 
-    setTimeout(() => {
-      try {
-        const saved = JSON.parse(localStorage.getItem('devtalks_user_guesses') || '[]');
-        localStorage.setItem('devtalks_user_guesses', JSON.stringify([newGuessEntry, ...saved]));
-      } catch (err) {}
+    try {
+      const response = await fetch('/api/submit-guess', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
 
-      soundFx.playRevealUnlocked();
+      const result = await response.json();
 
-      // Open Modal Pop-up
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'SUBMISSION FAILED. Please try again.');
+      }
+
+      // Success Audio
+      try { soundFx.playRevealUnlocked(); } catch (err) {}
+
+      // Open Success Confirmation Modal
       setModalData({
+        submissionId: result.submissionId,
         speakerNum: activeSpeaker.num,
         speakerTitle: activeSpeaker.title,
         name: fullName.trim(),
@@ -77,10 +82,17 @@ export default function GuessesArena({ onJumpToSpeaker }) {
         nextSpeakerIndex: (activeIndex + 1) % speakersList.length
       });
 
+      // Clear guess inputs for the next submission
       setGuessInput('');
       setReasonInput('');
+      setSubmitError(null);
+
+    } catch (err) {
+      console.error('[SUBMISSION ERROR]', err);
+      setSubmitError(err.message || 'SUBMISSION FAILED. Please try again.');
+    } finally {
       setIsSubmitting(false);
-    }, 450);
+    }
   };
 
   const handleNextSpeakerFromModal = () => {
@@ -88,7 +100,8 @@ export default function GuessesArena({ onJumpToSpeaker }) {
     const nextSpk = speakersList[modalData.nextSpeakerIndex];
     setSelectedSpeakerId(nextSpk.id);
     setModalData(null);
-    soundFx.playEvidenceClick();
+    setSubmitError(null);
+    try { soundFx.playEvidenceClick(); } catch (err) {}
   };
 
   return (
@@ -96,7 +109,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
       id="guesses" 
       className="relative w-full min-h-screen bg-[#080808] text-[#f4f0e8] py-20 sm:py-24 px-4 sm:px-8 lg:px-12 border-t border-white/10 overflow-hidden select-none"
     >
-      {/* ================= DISTINCT SPEAKER-SPECIFIC ATMOSPHERIC BACKGROUND IMAGES (HERO-SILHOUETTE STYLE) ================= */}
+      {/* ================= DISTINCT SPEAKER-SPECIFIC ATMOSPHERIC BACKGROUND IMAGES ================= */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <div className="sticky top-0 left-0 w-full h-[100dvh] overflow-hidden">
           {speakersList.map((spk) => {
@@ -119,7 +132,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
             );
           })}
           
-          {/* Subtle Dark Overlays & Gradient Blends for Clean Contrast & 100% Text Readability */}
+          {/* Subtle Dark Overlays & Gradient Blends for Clean Contrast */}
           <div className="absolute inset-0 bg-[#080808]/30 pointer-events-none" />
           <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#080808] via-[#080808]/75 to-transparent pointer-events-none" />
           <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#080808] via-[#080808]/75 to-transparent pointer-events-none" />
@@ -128,11 +141,9 @@ export default function GuessesArena({ onJumpToSpeaker }) {
 
       {/* ================= ATMOSPHERIC EMBER PARTICLES & LIGHT GLOWS ================= */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-1">
-        {/* Soft Radial Ambient Glows */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#ff5a1f]/12 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-[450px] h-[350px] bg-[#ff7a45]/10 rounded-full blur-[120px] pointer-events-none" />
         
-        {/* Dispersed Floating Ember Particles (Matching Uploaded Screenshot) */}
         {[
           { top: '8%', left: '12%', size: 'w-1.5 h-1.5', opacity: 'opacity-70', anim: 'animate-pulse' },
           { top: '15%', left: '78%', size: 'w-2 h-2', opacity: 'opacity-80', anim: 'animate-bounce' },
@@ -184,8 +195,9 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 key={spk.id}
                 type="button"
                 onClick={() => {
-                  soundFx.playEvidenceClick();
+                  try { soundFx.playEvidenceClick(); } catch (err) {}
                   setSelectedSpeakerId(spk.id);
+                  setSubmitError(null);
                 }}
                 className={`p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 border flex flex-col justify-between gap-3 cursor-pointer ${
                   isSelected
@@ -225,7 +237,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
           })}
         </div>
 
-        {/* ================= PREDICTION SUBMISSION FORM (MATCHING EXACT SCREENSHOT - NO GLASSMORPHISM) ================= */}
+        {/* ================= PREDICTION SUBMISSION FORM ================= */}
         <div className="w-full space-y-6 pt-4">
           
           {/* Header row: Speaker badge & Dossier link */}
@@ -248,7 +260,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
             <button
               type="button"
               onClick={() => {
-                soundFx.playEvidenceClick();
+                try { soundFx.playEvidenceClick(); } catch (err) {}
                 onJumpToSpeaker(activeSpeaker.id);
               }}
               className="font-mono text-xs sm:text-sm text-[#ff5a1f] hover:text-[#ff8a3d] font-bold flex items-center gap-1.5 hover:underline cursor-pointer tracking-wider self-start sm:self-center"
@@ -258,7 +270,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
             </button>
           </div>
 
-          {/* Quick Clue Banner (Rounded border pill with sparkle icon directly on background) */}
+          {/* Quick Clue Banner */}
           <div className="p-4 sm:p-5 rounded-2xl border border-[#ff5a1f]/35 bg-black/40 flex items-center gap-3.5 shadow-sm">
             <Sparkles className="w-5 h-5 text-[#ff5a1f] shrink-0" />
             <p className="font-sans text-xs sm:text-sm text-[#f4f0e8] italic leading-snug font-medium">
@@ -355,13 +367,21 @@ export default function GuessesArena({ onJumpToSpeaker }) {
               />
             </div>
 
+            {/* Error Message Display */}
+            {submitError && (
+              <div className="p-3.5 rounded-xl bg-[#c83f12]/20 border border-[#ff5a1f] text-[#f4f0e8] text-xs font-mono flex items-center gap-2 shadow-sm animate-pulse">
+                <AlertCircle className="w-4 h-4 text-[#ff5a1f] shrink-0" />
+                <span>{submitError}</span>
+              </div>
+            )}
+
             {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
               className="w-full py-4 px-6 bg-[#ff5a1f] hover:bg-[#ff7a45] text-[#080808] font-display font-black text-xs sm:text-sm tracking-widest uppercase rounded-xl transition-all shadow-[0_4px_20px_rgba(255,90,31,0.35)] hover:scale-[1.01] active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-3"
             >
-              <span>{isSubmitting ? 'RECORDING PREDICTION...' : 'SUBMIT PREDICTION & ENTER GIVEAWAY'}</span>
+              <span>{isSubmitting ? 'SUBMITTING...' : 'SUBMIT PREDICTION & ENTER GIVEAWAY'}</span>
               <Send className="w-4 h-4" />
             </button>
 
@@ -371,17 +391,17 @@ export default function GuessesArena({ onJumpToSpeaker }) {
 
       </div>
 
-      {/* ================= SUCCESS / "YOUR ANSWER MIGHT BE CORRECT!" POP-UP MODAL ================= */}
+      {/* ================= SUCCESS POP-UP MODAL (PREDICTION LOGGED) ================= */}
       <AnimatePresence>
         {modalData && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
             
             <motion.div
               initial={{ opacity: 0, scale: 0.88, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 10 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="relative w-full max-w-lg bg-[#111111] border-2 border-[#ff5a1f] rounded-3xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(255,90,31,0.2)] text-[#f4f0e8] space-y-6 select-none"
+              className="relative w-full max-w-lg bg-[#111111] border-2 border-[#ff5a1f] rounded-3xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(255,90,31,0.25)] text-[#f4f0e8] space-y-6 select-none"
             >
               {/* Close Button */}
               <button
@@ -394,21 +414,28 @@ export default function GuessesArena({ onJumpToSpeaker }) {
 
               {/* Glowing Icon & Header */}
               <div className="text-center space-y-2 pt-2">
-                <div className="w-16 h-16 rounded-full bg-[#ff5a1f] flex items-center justify-center mx-auto shadow-[0_4px_20px_rgba(255,90,31,0.3)]">
-                  <Sparkles className="w-9 h-9 text-[#080808] animate-pulse" />
+                <div className="w-16 h-16 rounded-full bg-[#ff5a1f] flex items-center justify-center mx-auto shadow-[0_4px_20px_rgba(255,90,31,0.35)]">
+                  <CheckCircle2 className="w-9 h-9 text-[#080808]" />
                 </div>
 
                 <div className="font-mono text-xs font-black uppercase tracking-[0.25em] text-[#ff5a1f]">
-                  PREDICTION RECORDED!
+                  PREDICTION LOGGED
                 </div>
 
                 <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#f4f0e8]">
-                  YOUR ANSWER MIGHT BE <span className="text-[#ff5a1f]">CORRECT!</span> 🔥
+                  YOUR PREDICTION HAS BEEN <span className="text-[#ff5a1f]">RECORDED!</span>
                 </h3>
               </div>
 
               {/* Submission Summary Card */}
               <div className="p-4 rounded-2xl bg-[#080808] border border-white/10 space-y-2.5 font-sans text-xs">
+                {modalData.submissionId && (
+                  <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                    <span className="text-[#817b73] font-mono">SUBMISSION ID:</span>
+                    <span className="font-bold text-[#ff8a3d] font-mono tracking-wider">{modalData.submissionId}</span>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
                   <span className="text-[#817b73] font-mono">TARGET SPEAKER:</span>
                   <span className="font-bold text-[#ff5a1f] font-mono">#{modalData.speakerNum} ({modalData.speakerTitle})</span>
@@ -431,7 +458,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
 
               {/* Encouragement note */}
               <p className="font-sans text-xs sm:text-sm text-[#817b73] text-center leading-relaxed font-medium">
-                Stay tuned! If your guess is correct, you'll be featured on <strong className="text-[#ff5a1f]">@devkraft</strong> and contacted via Instagram for the VIP Keynote Pass!
+                Your prediction has been secured. Winners will be announced during DEVTALKS '26 and contacted via Instagram for VIP backstage passes!
               </p>
 
               {/* Modal Buttons */}
