@@ -29,7 +29,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
   const containerRef = useRef(null);
   const revealLayerRef = useRef(null);
 
-  // Mouse & Touch Tracking Coordinates
+  // Mouse, Touch & Gyro Tracking Coordinates
   const targetPosRef = useRef({ x: 0, y: 0 });
   const currentPosRef = useRef({ x: 0, y: 0 });
   const isInitializedRef = useRef(false);
@@ -37,8 +37,10 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
   const userInteractionTimeoutRef = useRef(null);
   const animFrameRef = useRef(null);
   const idleTimeRef = useRef(0);
+  const gyroOffsetRef = useRef({ x: 0, y: 0 });
+  const [hasInteracted, setHasInteracted] = useState(false);
 
-  const [spotlightRadius, setSpotlightRadius] = useState(300);
+  const [spotlightRadius, setSpotlightRadius] = useState(320);
 
   const activeSpeaker = speakersList[0];
 
@@ -66,16 +68,17 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       const isSmallMobile = window.innerWidth < 480;
       const isTablet = window.innerWidth >= 480 && window.innerWidth < 1024;
       
+      // Generous spotlight size across all devices
       const radius = isSmallMobile 
-        ? Math.min(rect.width * 0.44, 180) 
+        ? Math.max(190, Math.min(rect.width * 0.52, 230))
         : isTablet 
-          ? 260 
+          ? 280 
           : 340;
       setSpotlightRadius(radius);
 
       if (!isInitializedRef.current) {
         const initialX = rect.width * 0.5;
-        const initialY = rect.height * 0.42;
+        const initialY = rect.height * 0.40;
         targetPosRef.current = { x: initialX, y: initialY };
         currentPosRef.current = { x: initialX, y: initialY };
         isInitializedRef.current = true;
@@ -85,39 +88,43 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
 
-    const handleMouseMove = (e) => {
+    // Update target point relative to hero container
+    const updateTargetPosition = (clientX, clientY) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      targetPosRef.current = {
-        x: Math.max(0, Math.min(e.clientX - rect.left, rect.width)),
-        y: Math.max(0, Math.min(e.clientY - rect.top, rect.height))
-      };
+      const clampedX = Math.max(0, Math.min(clientX - rect.left, rect.width));
+      const clampedY = Math.max(0, Math.min(clientY - rect.top, rect.height));
+      
+      targetPosRef.current = { x: clampedX, y: clampedY };
       isUserInteractingRef.current = true;
+      setHasInteracted(true);
 
       if (userInteractionTimeoutRef.current) clearTimeout(userInteractionTimeoutRef.current);
       userInteractionTimeoutRef.current = setTimeout(() => {
         isUserInteractingRef.current = false;
-      }, 2500);
+      }, 2400);
     };
 
+    // Unified pointer events for desktop, stylus, and touchscreens
+    const handlePointerMove = (e) => {
+      updateTargetPosition(e.clientX, e.clientY);
+    };
+
+    const handlePointerDown = (e) => {
+      updateTargetPosition(e.clientX, e.clientY);
+    };
+
+    // Native touch event listeners as robust fallback for all mobile browsers
     const handleTouchStart = (e) => {
-      if (!containerRef.current || !e.touches[0]) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      targetPosRef.current = {
-        x: Math.max(0, Math.min(e.touches[0].clientX - rect.left, rect.width)),
-        y: Math.max(0, Math.min(e.touches[0].clientY - rect.top, rect.height))
-      };
-      isUserInteractingRef.current = true;
+      if (e.touches && e.touches[0]) {
+        updateTargetPosition(e.touches[0].clientX, e.touches[0].clientY);
+      }
     };
 
     const handleTouchMove = (e) => {
-      if (!containerRef.current || !e.touches[0]) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      targetPosRef.current = {
-        x: Math.max(0, Math.min(e.touches[0].clientX - rect.left, rect.width)),
-        y: Math.max(0, Math.min(e.touches[0].clientY - rect.top, rect.height))
-      };
-      isUserInteractingRef.current = true;
+      if (e.touches && e.touches[0]) {
+        updateTargetPosition(e.touches[0].clientX, e.touches[0].clientY);
+      }
     };
 
     const handleTouchEnd = () => {
@@ -127,38 +134,67 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       }, 2000);
     };
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    // Device Orientation / Mobile Tilt holographic effect
+    const handleOrientation = (e) => {
+      if (e.gamma !== null && e.beta !== null) {
+        // gamma: left-to-right tilt [-90, 90]
+        // beta: front-to-back tilt [-180, 180]
+        const tiltX = (e.gamma || 0) * 3.5;
+        const tiltY = ((e.beta || 0) - 45) * 3.5;
+        gyroOffsetRef.current = {
+          x: Math.max(-120, Math.min(tiltX, 120)),
+          y: Math.max(-120, Math.min(tiltY, 120))
+        };
+      }
+    };
 
-    // 60-120fps Fluid Interpolation Loop
-    const LERP_FACTOR = 0.085;
+    const containerEl = containerRef.current;
+    if (containerEl) {
+      containerEl.addEventListener('pointermove', handlePointerMove, { passive: true });
+      containerEl.addEventListener('pointerdown', handlePointerDown, { passive: true });
+      containerEl.addEventListener('touchstart', handleTouchStart, { passive: true });
+      containerEl.addEventListener('touchmove', handleTouchMove, { passive: true });
+      containerEl.addEventListener('touchend', handleTouchEnd, { passive: true });
+      containerEl.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+    }
 
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', handleOrientation, { passive: true });
+    }
+
+    // 60-120fps Smooth Motion Interpolation Loop
     const animate = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
 
-      // Subtle slow cinematic drift when idle
+      // Fluid responsive lerping (snappier during touch interaction, ultra-silky during drift)
+      const lerpFactor = isUserInteractingRef.current ? 0.14 : 0.075;
+
+      // Ambient breathing figure-8 drift across mystery speaker facial & neon ring focal area
       if (!isUserInteractingRef.current && isInitializedRef.current) {
-        idleTimeRef.current += 0.007;
-        const driftX = rect.width * 0.5 + Math.sin(idleTimeRef.current) * (rect.width * 0.09);
-        const driftY = rect.height * 0.42 + Math.cos(idleTimeRef.current * 0.8) * (rect.height * 0.05);
+        idleTimeRef.current += 0.009;
+        const centerX = rect.width * 0.5 + gyroOffsetRef.current.x;
+        const centerY = rect.height * 0.40 + gyroOffsetRef.current.y;
+        
+        // Lissajous curve for dynamic, natural spotlight movement
+        const driftX = centerX + Math.sin(idleTimeRef.current) * (rect.width * 0.14);
+        const driftY = centerY + Math.sin(idleTimeRef.current * 2) * (rect.height * 0.07);
         targetPosRef.current = { x: driftX, y: driftY };
       }
 
       const target = targetPosRef.current;
       const current = currentPosRef.current;
 
-      current.x += (target.x - current.x) * LERP_FACTOR;
-      current.y += (target.y - current.y) * LERP_FACTOR;
+      current.x += (target.x - current.x) * lerpFactor;
+      current.y += (target.y - current.y) * lerpFactor;
 
       const curX = current.x.toFixed(1);
       const curY = current.y.toFixed(1);
       const radius = spotlightRadius;
 
       if (revealLayerRef.current) {
-        const maskCss = `radial-gradient(circle ${radius}px at ${curX}px ${curY}px, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 52%, rgba(0,0,0,0.2) 82%, rgba(0,0,0,0) 100%)`;
+        const maskCss = `radial-gradient(circle ${radius}px at ${curX}px ${curY}px, rgba(0,0,0,1) 0%, rgba(0,0,0,0.94) 55%, rgba(0,0,0,0.22) 84%, rgba(0,0,0,0) 100%)`;
         revealLayerRef.current.style.maskImage = maskCss;
         revealLayerRef.current.style.webkitMaskImage = maskCss;
       }
@@ -170,10 +206,18 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
 
     return () => {
       window.removeEventListener('resize', updateDimensions);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
+      if (containerEl) {
+        containerEl.removeEventListener('pointermove', handlePointerMove);
+        containerEl.removeEventListener('pointerdown', handlePointerDown);
+        containerEl.removeEventListener('touchstart', handleTouchStart);
+        containerEl.removeEventListener('touchmove', handleTouchMove);
+        containerEl.removeEventListener('touchend', handleTouchEnd);
+        containerEl.removeEventListener('touchcancel', handleTouchEnd);
+      }
+      window.removeEventListener('pointermove', handlePointerMove);
+      if (window.DeviceOrientationEvent) {
+        window.removeEventListener('deviceorientation', handleOrientation);
+      }
       if (userInteractionTimeoutRef.current) {
         clearTimeout(userInteractionTimeoutRef.current);
       }
@@ -187,7 +231,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     <section 
       id="hero"
       ref={containerRef}
-      className="relative w-full min-h-[100dvh] bg-[#070707] text-[#f4f0e8] flex flex-col justify-between pt-16 sm:pt-20 pb-5 sm:pb-7 px-4 sm:px-8 lg:px-12 overflow-hidden select-none"
+      className="relative w-full min-h-[100dvh] bg-[#070707] text-[#f4f0e8] flex flex-col justify-between pt-16 sm:pt-20 pb-5 sm:pb-7 px-4 sm:px-8 lg:px-12 overflow-hidden select-none touch-pan-y"
     >
       
       {/* ================= DUAL-IMAGE RADIAL REVEAL CANVAS (BACKGROUND) ================= */}
@@ -258,22 +302,53 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
         {/* ================= LEFT COLUMN: HEADLINE + RIPPED PAPER HINT NOTE ================= */}
         <div className="lg:col-span-4 flex flex-col items-start space-y-2.5 sm:space-y-3 z-30 max-w-sm">
           
-          {/* Main Title: GUESS THE SPEAKER? */}
-          <div className="space-y-0.5 text-left">
-            <h1 className="font-display font-black uppercase text-3xl xs:text-4xl sm:text-5xl lg:text-6xl text-[#f4f0e8] leading-[0.92] tracking-tight drop-shadow-[0_6px_25px_rgba(0,0,0,0.9)]">
-              GUESS THE <br />
-              <span className="text-[#ff5a1f] drop-shadow-[0_0_20px_rgba(255,90,31,0.55)]">
-                SPEAKER?
-              </span>
-            </h1>
+          {/* RIPPED PAPER HEADLINE CARD */}
+          <div className="relative w-full max-w-[280px] xs:max-w-[310px] sm:max-w-[340px] pt-2 transform -rotate-2 hover:rotate-0 transition-transform duration-300 pointer-events-auto">
             
-            <div className="pt-0.5 font-mono text-[10px] sm:text-xs text-[#ff8a3d] font-bold tracking-widest uppercase">
-              BIG IDEAS. BIGGER IMPACT.
+            {/* Top Tape Strip */}
+            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-20 sm:w-24 h-4 bg-white/45 backdrop-blur-md rounded-xs border border-white/70 rotate-1 shadow-sm z-20" />
+
+            {/* Torn Paper Body */}
+            <div 
+              className="relative p-4 sm:p-5 bg-[#f5ede2] text-[#1a1816] rounded-xs shadow-[0_18px_40px_rgba(0,0,0,0.85),_0_3px_12px_rgba(255,90,31,0.25)] font-sans border-t border-l border-white/80 text-left"
+              style={{
+                clipPath: 'polygon(0% 0%, 100% 0%, 98% 97%, 92% 95%, 85% 99%, 78% 96%, 68% 99%, 60% 95%, 50% 98%, 40% 96%, 30% 99%, 22% 96%, 12% 99%, 0% 97%)'
+              }}
+            >
+              {/* Paper Header */}
+              <div className="flex items-center justify-between border-b border-[#1a1816]/15 pb-1.5 mb-2 font-mono font-black text-[10px] sm:text-[11px] tracking-wider uppercase text-[#1a1816]">
+                <span className="flex items-center gap-1.5">
+                  <span>📌 DOSSIER 01</span>
+                  <span className="text-[#ff5a1f]">• •</span>
+                </span>
+                <span className="text-[8px] sm:text-[9px] text-[#1a1816]/50">CONFIDENTIAL</span>
+              </div>
+
+              {/* Main Headline on Paper */}
+              <div className="space-y-0.5 text-left">
+                <h1 className="font-display font-black uppercase text-2xl xs:text-3xl sm:text-4xl text-[#1a1816] leading-[0.95] tracking-tight">
+                  GUESS THE <br />
+                  <span className="text-[#ff5a1f] drop-shadow-[0_2px_10px_rgba(255,90,31,0.35)]">
+                    SPEAKER?
+                  </span>
+                </h1>
+                
+                <div className="pt-1.5 font-mono text-[9px] sm:text-[10px] text-[#ff5a1f] font-black tracking-widest uppercase">
+                  BIG IDEAS. BIGGER IMPACT.
+                </div>
+              </div>
+
+              {/* Bottom Watermark */}
+              <div className="pt-2.5 text-right">
+                <span className="font-mono text-[7.5px] sm:text-[8px] tracking-widest text-[#1a1816]/40 uppercase">
+                  DEVTALKS '26 // UNMASKING SOON
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Primary Action Button */}
-          <div className="pt-2 flex items-center gap-2 w-full">
+          <div className="pt-1.5 flex items-center gap-2 w-full">
             <button
               onClick={() => {
                 soundFx.playEvidenceClick();
@@ -289,13 +364,20 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
         </div>
 
         {/* ================= CENTER COLUMN: OPEN FOCAL STAGE (ALLOWS IMAGE REVEAL TO SHINE) ================= */}
-        <div className="lg:col-span-4 relative flex flex-col items-center justify-center min-h-[40px] xs:min-h-[60px] lg:min-h-[140px] pointer-events-none">
+        <div className="lg:col-span-4 relative flex flex-col items-center justify-center min-h-[40px] xs:min-h-[60px] lg:min-h-[140px] pointer-events-none gap-2">
           
           {/* Subtle Chalk Stamp: SAME HINTS, DIFFERENT ANSWERS */}
           <div className="transform rotate-2 pointer-events-auto">
             <div className="px-3 py-0.5 sm:py-1 bg-[#111111]/85 border border-[#ff5a1f]/50 text-[#ff8a3d] font-mono text-[8px] sm:text-[9px] font-bold tracking-widest uppercase rounded-full backdrop-blur-md shadow-md">
               SAME HINTS • DIFFERENT ANSWERS 🎯
             </div>
+          </div>
+
+          {/* Interactive Mobile Cue (Fades once interacted) */}
+          <div className={`sm:hidden pointer-events-auto transition-opacity duration-700 ${hasInteracted ? 'opacity-40 hover:opacity-100' : 'opacity-90 animate-pulse'}`}>
+            <span className="px-2.5 py-0.5 rounded-full bg-[#111111]/80 border border-[#ff5a1f]/30 text-[#f4f0e8]/80 font-mono text-[7.5px] tracking-wider uppercase backdrop-blur-sm">
+              ✨ DRAG / TOUCH TO UNMASK
+            </span>
           </div>
 
         </div>
