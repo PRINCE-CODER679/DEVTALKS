@@ -272,42 +272,8 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
             </div>
           </div>
 
-          {/* RIPPED PAPER STICKY NOTE HINTS (AUTHENTIC ASSET) */}
-          <div className="relative w-full max-w-[240px] xs:max-w-[260px] sm:max-w-[275px] pt-1.5 transform -rotate-1 hover:rotate-0 transition-transform duration-300 pointer-events-auto">
-            
-            {/* Top Tape Strip */}
-            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-14 sm:w-16 h-3 sm:h-3.5 bg-white/35 backdrop-blur-md rounded-xs border border-white/50 rotate-1 shadow-sm z-20" />
-
-            {/* Torn Paper Body */}
-            <div 
-              className="relative p-2.5 sm:p-3.5 bg-[#f4ede2] text-[#1a1816] rounded-xs shadow-[0_12px_30px_rgba(0,0,0,0.85),_0_2px_8px_rgba(255,90,31,0.2)] font-sans border-t border-l border-white/60 text-left"
-              style={{
-                clipPath: 'polygon(0% 0%, 100% 0%, 98% 97%, 92% 95%, 85% 99%, 78% 96%, 68% 99%, 60% 95%, 50% 98%, 40% 96%, 30% 99%, 22% 96%, 12% 99%, 0% 97%)'
-              }}
-            >
-              {/* Paper Header */}
-              <div className="flex items-center justify-between border-b border-[#1a1816]/15 pb-1 mb-1 font-mono font-black text-[10px] sm:text-[11px] tracking-wider uppercase text-[#1a1816]">
-                <span className="flex items-center gap-1">
-                  <span>📌 HINTS</span>
-                  <span className="text-[#ff5a1f]">• •</span>
-                </span>
-                <span className="text-[7.5px] sm:text-[8px] text-[#1a1816]/50">CONFIDENTIAL</span>
-              </div>
-
-              {/* Hints List */}
-              <div className="space-y-1 text-[8.5px] sm:text-[10px] font-sans font-medium text-[#2d2926]">
-                {activeSpeaker.hints.slice(0, 3).map((hint, idx) => (
-                  <div key={idx} className="flex items-center gap-1.5 leading-tight">
-                    <span className="text-[10px] shrink-0">{hint.icon}</span>
-                    <span className="font-semibold text-[#1a1816] truncate">{hint.title}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
           {/* Primary Action Button */}
-          <div className="pt-1 flex items-center gap-2 w-full">
+          <div className="pt-2 flex items-center gap-2 w-full">
             <button
               onClick={() => {
                 soundFx.playEvidenceClick();
