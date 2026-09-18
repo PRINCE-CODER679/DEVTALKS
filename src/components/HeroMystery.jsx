@@ -34,8 +34,11 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
   const isUserInteractingRef = useRef(false);
   const userInteractionTimeoutRef = useRef(null);
   const animFrameRef = useRef(null);
-  const idleTimeRef = useRef(0);
   const lastTimeRef = useRef(0);
+
+  // Reveal Opacity control (0 = base silhouette only, 1 = fully active reveal)
+  const revealOpacityRef = useRef(0);
+  const targetOpacityRef = useRef(0);
   
   // Gyroscope tracking with smooth interpolation
   const gyroTargetRef = useRef({ x: 0, y: 0 });
@@ -115,14 +118,17 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       const clampedX = Math.max(0, Math.min(clientX - rect.left, rect.width));
       const clampedY = Math.max(0, Math.min(clientY - rect.top, rect.height));
       
+      // If reveal is currently inactive, snap position to avoid sliding in from afar
+      if (revealOpacityRef.current < 0.05) {
+        currentPosRef.current = { x: clampedX, y: clampedY };
+      }
+
       targetPosRef.current = { x: clampedX, y: clampedY };
+      targetOpacityRef.current = 1;
       isUserInteractingRef.current = true;
       setHasInteracted(true);
 
       if (userInteractionTimeoutRef.current) clearTimeout(userInteractionTimeoutRef.current);
-      userInteractionTimeoutRef.current = setTimeout(() => {
-        isUserInteractingRef.current = false;
-      }, 2600);
     };
 
     // Unified pointer events for desktop, stylus, and touchscreens
@@ -130,8 +136,17 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       updateTargetPosition(e.clientX, e.clientY);
     };
 
+    const handlePointerEnter = (e) => {
+      targetOpacityRef.current = 1;
+      updateTargetPosition(e.clientX, e.clientY);
+    };
+
+    const handlePointerLeave = () => {
+      targetOpacityRef.current = 0;
+      isUserInteractingRef.current = false;
+    };
+
     const handlePointerDown = (e) => {
-      // Re-cache bounding rect on pointer down to ensure accuracy after scroll
       if (containerRef.current) {
         containerRectRef.current = containerRef.current.getBoundingClientRect();
       }
@@ -157,15 +172,14 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     const handleTouchEnd = () => {
       if (userInteractionTimeoutRef.current) clearTimeout(userInteractionTimeoutRef.current);
       userInteractionTimeoutRef.current = setTimeout(() => {
+        targetOpacityRef.current = 0;
         isUserInteractingRef.current = false;
-      }, 2200);
+      }, 1500);
     };
 
     // Device Orientation / Mobile Tilt holographic parallax effect
     const handleOrientation = (e) => {
       if (e.gamma !== null && e.beta !== null) {
-        // gamma: left-to-right tilt [-90, 90]
-        // beta: front-to-back tilt [-180, 180]
         const tiltX = (e.gamma || 0) * 2.8;
         const tiltY = ((e.beta || 0) - 45) * 2.8;
         gyroTargetRef.current = {
@@ -178,6 +192,8 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     const containerEl = containerRef.current;
     if (containerEl) {
       containerEl.addEventListener('pointermove', handlePointerMove, { passive: true });
+      containerEl.addEventListener('pointerenter', handlePointerEnter, { passive: true });
+      containerEl.addEventListener('pointerleave', handlePointerLeave, { passive: true });
       containerEl.addEventListener('pointerdown', handlePointerDown, { passive: true });
       containerEl.addEventListener('touchstart', handleTouchStart, { passive: true });
       containerEl.addEventListener('touchmove', handleTouchMove, { passive: true });
@@ -185,7 +201,6 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       containerEl.addEventListener('touchcancel', handleTouchEnd, { passive: true });
     }
 
-    window.addEventListener('pointermove', handlePointerMove, { passive: true });
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', handleOrientation, { passive: true });
     }
@@ -193,8 +208,6 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     // 60-120fps Smooth Delta-Time Motion Interpolation Loop
     const animate = (timestamp) => {
       if (!containerRef.current) return;
-      
-      const rect = containerRectRef.current || containerRef.current.getBoundingClientRect();
 
       // Delta time in seconds (capped at 50ms to prevent jumping after tab switch)
       const now = timestamp || performance.now();
@@ -205,45 +218,47 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       gyroCurrentRef.current.x += (gyroTargetRef.current.x - gyroCurrentRef.current.x) * Math.min(dt * 8, 1);
       gyroCurrentRef.current.y += (gyroTargetRef.current.y - gyroCurrentRef.current.y) * Math.min(dt * 8, 1);
 
-      // Ambient breathing figure-8 drift across mystery speaker when idle
-      if (!isUserInteractingRef.current && isInitializedRef.current) {
-        idleTimeRef.current += dt * 0.9;
-        const centerX = rect.width * 0.5 + gyroCurrentRef.current.x;
-        const centerY = rect.height * 0.38 + gyroCurrentRef.current.y;
-        
-        // Lissajous curve for dynamic, natural spotlight movement
-        const driftX = centerX + Math.sin(idleTimeRef.current * 0.8) * (rect.width * 0.12);
-        const driftY = centerY + Math.sin(idleTimeRef.current * 1.6) * (rect.height * 0.06);
-        targetPosRef.current = { x: driftX, y: driftY };
-      }
+      // Smooth opacity interpolation (fades in when cursor moves on image, fades out on leave)
+      const opacitySpeed = targetOpacityRef.current > revealOpacityRef.current ? 10 : 6;
+      revealOpacityRef.current += (targetOpacityRef.current - revealOpacityRef.current) * (1 - Math.exp(-opacitySpeed * dt));
+      const currentOpacity = revealOpacityRef.current;
 
       const target = targetPosRef.current;
       const current = currentPosRef.current;
 
-      // Delta-time normalized exponential lerping for buttery 60Hz & 120Hz motion
-      const speed = isUserInteractingRef.current ? 16 : 4.5;
+      // Delta-time normalized exponential lerping for responsive cursor tracking
+      const speed = 20;
       const lerp = 1 - Math.exp(-speed * dt);
 
-      current.x += (target.x - current.x) * lerp;
-      current.y += (target.y - current.y) * lerp;
+      current.x += (target.x + gyroCurrentRef.current.x - current.x) * lerp;
+      current.y += (target.y + gyroCurrentRef.current.y - current.y) * lerp;
 
       const curX = current.x.toFixed(1);
       const curY = current.y.toFixed(1);
       const radius = spotlightRadiusRef.current;
 
-      // Apply GPU-accelerated radial mask
       if (revealLayerRef.current) {
-        const maskCss = `radial-gradient(circle ${radius}px at ${curX}px ${curY}px, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 55%, rgba(0,0,0,0.2) 85%, rgba(0,0,0,0) 100%)`;
-        revealLayerRef.current.style.maskImage = maskCss;
-        revealLayerRef.current.style.webkitMaskImage = maskCss;
+        if (currentOpacity > 0.005) {
+          const maskCss = `radial-gradient(circle ${radius}px at ${curX}px ${curY}px, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 55%, rgba(0,0,0,0.2) 85%, rgba(0,0,0,0) 100%)`;
+          revealLayerRef.current.style.maskImage = maskCss;
+          revealLayerRef.current.style.webkitMaskImage = maskCss;
+          revealLayerRef.current.style.opacity = currentOpacity.toFixed(3);
+        } else {
+          revealLayerRef.current.style.opacity = '0';
+        }
       }
 
       // Smooth spotlight beam glow halo
       if (spotlightGlowRef.current) {
-        const glowRadius = radius * 1.05;
-        spotlightGlowRef.current.style.transform = `translate3d(${curX - glowRadius}px, ${curY - glowRadius}px, 0)`;
-        spotlightGlowRef.current.style.width = `${glowRadius * 2}px`;
-        spotlightGlowRef.current.style.height = `${glowRadius * 2}px`;
+        if (currentOpacity > 0.005) {
+          const glowRadius = radius * 1.05;
+          spotlightGlowRef.current.style.transform = `translate3d(${curX - glowRadius}px, ${curY - glowRadius}px, 0)`;
+          spotlightGlowRef.current.style.width = `${glowRadius * 2}px`;
+          spotlightGlowRef.current.style.height = `${glowRadius * 2}px`;
+          spotlightGlowRef.current.style.opacity = (currentOpacity * 0.85).toFixed(3);
+        } else {
+          spotlightGlowRef.current.style.opacity = '0';
+        }
       }
 
       animFrameRef.current = requestAnimationFrame(animate);
@@ -256,13 +271,14 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       window.removeEventListener('scroll', handleScroll);
       if (containerEl) {
         containerEl.removeEventListener('pointermove', handlePointerMove);
+        containerEl.removeEventListener('pointerenter', handlePointerEnter);
+        containerEl.removeEventListener('pointerleave', handlePointerLeave);
         containerEl.removeEventListener('pointerdown', handlePointerDown);
         containerEl.removeEventListener('touchstart', handleTouchStart);
         containerEl.removeEventListener('touchmove', handleTouchMove);
         containerEl.removeEventListener('touchend', handleTouchEnd);
         containerEl.removeEventListener('touchcancel', handleTouchEnd);
       }
-      window.removeEventListener('pointermove', handlePointerMove);
       if (window.DeviceOrientationEvent) {
         window.removeEventListener('deviceorientation', handleOrientation);
       }
@@ -297,13 +313,12 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
           <div className="absolute inset-0 bg-radial from-transparent via-[#070707]/20 to-[#070707]/90" />
         </div>
 
-        {/* Layer 2: Alternate Revealed Speaker (Masked with GPU Acceleration) */}
+        {/* Layer 2: Alternate Revealed Speaker (Masked with GPU Acceleration, visible only on cursor hover/drag) */}
         <div 
           ref={revealLayerRef}
-          className="absolute inset-0 w-full h-full will-change-[mask-image] transform-gpu"
+          className="absolute inset-0 w-full h-full will-change-[mask-image,opacity] transform-gpu"
           style={{
-            maskImage: `radial-gradient(circle 300px at 50% 38%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)`,
-            WebkitMaskImage: `radial-gradient(circle 300px at 50% 38%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)`,
+            opacity: 0,
             WebkitBackfaceVisibility: 'hidden',
             backfaceVisibility: 'hidden'
           }}
@@ -322,10 +337,11 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
         {/* Dynamic Luminous Spotlight Glow Halo */}
         <div
           ref={spotlightGlowRef}
-          className="absolute pointer-events-none will-change-transform rounded-full mix-blend-screen opacity-80 transition-opacity duration-300"
+          className="absolute pointer-events-none will-change-transform rounded-full mix-blend-screen opacity-0 transition-opacity duration-300"
           style={{
             width: '640px',
             height: '640px',
+            opacity: 0,
             background: 'radial-gradient(circle, rgba(255,90,31,0.22) 0%, rgba(255,90,31,0.08) 40%, rgba(0,0,0,0) 70%)',
             transform: 'translate3d(-9999px, -9999px, 0)'
           }}
