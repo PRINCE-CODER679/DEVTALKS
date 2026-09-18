@@ -3,174 +3,150 @@ import { Volume2, VolumeX, ArrowRight } from 'lucide-react';
 
 export default function IntroVideoOverlay({ onComplete }) {
   const [isExiting, setIsExiting] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const mainVideoRef = useRef(null);
-  const bgVideoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef(null);
+  const isFinishedRef = useRef(false);
 
-  // Unmute and guarantee smooth playback
-  const enableAudioAndPlay = useCallback(() => {
-    const mainVid = mainVideoRef.current;
-    if (mainVid) {
-      mainVid.muted = false;
-      mainVid.volume = 1.0;
+  // Safely unmute audio and ensure video is playing
+  const unmuteAndPlay = useCallback(() => {
+    const vid = videoRef.current;
+    if (vid && !isFinishedRef.current) {
+      vid.muted = false;
+      vid.volume = 1.0;
       setIsMuted(false);
-      const playPromise = mainVid.play();
+      
+      const playPromise = vid.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => {});
+        playPromise.catch(() => {
+          // If unmuted playback is rejected, fallback to muted
+          if (vid && !isFinishedRef.current) {
+            vid.muted = true;
+            setIsMuted(true);
+            vid.play().catch(() => {});
+          }
+        });
       }
     }
   }, []);
 
-  // Initialize playback with autoPlay & attempt unmuted sound immediately from start
+  // Initialize playback on mount
   useEffect(() => {
-    const mainVid = mainVideoRef.current;
-    const bgVid = bgVideoRef.current;
+    const vid = videoRef.current;
+    if (!vid) return;
 
-    if (mainVid) {
-      mainVid.currentTime = 0;
-      mainVid.volume = 1.0;
-      
-      // Attempt unmuted sound playback right from the start
-      mainVid.muted = false;
-      const playPromise = mainVid.play();
-      
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            // Unmuted autoplay succeeded
+    // Start video playback immediately (muted ensures 100% mobile autoplay success)
+    vid.currentTime = 0;
+    const playPromise = vid.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          // Try to unmute immediately if browser policy allows
+          try {
+            vid.muted = false;
             setIsMuted(false);
-          })
-          .catch(() => {
-            // If browser autoplay policy requires gesture, start playing muted and unlock on first interaction
-            if (mainVid) {
-              mainVid.muted = true;
-              setIsMuted(true);
-              mainVid.play().catch(() => {});
-            }
-          });
-      }
+          } catch (e) {
+            vid.muted = true;
+            setIsMuted(true);
+          }
+        })
+        .catch(() => {
+          // In case of initial restriction, retry muted
+          if (vid) {
+            vid.muted = true;
+            setIsMuted(true);
+            vid.play().catch(() => {});
+          }
+        });
     }
 
-    if (bgVid) {
-      bgVid.currentTime = 0;
-      bgVid.muted = true;
-      bgVid.play().catch(() => {});
-    }
-
-    // Global touch/pointer listener to unmute instantly on touch/interaction
-    const handleFirstGesture = () => {
-      enableAudioAndPlay();
+    // Unmute on the very first touch / interaction anywhere on the screen
+    const handleFirstTouch = () => {
+      unmuteAndPlay();
     };
 
-    window.addEventListener('pointerdown', handleFirstGesture, { passive: true });
-    window.addEventListener('touchstart', handleFirstGesture, { passive: true });
-    window.addEventListener('click', handleFirstGesture, { passive: true });
-    window.addEventListener('keydown', handleFirstGesture, { passive: true });
+    window.addEventListener('pointerdown', handleFirstTouch, { once: true, passive: true });
+    window.addEventListener('touchstart', handleFirstTouch, { once: true, passive: true });
+    window.addEventListener('keydown', handleFirstTouch, { once: true, passive: true });
 
     return () => {
-      window.removeEventListener('pointerdown', handleFirstGesture);
-      window.removeEventListener('touchstart', handleFirstGesture);
-      window.removeEventListener('click', handleFirstGesture);
-      window.removeEventListener('keydown', handleFirstGesture);
+      window.removeEventListener('pointerdown', handleFirstTouch);
+      window.removeEventListener('touchstart', handleFirstTouch);
+      window.removeEventListener('keydown', handleFirstTouch);
     };
-  }, [enableAudioAndPlay]);
-
-  // Prevent accidental pauses on touch devices: keep video playing continuously
-  const handlePause = () => {
-    if (!isExiting && mainVideoRef.current) {
-      mainVideoRef.current.play().catch(() => {});
-    }
-  };
-
-  // Sync background ambient video time with main foreground video
-  const handleTimeUpdate = () => {
-    const mainVid = mainVideoRef.current;
-    const bgVid = bgVideoRef.current;
-    if (mainVid && bgVid && Math.abs(mainVid.currentTime - bgVid.currentTime) > 0.3) {
-      bgVid.currentTime = mainVid.currentTime;
-    }
-  };
+  }, [unmuteAndPlay]);
 
   const handleToggleMute = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    const vid = mainVideoRef.current;
+    const vid = videoRef.current;
     if (vid) {
-      const nextMuted = !vid.muted;
-      vid.muted = nextMuted;
-      if (!nextMuted) {
-        vid.volume = 1.0;
-        vid.play().catch(() => {});
+      if (vid.muted) {
+        unmuteAndPlay();
+      } else {
+        vid.muted = true;
+        setIsMuted(true);
       }
-      setIsMuted(nextMuted);
     }
   };
 
-  const handleWrapperTouch = () => {
-    // If touching anywhere on screen and video is muted, unmute it immediately without pausing
-    if (isMuted) {
-      enableAudioAndPlay();
-    } else if (mainVideoRef.current && mainVideoRef.current.paused) {
-      mainVideoRef.current.play().catch(() => {});
+  const handleScreenTouch = () => {
+    const vid = videoRef.current;
+    if (!vid || isFinishedRef.current) return;
+
+    // If currently muted, tapping anywhere unmutes
+    if (vid.muted) {
+      unmuteAndPlay();
+    } else if (vid.paused) {
+      vid.play().catch(() => {});
     }
   };
 
   const handleFinish = () => {
-    if (isExiting) return;
+    if (isFinishedRef.current || isExiting) return;
+    isFinishedRef.current = true;
     setIsExiting(true);
     setTimeout(() => {
       onComplete();
-    }, 350);
+    }, 300);
   };
 
   if (isExiting) return null;
 
   return (
     <div 
-      className="intro-video-wrapper cursor-pointer"
-      onClick={handleWrapperTouch}
-      onTouchStart={handleWrapperTouch}
+      className="fixed inset-0 w-full h-full min-h-[100dvh] bg-[#080808] z-[999999] overflow-hidden flex items-center justify-center select-none cursor-pointer"
+      onClick={handleScreenTouch}
+      onTouchStart={handleScreenTouch}
       role="region"
       aria-label="DEVTALKS Official Teaser Intro"
     >
+      {/* Background ambient radial glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,90,31,0.12)_0%,_rgba(8,8,8,0.95)_70%)] pointer-events-none -z-10" />
+
       {/* ========================================================================= */}
-      {/* 1. AMBIENT ATMOSPHERIC BACKGROUND VIDEO LAYER (ELIMINATES EMPTY BARS)     */}
+      {/* CINEMATIC VIDEO (SINGLE HARDWARE-ACCELERATED DECODER STREAM)             */}
       {/* ========================================================================= */}
       <video
-        ref={bgVideoRef}
+        ref={videoRef}
         src="/official-teaser.mp4"
         autoPlay
         muted
-        preload="auto"
         playsInline
         webkit-playsinline="true"
         x5-playsinline="true"
-        className="intro-bg-ambient-video pointer-events-none"
-        aria-hidden="true"
-      />
-
-      {/* ========================================================================= */}
-      {/* 2. SHARP FOREGROUND CINEMATIC VIDEO (100% UN-CROPPED TEXT & VISUALS)      */}
-      {/* ========================================================================= */}
-      <video
-        ref={mainVideoRef}
-        src="/official-teaser.mp4"
-        autoPlay
         preload="auto"
-        playsInline
-        webkit-playsinline="true"
-        x5-playsinline="true"
-        onPause={handlePause}
-        onTimeUpdate={handleTimeUpdate}
+        controls={false}
+        disablePictureInPicture
+        controlsList="nodownload nofullscreen noremoteplayback"
         onEnded={handleFinish}
-        onError={handleFinish}
-        className="intro-main-focused-video pointer-events-none"
+        className="w-full h-full max-w-[100vw] max-h-[100dvh] object-contain sm:object-cover pointer-events-none drop-shadow-[0_15px_45px_rgba(0,0,0,0.95)]"
       />
 
       {/* ========================================================================= */}
-      {/* 3. MINIMAL OVERLAY CONTROLS (UNMUTE AUDIO & SKIP BUTTON)                  */}
+      {/* MINIMAL OVERLAY CONTROLS (UNMUTE AUDIO & ENTER SITE BUTTON)               */}
       {/* ========================================================================= */}
       <div 
         className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 flex items-center gap-2.5 pointer-events-auto"
