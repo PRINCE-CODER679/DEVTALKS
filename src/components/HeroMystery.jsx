@@ -25,6 +25,8 @@ import { soundFx } from '../utils/audio';
 export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister, onWatchTeaser }) {
   const containerRef = useRef(null);
   const revealLayerRef = useRef(null);
+  const spotlightGlowRef = useRef(null);
+  const containerRectRef = useRef(null);
 
   // Mouse, Touch & Gyro Tracking Coordinates
   const targetPosRef = useRef({ x: 0, y: 0 });
@@ -34,10 +36,13 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
   const userInteractionTimeoutRef = useRef(null);
   const animFrameRef = useRef(null);
   const idleTimeRef = useRef(0);
-  const gyroOffsetRef = useRef({ x: 0, y: 0 });
+  const lastTimeRef = useRef(0);
+  
+  // Gyroscope tracking with smooth interpolation
+  const gyroTargetRef = useRef({ x: 0, y: 0 });
+  const gyroCurrentRef = useRef({ x: 0, y: 0 });
   const [hasInteracted, setHasInteracted] = useState(false);
-
-  const [spotlightRadius, setSpotlightRadius] = useState(320);
+  const spotlightRadiusRef = useRef(320);
 
   const communityComments = [
     {
@@ -57,23 +62,27 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
   ];
 
   useEffect(() => {
+    // Cache container dimensions to prevent layout thrashing on touch/mouse moves
     const updateDimensions = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
+      containerRectRef.current = rect;
+
       const isSmallMobile = window.innerWidth < 480;
       const isTablet = window.innerWidth >= 480 && window.innerWidth < 1024;
       
-      // Generous spotlight size across all devices
+      // Responsive spotlight radius
       const radius = isSmallMobile 
-        ? Math.max(190, Math.min(rect.width * 0.52, 230))
+        ? Math.max(180, Math.min(rect.width * 0.50, 240))
         : isTablet 
           ? 280 
           : 340;
-      setSpotlightRadius(radius);
+      
+      spotlightRadiusRef.current = radius;
 
       if (!isInitializedRef.current) {
         const initialX = rect.width * 0.5;
-        const initialY = rect.height * 0.40;
+        const initialY = rect.height * 0.38;
         targetPosRef.current = { x: initialX, y: initialY };
         currentPosRef.current = { x: initialX, y: initialY };
         isInitializedRef.current = true;
@@ -81,12 +90,29 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     };
 
     updateDimensions();
-    window.addEventListener('resize', updateDimensions);
 
-    // Update target point relative to hero container
+    const handleResize = () => {
+      updateDimensions();
+    };
+
+    const handleScroll = () => {
+      if (containerRef.current) {
+        containerRectRef.current = containerRef.current.getBoundingClientRect();
+      }
+    };
+
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Update target point relative to cached hero container bounds
     const updateTargetPosition = (clientX, clientY) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      let rect = containerRectRef.current;
+      if (!rect || rect.width === 0) {
+        if (!containerRef.current) return;
+        rect = containerRef.current.getBoundingClientRect();
+        containerRectRef.current = rect;
+      }
+
       const clampedX = Math.max(0, Math.min(clientX - rect.left, rect.width));
       const clampedY = Math.max(0, Math.min(clientY - rect.top, rect.height));
       
@@ -97,7 +123,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       if (userInteractionTimeoutRef.current) clearTimeout(userInteractionTimeoutRef.current);
       userInteractionTimeoutRef.current = setTimeout(() => {
         isUserInteractingRef.current = false;
-      }, 2400);
+      }, 2600);
     };
 
     // Unified pointer events for desktop, stylus, and touchscreens
@@ -106,11 +132,18 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     };
 
     const handlePointerDown = (e) => {
+      // Re-cache bounding rect on pointer down to ensure accuracy after scroll
+      if (containerRef.current) {
+        containerRectRef.current = containerRef.current.getBoundingClientRect();
+      }
       updateTargetPosition(e.clientX, e.clientY);
     };
 
     // Native touch event listeners as robust fallback for all mobile browsers
     const handleTouchStart = (e) => {
+      if (containerRef.current) {
+        containerRectRef.current = containerRef.current.getBoundingClientRect();
+      }
       if (e.touches && e.touches[0]) {
         updateTargetPosition(e.touches[0].clientX, e.touches[0].clientY);
       }
@@ -126,19 +159,19 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       if (userInteractionTimeoutRef.current) clearTimeout(userInteractionTimeoutRef.current);
       userInteractionTimeoutRef.current = setTimeout(() => {
         isUserInteractingRef.current = false;
-      }, 2000);
+      }, 2200);
     };
 
-    // Device Orientation / Mobile Tilt holographic effect
+    // Device Orientation / Mobile Tilt holographic parallax effect
     const handleOrientation = (e) => {
       if (e.gamma !== null && e.beta !== null) {
         // gamma: left-to-right tilt [-90, 90]
         // beta: front-to-back tilt [-180, 180]
-        const tiltX = (e.gamma || 0) * 3.5;
-        const tiltY = ((e.beta || 0) - 45) * 3.5;
-        gyroOffsetRef.current = {
-          x: Math.max(-120, Math.min(tiltX, 120)),
-          y: Math.max(-120, Math.min(tiltY, 120))
+        const tiltX = (e.gamma || 0) * 2.8;
+        const tiltY = ((e.beta || 0) - 45) * 2.8;
+        gyroTargetRef.current = {
+          x: Math.max(-90, Math.min(tiltX, 90)),
+          y: Math.max(-90, Math.min(tiltY, 90))
         };
       }
     };
@@ -158,40 +191,60 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       window.addEventListener('deviceorientation', handleOrientation, { passive: true });
     }
 
-    // 60-120fps Smooth Motion Interpolation Loop
-    const animate = () => {
+    // 60-120fps Smooth Delta-Time Motion Interpolation Loop
+    const animate = (timestamp) => {
       if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      
+      const rect = containerRectRef.current || containerRef.current.getBoundingClientRect();
 
-      // Fluid responsive lerping (snappier during touch interaction, ultra-silky during drift)
-      const lerpFactor = isUserInteractingRef.current ? 0.14 : 0.075;
+      // Delta time in seconds (capped at 50ms to prevent jumping after tab switch)
+      const now = timestamp || performance.now();
+      const dt = lastTimeRef.current ? Math.min((now - lastTimeRef.current) / 1000, 0.05) : 0.016;
+      lastTimeRef.current = now;
 
-      // Ambient breathing figure-8 drift across mystery speaker facial & neon ring focal area
+      // Smooth gyro lerp (low-pass filter)
+      gyroCurrentRef.current.x += (gyroTargetRef.current.x - gyroCurrentRef.current.x) * Math.min(dt * 8, 1);
+      gyroCurrentRef.current.y += (gyroTargetRef.current.y - gyroCurrentRef.current.y) * Math.min(dt * 8, 1);
+
+      // Ambient breathing figure-8 drift across mystery speaker when idle
       if (!isUserInteractingRef.current && isInitializedRef.current) {
-        idleTimeRef.current += 0.009;
-        const centerX = rect.width * 0.5 + gyroOffsetRef.current.x;
-        const centerY = rect.height * 0.40 + gyroOffsetRef.current.y;
+        idleTimeRef.current += dt * 0.9;
+        const centerX = rect.width * 0.5 + gyroCurrentRef.current.x;
+        const centerY = rect.height * 0.38 + gyroCurrentRef.current.y;
         
         // Lissajous curve for dynamic, natural spotlight movement
-        const driftX = centerX + Math.sin(idleTimeRef.current) * (rect.width * 0.14);
-        const driftY = centerY + Math.sin(idleTimeRef.current * 2) * (rect.height * 0.07);
+        const driftX = centerX + Math.sin(idleTimeRef.current * 0.8) * (rect.width * 0.12);
+        const driftY = centerY + Math.sin(idleTimeRef.current * 1.6) * (rect.height * 0.06);
         targetPosRef.current = { x: driftX, y: driftY };
       }
 
       const target = targetPosRef.current;
       const current = currentPosRef.current;
 
-      current.x += (target.x - current.x) * lerpFactor;
-      current.y += (target.y - current.y) * lerpFactor;
+      // Delta-time normalized exponential lerping for buttery 60Hz & 120Hz motion
+      const speed = isUserInteractingRef.current ? 16 : 4.5;
+      const lerp = 1 - Math.exp(-speed * dt);
+
+      current.x += (target.x - current.x) * lerp;
+      current.y += (target.y - current.y) * lerp;
 
       const curX = current.x.toFixed(1);
       const curY = current.y.toFixed(1);
-      const radius = spotlightRadius;
+      const radius = spotlightRadiusRef.current;
 
+      // Apply GPU-accelerated radial mask
       if (revealLayerRef.current) {
-        const maskCss = `radial-gradient(circle ${radius}px at ${curX}px ${curY}px, rgba(0,0,0,1) 0%, rgba(0,0,0,0.94) 55%, rgba(0,0,0,0.22) 84%, rgba(0,0,0,0) 100%)`;
+        const maskCss = `radial-gradient(circle ${radius}px at ${curX}px ${curY}px, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 55%, rgba(0,0,0,0.2) 85%, rgba(0,0,0,0) 100%)`;
         revealLayerRef.current.style.maskImage = maskCss;
         revealLayerRef.current.style.webkitMaskImage = maskCss;
+      }
+
+      // Smooth spotlight beam glow halo
+      if (spotlightGlowRef.current) {
+        const glowRadius = radius * 1.05;
+        spotlightGlowRef.current.style.transform = `translate3d(${curX - glowRadius}px, ${curY - glowRadius}px, 0)`;
+        spotlightGlowRef.current.style.width = `${glowRadius * 2}px`;
+        spotlightGlowRef.current.style.height = `${glowRadius * 2}px`;
       }
 
       animFrameRef.current = requestAnimationFrame(animate);
@@ -200,7 +253,8 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     animFrameRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('resize', updateDimensions);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
       if (containerEl) {
         containerEl.removeEventListener('pointermove', handlePointerMove);
         containerEl.removeEventListener('pointerdown', handlePointerDown);
@@ -220,7 +274,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
         cancelAnimationFrame(animFrameRef.current);
       }
     };
-  }, [spotlightRadius]);
+  }, []);
 
   return (
     <section 
@@ -244,13 +298,15 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
           <div className="absolute inset-0 bg-radial from-transparent via-[#070707]/20 to-[#070707]/90" />
         </div>
 
-        {/* Layer 2: Alternate Revealed Speaker (Masked) */}
+        {/* Layer 2: Alternate Revealed Speaker (Masked with GPU Acceleration) */}
         <div 
           ref={revealLayerRef}
-          className="absolute inset-0 w-full h-full will-change-[mask-image]"
+          className="absolute inset-0 w-full h-full will-change-[mask-image] transform-gpu"
           style={{
-            maskImage: `radial-gradient(circle 300px at 50% 42%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)`,
-            WebkitMaskImage: `radial-gradient(circle 300px at 50% 42%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)`
+            maskImage: `radial-gradient(circle 300px at 50% 38%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)`,
+            WebkitMaskImage: `radial-gradient(circle 300px at 50% 38%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)`,
+            WebkitBackfaceVisibility: 'hidden',
+            backfaceVisibility: 'hidden'
           }}
         >
           <div className="relative w-full h-full flex items-center justify-center">
@@ -260,9 +316,21 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
               className="w-full h-full object-cover object-[center_35%] sm:object-center filter contrast-130 brightness-105 saturate-115"
               draggable={false}
             />
-            <div className="absolute inset-0 bg-radial from-[#ff4500]/15 via-transparent to-transparent mix-blend-screen" />
+            <div className="absolute inset-0 bg-radial from-[#ff4500]/20 via-transparent to-transparent mix-blend-screen" />
           </div>
         </div>
+
+        {/* Dynamic Luminous Spotlight Glow Halo */}
+        <div
+          ref={spotlightGlowRef}
+          className="absolute pointer-events-none will-change-transform rounded-full mix-blend-screen opacity-80 transition-opacity duration-300"
+          style={{
+            width: '640px',
+            height: '640px',
+            background: 'radial-gradient(circle, rgba(255,90,31,0.22) 0%, rgba(255,90,31,0.08) 40%, rgba(0,0,0,0) 70%)',
+            transform: 'translate3d(-9999px, -9999px, 0)'
+          }}
+        />
 
         {/* Subtle Scanline Overlay */}
         <div className="absolute inset-0 subtle-dossier-grid opacity-15 pointer-events-none z-10" />
