@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, RotateCw } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 /**
  * SpeakerReconstructedPortrait
  * 
- * Ultra-smooth mobile-optimized circular digital reconstructed speaker portrait.
+ * Digital Reconstructed Speaker Portrait with Mosaic Pixelation & Connected Orbital Ring.
+ * 
  * Features:
- * - Pure hardware-accelerated CSS rendering (no heavy SVG feGaussianBlur filters)
+ * - Variable-resolution digital mosaic pixel matrix (larger blocks on perimeter, recognizable face in center)
+ * - Transitions: FRAGMENTED → PIXELATED → RECONSTRUCTING → SHARP upon reveal
  * - Circular portrait interacting with boundary
- * - Irregular fragmented/glitch slice portions around edges
- * - Connected orbital ring architecture with clean SVG strokes
+ * - Irregular fragmented/glitch slice portions extending outside circular edge
+ * - Connected orbital ring system with thin arcs, broken circular segments & rotating markers
  * - Laser scanline sweep on active card transition
- * - Mosaic/pixel matrix perimeter keeping center face recognizable
- * - Micro-particles with low GPU footprint
+ * - Floating orange embers & micro-particles
  */
 export default function SpeakerReconstructedPortrait({
   speaker,
@@ -23,6 +24,7 @@ export default function SpeakerReconstructedPortrait({
   onToggleReveal
 }) {
   const [scanCycle, setScanCycle] = useState(0);
+  const canvasRef = useRef(null);
 
   // Trigger scanline sweep when this card becomes active
   useEffect(() => {
@@ -31,10 +33,110 @@ export default function SpeakerReconstructedPortrait({
     }
   }, [isActive, isRevealed]);
 
-  // Image source resolution: use the original silhouette image for mystery reconstructed state, and revealed photo upon reveal
+  // Image source resolution
   const imageSrc = isRevealed ? (speaker.revealed?.photo || speaker.silhouetteImg) : speaker.silhouetteImg;
-
   const isLeft = offset < 0;
+
+  // Real-time Digital Mosaic & Pixel Matrix Canvas Engine
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let isMounted = true;
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = imageSrc;
+
+    img.onload = () => {
+      if (!isMounted) return;
+
+      const size = 260;
+      canvas.width = size;
+      canvas.height = size;
+
+      // Temporary offscreen canvas to sample image pixels
+      const offCanvas = document.createElement('canvas');
+      const offCtx = offCanvas.getContext('2d');
+      offCanvas.width = size;
+      offCanvas.height = size;
+
+      // Draw original image centered
+      offCtx.drawImage(img, 0, 0, size, size);
+
+      // If revealed, render sharp crystal-clear image directly
+      if (isRevealed) {
+        ctx.clearRect(0, 0, size, size);
+        ctx.drawImage(offCanvas, 0, 0, size, size);
+        return;
+      }
+
+      // Extract pixel data for variable-density digital mosaic
+      const imgData = offCtx.getImageData(0, 0, size, size);
+      const data = imgData.data;
+
+      ctx.clearRect(0, 0, size, size);
+
+      const centerX = size / 2;
+      const centerY = size / 2;
+      const baseBlockSize = isActive ? 8 : 14;
+
+      // Render variable-density mosaic blocks
+      for (let y = 0; y < size; y += baseBlockSize) {
+        for (let x = 0; x < size; x += baseBlockSize) {
+          const dx = x + baseBlockSize / 2 - centerX;
+          const dy = y + baseBlockSize / 2 - centerY;
+          const distFromCenter = Math.sqrt(dx * dx + dy * dy);
+          const maxRadius = size / 2;
+
+          // Variable block resolution: finer blocks near center face, larger blocks on perimeter
+          let currentBlockSize = baseBlockSize;
+          if (distFromCenter < maxRadius * 0.45) {
+            currentBlockSize = Math.max(3, Math.floor(baseBlockSize * 0.5));
+          } else if (distFromCenter > maxRadius * 0.75) {
+            currentBlockSize = Math.floor(baseBlockSize * 1.35);
+          }
+
+          // Sample pixel color at center of current block
+          const sampleX = Math.min(size - 1, Math.max(0, Math.floor(x + currentBlockSize / 2)));
+          const sampleY = Math.min(size - 1, Math.max(0, Math.floor(y + currentBlockSize / 2)));
+          const pixelIndex = (sampleY * size + sampleX) * 4;
+
+          const r = data[pixelIndex];
+          const g = data[pixelIndex + 1];
+          const b = data[pixelIndex + 2];
+          const a = data[pixelIndex + 3] / 255;
+
+          if (a > 0.05) {
+            // Apply subtle orange cybernetic duotone grading to dark pixels
+            const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
+            
+            // Random digital glitch pulse on 2% of outer blocks
+            const isGlitchPixel = distFromCenter > maxRadius * 0.5 && ((x * 17 + y * 23) % 43 === 0);
+
+            if (isGlitchPixel && isActive) {
+              ctx.fillStyle = `rgba(255, 90, 31, ${0.45 + (brightness / 255) * 0.4})`;
+            } else {
+              // Boost contrast and add subtle warmth to the mosaic cell
+              const redVal = Math.min(255, Math.floor(r * 1.1 + (255 - brightness) * 0.15));
+              const greenVal = Math.min(255, Math.floor(g * 0.95));
+              const blueVal = Math.min(255, Math.floor(b * 0.85));
+              ctx.fillStyle = `rgba(${redVal}, ${greenVal}, ${blueVal}, ${a})`;
+            }
+
+            // Draw crisp mosaic block with 1px technical spacing
+            const gap = currentBlockSize > 6 ? 0.75 : 0;
+            ctx.fillRect(x, y, currentBlockSize - gap, currentBlockSize - gap);
+          }
+        }
+      }
+    };
+
+    return () => {
+      isMounted = false;
+    };
+  }, [imageSrc, isActive, isRevealed]);
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center select-none overflow-visible pointer-events-none">
@@ -48,12 +150,12 @@ export default function SpeakerReconstructedPortrait({
         <div 
           className={`absolute rounded-full transition-opacity duration-500 pointer-events-none -z-10 ${
             isActive 
-              ? 'w-60 sm:w-72 h-60 sm:h-72 bg-[#ff5a1f]/20 blur-xl opacity-100'
+              ? 'w-60 sm:w-72 h-60 sm:h-72 bg-[#ff5a1f]/22 blur-xl opacity-100'
               : 'w-40 sm:w-48 h-40 sm:h-48 bg-[#ff5a1f]/10 blur-lg opacity-30'
           }`}
         />
 
-        {/* Lightweight SVG Orbital Ring Architecture */}
+        {/* Dynamic SVG Orbital Ring Architecture */}
         <svg 
           viewBox="0 0 380 380" 
           className="w-[285px] xs:w-[310px] sm:w-[370px] h-[285px] xs:w-[310px] sm:h-[370px] overflow-visible pointer-events-none"
@@ -89,7 +191,6 @@ export default function SpeakerReconstructedPortrait({
               strokeWidth="1"
               strokeDasharray="4 8"
             />
-            {/* Markers on outer orbit */}
             <circle cx="190" cy="16" r="2.5" fill="#ff5a1f" />
             <circle cx="364" cy="190" r="2" fill="#ff8a3d" />
             <circle cx="190" cy="364" r="2.5" fill="#ff5a1f" />
@@ -159,7 +260,7 @@ export default function SpeakerReconstructedPortrait({
           {isActive && (
             <g className="font-mono text-[7px] fill-[#ff8a3d] tracking-widest uppercase opacity-75">
               <text x="190" y="24" textAnchor="middle">
-                0{speaker.num} // RECON.SYS • {isRevealed ? 'VERIFIED' : 'SIGNAL LOCKED'}
+                0{speaker.num} // MOSAIC.SYS • {isRevealed ? 'RECONSTRUCTED' : 'PIXEL RECON'}
               </text>
               <text x="355" y="194" textAnchor="start" transform="rotate(90 355 194)">
                 FREQ // 1420.4 MHZ
@@ -168,7 +269,7 @@ export default function SpeakerReconstructedPortrait({
                 LAT 28.614 // ORBIT R-380
               </text>
               <text x="25" y="194" textAnchor="end" transform="rotate(-90 25 194)">
-                MATRIX // SYNC OK
+                MOSAIC // {isRevealed ? '100% SHARP' : 'MATRIX SYNC'}
               </text>
             </g>
           )}
@@ -176,7 +277,7 @@ export default function SpeakerReconstructedPortrait({
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. RECONSTRUCTED SPEAKER PORTRAIT CORE WITH INTERACTIVE BOUNDARY & GLITCH */}
+      {/* 2. RECONSTRUCTED SPEAKER PORTRAIT WITH MOSAIC PIXELATION & EXTENDING GLITCH */}
       {/* ========================================================================= */}
       <div className="relative z-10 flex items-center justify-center my-auto pointer-events-none">
         
@@ -247,27 +348,21 @@ export default function SpeakerReconstructedPortrait({
           </div>
 
           {/* ========================================================================= */}
-          {/* LAYER B: MAIN CIRCULAR PORTRAIT                                           */}
+          {/* LAYER B: DYNAMIC MOSAIC PIXEL MATRIX CANVAS                               */}
           {/* ========================================================================= */}
-          <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-[#ff5a1f]/80 shadow-[inset_0_0_20px_rgba(0,0,0,0.8),_0_0_20px_rgba(255,90,31,0.25)] bg-[#0a0a0a] flex items-end justify-center pointer-events-none">
+          <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-[#ff5a1f]/80 shadow-[inset_0_0_20px_rgba(0,0,0,0.8),_0_0_20px_rgba(255,90,31,0.25)] bg-[#0a0a0a] flex items-center justify-center pointer-events-none">
             
             {/* Ambient Silhouette Backlight */}
             <div className="absolute bottom-2 w-36 sm:w-44 h-36 sm:h-44 rounded-full bg-[#ff5a1f]/20 blur-xl pointer-events-none -z-0" />
 
-            {/* Base Image Layer */}
-            <img
-              src={imageSrc}
-              alt={speaker.title}
-              className={`w-full h-full transition-all duration-500 ${
-                isRevealed 
-                  ? 'object-cover object-top contrast-115 brightness-105 saturate-110' 
-                  : isActive
-                    ? 'object-contain object-bottom contrast-125 brightness-110 saturate-105'
-                    : 'object-contain object-bottom contrast-130 brightness-80 saturate-75'
-              } pointer-events-none relative z-10`}
+            {/* Live Mosaic / Pixel Matrix Canvas */}
+            <canvas
+              ref={canvasRef}
+              className="w-full h-full object-contain pointer-events-none relative z-10"
+              style={{ imageRendering: isRevealed ? 'auto' : 'pixelated' }}
             />
 
-            {/* Upper Band Displacement Slice */}
+            {/* Upper Band Displacement Slice Overlay */}
             {!isRevealed && (
               <div
                 className="absolute inset-0 pointer-events-none z-20 flex items-end justify-center opacity-70"
@@ -282,7 +377,7 @@ export default function SpeakerReconstructedPortrait({
               </div>
             )}
 
-            {/* Lower Band Displacement Slice */}
+            {/* Lower Band Displacement Slice Overlay */}
             {!isRevealed && (
               <div
                 className="absolute inset-0 pointer-events-none z-20 flex items-end justify-center opacity-65"
@@ -297,12 +392,12 @@ export default function SpeakerReconstructedPortrait({
               </div>
             )}
 
-            {/* Digital Pixel Matrix / Mosaic Perimeter Overlay */}
+            {/* Digital Pixel Grid Screen Overlay */}
             {!isRevealed && (
               <div 
-                className="absolute inset-0 pointer-events-none opacity-30 mix-blend-overlay"
+                className="absolute inset-0 pointer-events-none opacity-25 mix-blend-overlay"
                 style={{
-                  backgroundImage: `radial-gradient(circle at 50% 45%, transparent 42%, rgba(255,90,31,0.6) 88%), url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='12' height='12' fill='none' stroke='%23ff5a1f' stroke-width='0.75' stroke-opacity='0.4'/%3E%3C/svg%3E")`
+                  backgroundImage: `radial-gradient(circle at 50% 45%, transparent 40%, rgba(255,90,31,0.6) 88%), url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 8 8' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='8' height='8' fill='none' stroke='%23ff5a1f' stroke-width='0.5' stroke-opacity='0.35'/%3E%3C/svg%3E")`
                 }}
               />
             )}
@@ -352,7 +447,7 @@ export default function SpeakerReconstructedPortrait({
             ) : isActive ? (
               <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#080808] border border-[#ff5a1f]/60 text-[#f4f0e8] font-mono text-[9px] font-bold uppercase tracking-wider shadow-md">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff5a1f] animate-ping" />
-                <span className="text-[#ff5a1f]">SIGNAL</span>
+                <span className="text-[#ff5a1f]">MOSAIC</span>
                 <span className="text-white/40">|</span>
                 <span>RECONSTRUCTING</span>
               </div>
