@@ -365,6 +365,15 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
           </div>
         </div>
 
+        {/* Center Tape Sticker: COMING SOON */}
+        <div className="inline-flex items-center transform rotate-1 hover:rotate-0 transition-transform">
+          <div className="px-2.5 sm:px-3.5 py-0.5 sm:py-1 bg-[#111111]/90 border border-[#ff5a1f]/60 text-[#ff8a3d] font-mono font-bold tracking-widest uppercase rounded shadow-[0_0_15px_rgba(255,90,31,0.25)] backdrop-blur-md flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ff5a1f] animate-ping" />
+            <span>COMING SOON</span>
+            <span>⏳</span>
+          </div>
+        </div>
+
         {/* Right Tape Sticker: GUESS WHAT?! */}
         <div className="inline-flex items-center transform rotate-3 hover:rotate-0 transition-transform">
           <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-[#ff5a1f] text-[#070707] font-display font-black tracking-wider uppercase rounded shadow-md">
@@ -449,6 +458,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
         <div className="flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-[#111111]/80 border border-white/10">
           <Calendar className="w-3 h-3 text-[#ff5a1f]" />
           <span className="font-bold text-[#f4f0e8]">10TH & 11TH JANUARY 2026</span>
+          <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-[#ff5a1f]/20 text-[#ff8a3d] border border-[#ff5a1f]/40 uppercase tracking-wider ml-1">COMING SOON</span>
         </div>
 
         {/* Venue Pill */}
