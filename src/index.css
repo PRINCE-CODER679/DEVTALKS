@@ -112,9 +112,6 @@
   display: none;
 }
 
-/* ========================================================================= */
-/* DUAL-LAYER CINEMATIC INTRO VIDEO OVERLAY (MOBILE & DESKTOP)               */
-/* ========================================================================= */
 .intro-video-wrapper {
   position: fixed !important;
   top: 0 !important;
@@ -133,6 +130,9 @@
   background-color: #080808 !important;
   margin: 0 !important;
   padding: 0 !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  touch-action: manipulation !important;
 }
 
 /* Layer 1: Ambient Living Atmosphere (Fills 100% Edge-to-Edge without bars) */
@@ -152,6 +152,7 @@
   -webkit-transform: scale(1.25) !important;
   opacity: 0.9 !important;
   pointer-events: none !important;
+  -webkit-touch-callout: none !important;
   z-index: 1 !important;
 }
 
@@ -174,6 +175,8 @@
   filter: drop-shadow(0 15px 45px rgba(0, 0, 0, 0.95)) !important;
   border: none !important;
   outline: none !important;
+  pointer-events: none !important;
+  -webkit-touch-callout: none !important;
 }
 
 /* Desktop: Full widescreen cover */
@@ -186,3 +189,4 @@
     filter: none !important;
   }
 }
+

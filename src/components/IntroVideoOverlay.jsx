@@ -1,63 +1,95 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Volume2, VolumeX, ArrowRight } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Volume2, VolumeX, ArrowRight, Sparkles } from 'lucide-react';
 
 export default function IntroVideoOverlay({ onComplete }) {
   const [isExiting, setIsExiting] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const mainVideoRef = useRef(null);
   const bgVideoRef = useRef(null);
 
-  // Initialize playback with autoPlay & sound unlock
+  // Unmute and guarantee smooth playback
+  const enableAudioAndPlay = useCallback(() => {
+    const mainVid = mainVideoRef.current;
+    if (mainVid) {
+      mainVid.muted = false;
+      mainVid.volume = 1.0;
+      setIsMuted(false);
+      setHasInteracted(true);
+      const playPromise = mainVid.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
+    }
+  }, []);
+
+  // Initialize playback with autoPlay & attempt unmuted sound immediately
   useEffect(() => {
     const mainVid = mainVideoRef.current;
     const bgVid = bgVideoRef.current;
 
     if (mainVid) {
       mainVid.currentTime = 0;
-      mainVid.muted = true;
-      mainVid.defaultMuted = true;
+      mainVid.volume = 1.0;
+      
+      // Attempt to play with sound first
+      mainVid.muted = false;
       const playPromise = mainVid.play();
+      
       if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          mainVid.muted = true;
-          mainVid.play().catch(() => {});
-        });
+        playPromise
+          .then(() => {
+            // Unmuted autoplay succeeded!
+            setIsMuted(false);
+            setHasInteracted(true);
+          })
+          .catch(() => {
+            // Autoplay with sound restricted by browser policy: play muted and await touch/gesture
+            if (mainVid) {
+              mainVid.muted = true;
+              setIsMuted(true);
+              mainVid.play().catch(() => {});
+            }
+          });
       }
     }
 
     if (bgVid) {
       bgVid.currentTime = 0;
       bgVid.muted = true;
-      bgVid.defaultMuted = true;
       bgVid.play().catch(() => {});
     }
 
-    // First user interaction immediately un-mutes with full audio without pausing
-    const unlockAudio = () => {
-      const v = mainVideoRef.current;
-      if (v) {
-        v.muted = false;
-        v.volume = 1.0;
-        setIsMuted(false);
-      }
+    // Global touch/pointer listener to unmute instantly on first touch
+    const handleFirstGesture = (e) => {
+      enableAudioAndPlay();
     };
 
-    window.addEventListener('pointerdown', unlockAudio, { once: true });
-    window.addEventListener('touchstart', unlockAudio, { once: true });
-    window.addEventListener('keydown', unlockAudio, { once: true });
+    window.addEventListener('pointerdown', handleFirstGesture, { passive: true });
+    window.addEventListener('touchstart', handleFirstGesture, { passive: true });
+    window.addEventListener('click', handleFirstGesture, { passive: true });
+    window.addEventListener('keydown', handleFirstGesture, { passive: true });
 
     return () => {
-      window.removeEventListener('pointerdown', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
+      window.removeEventListener('pointerdown', handleFirstGesture);
+      window.removeEventListener('touchstart', handleFirstGesture);
+      window.removeEventListener('click', handleFirstGesture);
+      window.removeEventListener('keydown', handleFirstGesture);
     };
-  }, []);
+  }, [enableAudioAndPlay]);
+
+  // Prevent accidental pauses on touch devices: keep video playing continuously
+  const handlePause = () => {
+    if (!isExiting && mainVideoRef.current) {
+      mainVideoRef.current.play().catch(() => {});
+    }
+  };
 
   // Sync background ambient video time with main foreground video
   const handleTimeUpdate = () => {
     const mainVid = mainVideoRef.current;
     const bgVid = bgVideoRef.current;
-    if (mainVid && bgVid && Math.abs(mainVid.currentTime - bgVid.currentTime) > 0.25) {
+    if (mainVid && bgVid && Math.abs(mainVid.currentTime - bgVid.currentTime) > 0.3) {
       bgVid.currentTime = mainVid.currentTime;
     }
   };
@@ -69,8 +101,23 @@ export default function IntroVideoOverlay({ onComplete }) {
     }
     const vid = mainVideoRef.current;
     if (vid) {
-      vid.muted = !vid.muted;
-      setIsMuted(vid.muted);
+      const nextMuted = !vid.muted;
+      vid.muted = nextMuted;
+      if (!nextMuted) {
+        vid.volume = 1.0;
+        vid.play().catch(() => {});
+      }
+      setIsMuted(nextMuted);
+      setHasInteracted(true);
+    }
+  };
+
+  const handleWrapperTouch = (e) => {
+    // If touching anywhere on screen and video is muted, unmute it immediately without pausing
+    if (isMuted) {
+      enableAudioAndPlay();
+    } else if (mainVideoRef.current && mainVideoRef.current.paused) {
+      mainVideoRef.current.play().catch(() => {});
     }
   };
 
@@ -85,7 +132,13 @@ export default function IntroVideoOverlay({ onComplete }) {
   if (isExiting) return null;
 
   return (
-    <div className="intro-video-wrapper">
+    <div 
+      className="intro-video-wrapper cursor-pointer"
+      onClick={handleWrapperTouch}
+      onTouchStart={handleWrapperTouch}
+      role="region"
+      aria-label="DEVTALKS Official Teaser Intro"
+    >
       {/* ========================================================================= */}
       {/* 1. AMBIENT ATMOSPHERIC BACKGROUND VIDEO LAYER (ELIMINATES EMPTY BARS)     */}
       {/* ========================================================================= */}
@@ -94,12 +147,11 @@ export default function IntroVideoOverlay({ onComplete }) {
         src="/official-teaser.mp4"
         autoPlay
         muted
-        defaultMuted
         preload="auto"
         playsInline
         webkit-playsinline="true"
         x5-playsinline="true"
-        className="intro-bg-ambient-video"
+        className="intro-bg-ambient-video pointer-events-none"
         aria-hidden="true"
       />
 
@@ -110,32 +162,35 @@ export default function IntroVideoOverlay({ onComplete }) {
         ref={mainVideoRef}
         src="/official-teaser.mp4"
         autoPlay
-        muted
-        defaultMuted
         preload="auto"
         playsInline
         webkit-playsinline="true"
         x5-playsinline="true"
+        onPause={handlePause}
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleFinish}
         onError={handleFinish}
-        className="intro-main-focused-video"
+        className="intro-main-focused-video pointer-events-none"
       />
 
       {/* ========================================================================= */}
       {/* 3. MINIMAL OVERLAY CONTROLS (UNMUTE AUDIO & SKIP BUTTON)                  */}
       {/* ========================================================================= */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 flex items-center gap-2.5 pointer-events-auto">
+      <div 
+        className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 flex items-center gap-2.5 pointer-events-auto"
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+      >
         {/* Audio Toggle */}
         <button
           type="button"
           onClick={handleToggleMute}
-          className="px-3.5 py-1.5 rounded-full bg-[#080808]/80 hover:bg-[#080808] border border-white/10 hover:border-[#ff5a1f] text-[#f4f0e8] font-mono text-[11px] font-bold tracking-wider uppercase transition-all backdrop-blur-md cursor-pointer flex items-center gap-1.5 shadow-xl"
+          className="px-3.5 py-1.5 rounded-full bg-[#080808]/85 hover:bg-[#080808] border border-white/15 hover:border-[#ff5a1f] text-[#f4f0e8] font-mono text-[11px] font-bold tracking-wider uppercase transition-all backdrop-blur-md cursor-pointer flex items-center gap-1.5 shadow-xl active:scale-95"
         >
           {isMuted ? (
             <>
-              <VolumeX className="w-3.5 h-3.5 text-[#817b73]" />
-              <span className="text-[#817b73]">UNMUTE</span>
+              <VolumeX className="w-3.5 h-3.5 text-[#ff8a3d] animate-pulse" />
+              <span className="text-[#ff8a3d]">UNMUTE</span>
             </>
           ) : (
             <>
@@ -158,6 +213,20 @@ export default function IntroVideoOverlay({ onComplete }) {
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
+
+      {/* ========================================================================= */}
+      {/* 4. TAP ANYWHERE FOR SOUND PROMPT (DISAPPEARS ONCE AUDIO IS ACTIVE)       */}
+      {/* ========================================================================= */}
+      {isMuted && !hasInteracted && (
+        <div 
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 pointer-events-none animate-bounce"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#080808]/90 border border-[#ff5a1f]/60 text-[#f4f0e8] font-mono text-[10px] sm:text-xs font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(255,90,31,0.4)] backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-[#ff5a1f] animate-ping" />
+            <span>🔊 TAP ANYWHERE TO UNMUTE AUDIO</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
