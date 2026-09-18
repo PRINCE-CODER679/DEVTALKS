@@ -5,11 +5,13 @@ import {
   RotateCw, 
   Sparkles, 
   FileText, 
-  ArrowRight,
-  Compass
+  Compass,
+  Eye,
+  Lock
 } from 'lucide-react';
 import { speakersList } from '../data/speakers';
 import { soundFx } from '../utils/audio';
+import SpeakerReconstructedPortrait from './SpeakerReconstructedPortrait';
 
 export default function SpeakerCoverflowRing({ 
   activeSpeakerId, 
@@ -18,6 +20,7 @@ export default function SpeakerCoverflowRing({
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flippedCards, setFlippedCards] = useState({ 0: false, 1: false, 2: false });
+  const [revealedSpeakers, setRevealedSpeakers] = useState({ 0: false, 1: false, 2: false });
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const touchStartXRef = React.useRef(0);
   const touchEndXRef = React.useRef(0);
@@ -70,6 +73,18 @@ export default function SpeakerCoverflowRing({
     }
     try { soundFx.playEvidenceClick(); } catch (err) {}
     setFlippedCards(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  const toggleReveal = (index, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    try { soundFx.playRevealUnlocked(); } catch (err) {}
+    setRevealedSpeakers(prev => ({
       ...prev,
       [index]: !prev[index]
     }));
@@ -129,7 +144,7 @@ export default function SpeakerCoverflowRing({
             <div className="flex items-center gap-3">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full border border-[#ff5a1f]/40 bg-[#111111] text-[11px] font-mono tracking-widest uppercase text-[#ff5a1f] font-bold shadow-xs">
                 <Sparkles className="w-3.5 h-3.5 text-[#ff5a1f]" />
-                <span>3D COVERFLOW DOSSIER RING</span>
+                <span>3D COVERFLOW RECONSTRUCTION RING</span>
               </span>
               <span className="font-mono text-xs text-[#817b73] font-semibold">
                 ACTIVE: 0{currentIndex + 1} OF 0{speakersList.length}
@@ -140,7 +155,7 @@ export default function SpeakerCoverflowRing({
               CONFIDENTIAL <span className="text-[#ff5a1f]">SPEAKERS</span>
             </h2>
             <p className="font-sans text-xs sm:text-sm text-[#817b73] max-w-2xl font-medium">
-              Use the arrow buttons or click side cards to navigate the 3D ring. Tap the card or button to flip for confidential clues!
+              Digital signals reconstructed in real time. Use arrows or click side nodes to rotate the orbital carousel. Tap to reveal or inspect confidential clues!
             </p>
           </div>
 
@@ -192,21 +207,23 @@ export default function SpeakerCoverflowRing({
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            className="relative w-full max-w-5xl h-[520px] sm:h-[570px] flex items-center justify-center overflow-visible"
+            className="relative w-full max-w-5xl h-[530px] sm:h-[600px] flex items-center justify-center overflow-visible"
             style={{ perspective: 1400, transformStyle: 'preserve-3d' }}
           >
             {/* 3D Cylindrical Ring Base Platform */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[340px] sm:w-[580px] h-[90px] pointer-events-none -z-10 flex items-center justify-center">
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#ff5a1f_0%,_transparent_72%)] opacity-15 blur-xl" />
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[360px] sm:w-[620px] h-[100px] pointer-events-none -z-10 flex items-center justify-center">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#ff5a1f_0%,_transparent_72%)] opacity-20 blur-xl" />
               <div 
                 style={{ 
                   transform: `rotateX(60deg) rotateZ(${-currentIndex * 120}deg)`,
-                  transition: 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)'
+                  transition: 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)'
                 }}
-                className="w-full h-full rounded-full border-2 border-[#ff5a1f]/30 border-dashed flex items-center justify-center"
+                className="w-full h-full rounded-full border-2 border-[#ff5a1f]/40 border-dashed flex items-center justify-center"
               >
-                <div className="w-[85%] h-[85%] rounded-full border border-white/10" />
-                <div className="absolute w-3 h-3 rounded-full bg-[#ff5a1f] -top-1.5" />
+                <div className="w-[88%] h-[88%] rounded-full border border-white/15 border-dotted" />
+                <div className="w-[72%] h-[72%] rounded-full border border-[#ff5a1f]/20" />
+                <div className="absolute w-3.5 h-3.5 rounded-full bg-[#ff5a1f] -top-1.5 shadow-[0_0_10px_#ff5a1f]" />
+                <div className="absolute w-2 h-2 rounded-full bg-[#ff8a3d] -bottom-1 shadow-[0_0_6px_#ff8a3d]" />
               </div>
             </div>
 
@@ -218,10 +235,11 @@ export default function SpeakerCoverflowRing({
 
               const isCenter = offset === 0;
               const isFlipped = !!flippedCards[index];
+              const isRevealed = !!revealedSpeakers[index];
 
               const isMobile = windowWidth < 640;
               const isSmallMobile = windowWidth < 400;
-              const sideDistance = isSmallMobile ? 120 : isMobile ? 160 : 280;
+              const sideDistance = isSmallMobile ? 125 : isMobile ? 165 : 290;
               const sideScale = isMobile ? 0.76 : 0.82;
               const centerScale = isSmallMobile ? 0.94 : 1.0;
 
@@ -233,18 +251,18 @@ export default function SpeakerCoverflowRing({
               let zIndex = 30;
 
               if (offset === -1) {
-                rotateY = isMobile ? 28 : 35;
+                rotateY = isMobile ? 26 : 32;
                 translateX = -sideDistance;
                 translateZ = isMobile ? -90 : -130;
                 scale = sideScale;
-                opacity = isMobile ? 0.55 : 0.75;
+                opacity = isMobile ? 0.55 : 0.72;
                 zIndex = 10;
               } else if (offset === 1) {
-                rotateY = isMobile ? -28 : -35;
+                rotateY = isMobile ? -26 : -32;
                 translateX = sideDistance;
                 translateZ = isMobile ? -90 : -130;
                 scale = sideScale;
-                opacity = isMobile ? 0.55 : 0.75;
+                opacity = isMobile ? 0.55 : 0.72;
                 zIndex = 10;
               } else if (offset === 0) {
                 rotateY = 0;
@@ -269,33 +287,46 @@ export default function SpeakerCoverflowRing({
                     zIndex: zIndex,
                     transformStyle: 'preserve-3d',
                     WebkitTransformStyle: 'preserve-3d',
-                    transition: 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s ease-out'
+                    transition: 'transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s ease-out'
                   }}
-                  className={`absolute w-[275px] xs:w-[290px] sm:w-[350px] aspect-[1/1.42] select-none ${
+                  className={`absolute w-[285px] xs:w-[310px] sm:w-[360px] aspect-[1/1.44] select-none ${
                     !isCenter ? 'cursor-pointer hover:opacity-95 hover:scale-[0.85] transition-transform' : ''
                   }`}
                 >
                   {/* Card Container */}
-                  <div className={`relative w-full h-full rounded-3xl p-3.5 sm:p-4 transition-all duration-300 ${
+                  <div className={`relative w-full h-full rounded-3xl p-3.5 sm:p-4 transition-all duration-500 overflow-visible ${
                     isCenter 
-                      ? 'border-2 border-[#ff5a1f] shadow-[0_20px_50px_rgba(255,90,31,0.18)] bg-[#111111]' 
-                      : 'border border-white/10 bg-[#111111]/90 shadow-lg filter brightness-90 hover:brightness-100'
+                      ? 'border-2 border-[#ff5a1f] shadow-[0_20px_60px_rgba(255,90,31,0.22)] bg-[#101010]' 
+                      : 'border border-white/10 bg-[#101010]/95 shadow-lg filter brightness-90 hover:brightness-100'
                   }`}>
                     
                     {/* Top Status Bar on Card */}
-                    <div className="w-full flex items-center justify-between pb-2 mb-2 border-b border-white/10 font-mono text-[10px]">
-                      <span className="text-[#f4f0e8] font-bold tracking-wider">
-                        CASE #{speaker.num} • {speaker.roleTag.split('//')[1]?.trim() || 'TITAN'}
+                    <div className="w-full flex items-center justify-between pb-2 mb-1.5 border-b border-white/10 font-mono text-[10px] relative z-30">
+                      <span className="text-[#f4f0e8] font-bold tracking-wider flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-[#ff5a1f]" />
+                        <span>CASE #{speaker.num} • {speaker.roleTag.split('//')[1]?.trim() || 'TITAN'}</span>
                       </span>
                       {isCenter ? (
-                        <button 
-                          type="button"
-                          onClick={(e) => toggleFlip(index, e)}
-                          className="font-bold uppercase tracking-wider text-[#ff5a1f] hover:text-[#ff7a45] flex items-center gap-1 cursor-pointer transition-colors z-50 pointer-events-auto"
-                        >
-                          <RotateCw className="w-3 h-3 text-[#ff5a1f]" />
-                          <span>{isFlipped ? 'SHOW FRONT' : 'FLIP CLUES'}</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button 
+                            type="button"
+                            onClick={(e) => toggleReveal(index, e)}
+                            className="font-bold uppercase tracking-wider text-[#ff8a3d] hover:text-[#f4f0e8] flex items-center gap-1 cursor-pointer transition-colors z-50 pointer-events-auto text-[9px]"
+                            title={isRevealed ? 'Hide identity' : 'Instant identity reveal'}
+                          >
+                            {isRevealed ? <Lock className="w-2.5 h-2.5 text-[#ff5a1f]" /> : <Eye className="w-2.5 h-2.5 text-[#ff5a1f]" />}
+                            <span>{isRevealed ? 'MASK' : 'REVEAL'}</span>
+                          </button>
+                          <span className="text-white/20">|</span>
+                          <button 
+                            type="button"
+                            onClick={(e) => toggleFlip(index, e)}
+                            className="font-bold uppercase tracking-wider text-[#ff5a1f] hover:text-[#ff7a45] flex items-center gap-1 cursor-pointer transition-colors z-50 pointer-events-auto text-[9px]"
+                          >
+                            <RotateCw className="w-2.5 h-2.5 text-[#ff5a1f]" />
+                            <span>{isFlipped ? 'FRONT' : 'CLUES'}</span>
+                          </button>
+                        </div>
                       ) : (
                         <span className="text-[#ff5a1f] font-mono text-[9px] uppercase font-bold">CLICK TO SELECT</span>
                       )}
@@ -303,14 +334,13 @@ export default function SpeakerCoverflowRing({
 
                     {/* 3D FLIPPER CONTAINER */}
                     <div 
-                      className="relative w-full h-[88%] select-none cursor-pointer"
+                      className="relative w-full h-[90%] select-none cursor-pointer"
                       style={{ perspective: 1200 }}
                       onClick={(e) => {
-                        if (isCenter) {
-                          toggleFlip(index, e);
+                        if (isCenter && !isFlipped) {
+                          // Allow clicking card to flip or reveal
                         }
                       }}
-                      title={isCenter ? (isFlipped ? 'Click to show front' : 'Click to show secret clues') : 'Click to bring to center'}
                     >
                       {/* THE 3D ROTATING INNER CONTAINER */}
                       <div
@@ -322,7 +352,7 @@ export default function SpeakerCoverflowRing({
                         }}
                         className="w-full h-full relative"
                       >
-                        {/* ================= FRONT FACE: MYSTERY POSTER ================= */}
+                        {/* ================= FRONT FACE: RECONSTRUCTED ORBITAL PORTRAIT ================= */}
                         <div
                           style={{ 
                             backfaceVisibility: 'hidden',
@@ -331,78 +361,63 @@ export default function SpeakerCoverflowRing({
                             zIndex: isFlipped ? 0 : 20,
                             pointerEvents: isFlipped ? 'none' : 'auto'
                           }}
-                          className="absolute inset-0 w-full h-full rounded-[22px] bg-[#111111] text-[#f4f0e8] p-4 sm:p-5 overflow-hidden flex flex-col justify-between shadow-lg border border-white/10"
+                          className="absolute inset-0 w-full h-full rounded-[22px] bg-[#0c0c0c] text-[#f4f0e8] p-3 sm:p-4 overflow-visible flex flex-col justify-between shadow-lg border border-white/10"
                         >
-                          {/* Question Mark SVG */}
-                          <div className="absolute -top-2 -right-1 z-30 w-12 h-16 pointer-events-none drop-shadow-[0_4px_8px_rgba(255,90,31,0.25)]">
-                            <svg viewBox="0 0 100 120" className="w-full h-full transform rotate-12">
-                              <defs>
-                                <linearGradient id={`ringGoldGrad-${speaker.num}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                                  <stop offset="0%" stopColor="#ffb27a" />
-                                  <stop offset="50%" stopColor="#ff5a1f" />
-                                  <stop offset="100%" stopColor="#c83f12" />
-                                </linearGradient>
-                              </defs>
-                              <path 
-                                d="M48 20 C32 20 22 28 22 42 C22 48 26 53 32 53 C37 53 41 49 41 44 C41 37 46 32 53 32 C60 32 66 36 66 43 C66 49 61 54 53 60 C44 68 39 76 39 88 L40 92 L58 92 L58 87 C58 79 64 73 72 66 C80 59 86 51 86 39 C86 26 71 20 48 20 Z M49 100 C43 100 38 105 38 111 C38 117 43 122 49 122 C55 122 60 117 60 111 C60 105 55 100 49 100 Z"
-                                fill={`url(#ringGoldGrad-${speaker.num})`}
-                                stroke="#ff5a1f"
-                                strokeWidth="2"
-                              />
-                            </svg>
-                          </div>
-
-                          {/* Card Header: "GueSS WHO IS COMING" */}
-                          <div className="relative z-20 flex flex-col items-center text-center">
-                            <div className="flex items-baseline justify-center tracking-tight leading-none font-display">
-                              <span className="text-2xl sm:text-4xl font-black text-[#f4f0e8]">Gue</span>
-                              <span className="text-3xl sm:text-5xl font-black text-[#ff5a1f] transform -translate-y-0.5">SS</span>
-                              <span className="text-2xl sm:text-4xl font-black text-[#f4f0e8]">?</span>
+                          {/* Card Header Tag */}
+                          <div className="relative z-30 flex items-center justify-between text-center w-full">
+                            <div className="flex flex-col items-start">
+                              <span className="font-mono text-[9px] font-black text-[#ff5a1f] tracking-widest uppercase">
+                                SIGNAL RECONSTRUCTION
+                              </span>
+                              <span className="font-display font-black text-sm sm:text-base text-[#f4f0e8] tracking-wide uppercase">
+                                {isRevealed ? speaker.revealed.name : speaker.title}
+                              </span>
                             </div>
-                            <div className="font-display font-black text-[9px] sm:text-xs uppercase tracking-wider text-[#817b73] mt-0.5">
-                              WHO IS COMING
-                            </div>
-                          </div>
 
-                          {/* Doodle: Handwritten Hint */}
-                          <div className="absolute top-[38%] left-3 z-30 flex flex-col items-start pointer-events-none">
-                            <span className="font-display font-black text-[9px] text-[#817b73] tracking-tight leading-none">
-                              Hint:
-                            </span>
-                            <span className="font-handwritten text-xs sm:text-base font-bold text-[#ff8a3d] transform -rotate-12 leading-tight tracking-wide border-b border-[#ff8a3d]/40 pb-0.5">
-                              {speaker.posterHint || 'SPECIAL GUEST'}
+                            {/* Dossier Code Pill */}
+                            <span className="px-2 py-0.5 rounded bg-[#ff5a1f]/15 border border-[#ff5a1f]/40 font-mono text-[8px] font-bold text-[#ff8a3d] uppercase tracking-wider">
+                              SEC-0{speaker.num}
                             </span>
                           </div>
 
-                          {/* Center Silhouette */}
-                          <div className="relative w-full h-[62%] flex items-end justify-center z-10 -mb-2 overflow-visible">
-                            <div className="absolute bottom-2 w-36 sm:w-44 h-36 sm:h-44 rounded-full bg-[#ff5a1f]/15 blur-xl -z-10" />
-                            <img 
-                              src={speaker.silhouetteImg} 
-                              alt="Mystery Silhouette"
-                              className="w-full h-full max-h-[220px] object-contain object-bottom filter brightness-110 contrast-125 pointer-events-none"
+                          {/* ========================================================================= */}
+                          {/* CENTERPIECE: DIGITALLY RECONSTRUCTED SPEAKER PORTRAIT & ORBITAL RING     */}
+                          {/* ========================================================================= */}
+                          <div className="relative w-full flex-1 flex items-center justify-center my-1 overflow-visible">
+                            <SpeakerReconstructedPortrait
+                              speaker={speaker}
+                              isActive={isCenter}
+                              isRevealed={isRevealed}
+                              offset={offset}
+                              onToggleReveal={(e) => toggleReveal(index, e)}
                             />
                           </div>
 
-                          {/* Bottom Flip Button */}
-                          {isCenter && (
-                            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-40">
+                          {/* Bottom Info Bar / Quick Action */}
+                          <div className="relative z-30 flex items-center justify-between pt-1 border-t border-white/10 text-[10px] font-mono">
+                            {isRevealed ? (
+                              <div className="space-y-0.5">
+                                <span className="font-bold text-[#ff8a3d] text-[10px] line-clamp-1">
+                                  {speaker.revealed.designation}
+                                </span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-1.5 text-[#817b73]">
+                                <span className="text-[#ff5a1f] font-bold">Hint:</span>
+                                <span className="italic text-[#f4f0e8]">{speaker.posterHint || 'SPECIAL GUEST'}</span>
+                              </div>
+                            )}
+
+                            {isCenter && (
                               <button
                                 type="button"
                                 onClick={(e) => toggleFlip(index, e)}
-                                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#080808] hover:bg-[#111111] text-[#f4f0e8] font-mono text-[10px] font-bold tracking-wider shadow-lg border-2 border-[#ff5a1f] animate-bounce cursor-pointer hover:scale-105 active:scale-95 transition-transform pointer-events-auto"
+                                className="px-2.5 py-1 rounded-full bg-[#161616] hover:bg-[#ff5a1f] hover:text-[#080808] border border-[#ff5a1f]/40 text-[#ff8a3d] font-mono text-[9px] font-bold tracking-wider transition-all cursor-pointer pointer-events-auto flex items-center gap-1"
                               >
-                                <RotateCw className="w-3 h-3 text-[#ff5a1f]" />
-                                <span>TAP TO FLIP</span>
+                                <RotateCw className="w-2.5 h-2.5" />
+                                <span>CLUES</span>
                               </button>
-                            </div>
-                          )}
-
-                          {/* Bottom Banner */}
-                          <div className="relative z-20 -mx-4 -mb-4 bg-[#ff5a1f] py-1.5 px-3 border-t-2 border-white/10 shadow-sm flex items-center justify-center text-[#080808]">
-                            <span className="font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">
-                              ★ KEYNOTE #{speaker.num} • CLICK FOR CLUES ★
-                            </span>
+                            )}
                           </div>
                         </div>
 
@@ -415,7 +430,7 @@ export default function SpeakerCoverflowRing({
                             zIndex: isFlipped ? 20 : 0,
                             pointerEvents: isFlipped ? 'auto' : 'none'
                           }}
-                          className="absolute inset-0 w-full h-full rounded-[22px] bg-[#111111] text-[#f4f0e8] p-4 sm:p-5 overflow-hidden flex flex-col justify-between border-2 border-[#ff5a1f] shadow-xl"
+                          className="absolute inset-0 w-full h-full rounded-[22px] bg-[#0c0c0c] text-[#f4f0e8] p-4 sm:p-5 overflow-hidden flex flex-col justify-between border-2 border-[#ff5a1f] shadow-xl"
                         >
                           {/* Dossier Header */}
                           <div className="flex items-center justify-between border-b border-white/10 pb-2">
@@ -431,7 +446,7 @@ export default function SpeakerCoverflowRing({
                           </div>
 
                           {/* Short Clue Quote */}
-                          <div className="p-2 rounded-xl bg-[#080808] border border-white/10 text-[11px] font-sans text-[#f4f0e8] italic leading-snug font-medium">
+                          <div className="p-2 rounded-xl bg-[#141414] border border-white/10 text-[11px] font-sans text-[#f4f0e8] italic leading-snug font-medium">
                             "{speaker.shortClue}"
                           </div>
 
@@ -440,7 +455,7 @@ export default function SpeakerCoverflowRing({
                             {speaker.hints.slice(0, 3).map((hint, idx) => (
                               <div 
                                 key={idx}
-                                className="p-2 bg-[#080808] hover:bg-[#181818] border border-white/10 rounded-lg flex items-start gap-2 shadow-xs transition-colors"
+                                className="p-2 bg-[#141414] hover:bg-[#181818] border border-white/10 rounded-lg flex items-start gap-2 shadow-xs transition-colors"
                               >
                                 <span className="text-sm shrink-0 mt-0.5">{hint.icon}</span>
                                 <div>
@@ -504,7 +519,7 @@ export default function SpeakerCoverflowRing({
               <span className="hidden sm:inline text-white/10">•</span>
               <span className="flex items-center gap-1.5 text-[#f4f0e8] font-semibold">
                 <RotateCw className="w-3.5 h-3.5 text-[#ff5a1f]" />
-                <span>TAP CENTER CARD TO FLIP CLUES</span>
+                <span>TAP TO FLIP CLUES OR REVEAL</span>
               </span>
             </div>
 

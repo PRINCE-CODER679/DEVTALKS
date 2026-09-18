@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Lenis from 'lenis';
+import 'lenis/dist/lenis.css';
 import ThreeAtmosphere from './components/ThreeAtmosphere';
 import Navbar from './components/Navbar';
 import HeroMystery from './components/HeroMystery';
@@ -18,34 +20,77 @@ export default function App() {
   const [selectedSpeakerId, setSelectedSpeakerId] = useState('speaker-1');
   const [isAudioActive, setIsAudioActive] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const lenisRef = useRef(null);
 
-  // Lock body scroll while intro video is playing
+  // Initialize Lenis Smooth Scroll
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.8,
+      infinite: false,
+    });
+
+    lenisRef.current = lenis;
+    window.__lenis = lenis;
+
+    let rafId;
+    function raf(time) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+      lenisRef.current = null;
+      window.__lenis = null;
+    };
+  }, []);
+
+  // Lock body scroll and pause Lenis while intro video is playing
   useEffect(() => {
     if (showIntroVideo) {
       document.body.style.overflow = 'hidden';
+      lenisRef.current?.stop();
     } else {
       document.body.style.overflow = 'unset';
+      lenisRef.current?.start();
     }
     return () => {
       document.body.style.overflow = 'unset';
+      lenisRef.current?.start();
     };
   }, [showIntroVideo]);
 
-  // Smooth Navigation Handler
+  // Smooth Navigation Handler with Lenis integration
   const handleNavigate = (sectionId) => {
     setActiveSection(sectionId);
     if (['speaker-1', 'speaker-2', 'speaker-3'].includes(sectionId)) {
       setSelectedSpeakerId(sectionId);
       const spkSection = document.getElementById('speakers') || document.getElementById(sectionId);
       if (spkSection) {
-        spkSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (lenisRef.current) {
+          lenisRef.current.scrollTo(spkSection, { offset: 0, duration: 1.2 });
+        } else {
+          spkSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
       return;
     }
 
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(element, { offset: 0, duration: 1.2 });
+      } else {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
