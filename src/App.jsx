@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import ThreeAtmosphere from './components/ThreeAtmosphere';
@@ -22,6 +23,14 @@ export default function App() {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const lenisRef = useRef(null);
 
+  // Smooth Scroll Progress Indicator
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 28,
+    restDelta: 0.001
+  });
+
   // Initialize Lenis Smooth Scroll
   useEffect(() => {
     const lenis = new Lenis({
@@ -30,8 +39,8 @@ export default function App() {
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.8,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5,
       infinite: false,
     });
 
@@ -131,6 +140,12 @@ export default function App() {
   return (
     <div className="relative min-h-screen bg-[#080808] text-[#f4f0e8] antialiased overflow-x-hidden selection:bg-[#ff5a1f] selection:text-[#080808] font-sans">
       
+      {/* Top Dynamic Glowing Scroll Progress Bar (reference site effect) */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#ff5a1f] via-[#ff8a3d] to-[#d81b60] origin-left z-[100] shadow-[0_0_12px_rgba(255,90,31,0.8)] pointer-events-none"
+        style={{ scaleX }}
+      />
+
       {/* ================= 0. CINEMATIC VIDEO INTRO ON FIRST LINK CLICK ================= */}
       {showIntroVideo && (
         <IntroVideoOverlay

@@ -23,12 +23,12 @@ export default function RegisterModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="relative w-full max-w-lg bg-[#111111] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] p-6 sm:p-8 text-[#f4f0e8] overflow-hidden"
+        className="relative w-full max-w-lg max-h-[92dvh] overflow-y-auto bg-[#111111] border border-white/15 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] p-5 sm:p-8 text-[#f4f0e8]"
       >
         {/* Close Button */}
         <button 
@@ -42,7 +42,7 @@ export default function RegisterModal({ isOpen, onClose }) {
         </button>
 
         {!isRegistered ? (
-          <div className="space-y-6">
+          <div className="space-y-5 sm:space-y-6">
             <div className="space-y-1">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#080808] border border-[#ff5a1f]/40 text-[#ff5a1f] font-mono text-[10px] tracking-widest uppercase font-bold">
                 <Ticket className="w-3 h-3 text-[#ff5a1f]" />
@@ -56,7 +56,7 @@ export default function RegisterModal({ isOpen, onClose }) {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
               <div className="space-y-1">
                 <label className="font-mono text-[11px] text-[#f4f0e8] uppercase font-bold">Full Name</label>
                 <input 
@@ -65,7 +65,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Alex Rivera"
-                  className="w-full px-4 py-2.5 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-xs font-mono text-[#f4f0e8] placeholder-[#817b73] focus:outline-none shadow-xs"
+                  className="w-full px-4 py-2.5 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-base sm:text-xs font-mono text-[#f4f0e8] placeholder-[#817b73] focus:outline-none shadow-xs"
                 />
               </div>
 
@@ -77,7 +77,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="alex@example.com"
-                  className="w-full px-4 py-2.5 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-xs font-mono text-[#f4f0e8] placeholder-[#817b73] focus:outline-none shadow-xs"
+                  className="w-full px-4 py-2.5 bg-[#080808] border border-white/10 focus:border-[#ff5a1f] rounded-xl text-base sm:text-xs font-mono text-[#f4f0e8] placeholder-[#817b73] focus:outline-none shadow-xs"
                 />
               </div>
 
@@ -87,7 +87,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   <select 
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-[#080808] border border-white/10 rounded-xl text-xs font-mono text-[#f4f0e8] focus:outline-none shadow-xs"
+                    className="w-full px-3 py-2.5 bg-[#080808] border border-white/10 rounded-xl text-base sm:text-xs font-mono text-[#f4f0e8] focus:outline-none shadow-xs"
                   >
                     <option value="Developer / Engineer" className="bg-[#111111]">Developer / Engineer</option>
                     <option value="Student / Researcher" className="bg-[#111111]">Student / Researcher</option>
@@ -101,7 +101,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   <select 
                     value={formData.attendance}
                     onChange={(e) => setFormData({ ...formData, attendance: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-[#080808] border border-white/10 rounded-xl text-xs font-mono text-[#f4f0e8] focus:outline-none shadow-xs"
+                    className="w-full px-3 py-2.5 bg-[#080808] border border-white/10 rounded-xl text-base sm:text-xs font-mono text-[#f4f0e8] focus:outline-none shadow-xs"
                   >
                     <option value="In-Person Auditorium" className="bg-[#111111]">In-Person Auditorium</option>
                     <option value="Live Worldwide Stream" className="bg-[#111111]">Live Worldwide Stream</option>

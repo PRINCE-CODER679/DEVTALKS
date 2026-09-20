@@ -295,7 +295,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
     <section 
       id="hero"
       ref={containerRef}
-      className="relative w-full min-h-[100dvh] bg-[#070707] text-[#f4f0e8] flex flex-col justify-between pt-16 sm:pt-20 pb-5 sm:pb-7 px-4 sm:px-8 lg:px-12 overflow-hidden select-none touch-pan-y"
+      className="relative w-full h-[100dvh] max-h-[100dvh] min-h-[540px] sm:min-h-[100dvh] bg-[#070707] text-[#f4f0e8] flex flex-col justify-between pt-14 sm:pt-20 pb-2.5 sm:pb-6 px-3 sm:px-8 lg:px-12 overflow-hidden select-none touch-pan-y"
     >
       
       {/* ================= DUAL-IMAGE RADIAL REVEAL CANVAS (BACKGROUND) ================= */}
@@ -306,7 +306,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
           <img
             src="/hero-speaker-base.png"
             alt="DEVTALKS '26 Mystery Speaker Silhouette"
-            className="w-full h-full object-cover object-[center_35%] sm:object-center filter contrast-125 brightness-95"
+            className="w-full h-full object-cover object-[center_28%] sm:object-center filter contrast-125 brightness-95"
             draggable={false}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-transparent to-[#070707]/80" />
@@ -327,7 +327,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
             <img
               src="/hero-speaker-reveal.png"
               alt="DEVTALKS '26 Speaker Revealed"
-              className="w-full h-full object-cover object-[center_35%] sm:object-center filter contrast-130 brightness-105 saturate-115"
+              className="w-full h-full object-cover object-[center_28%] sm:object-center filter contrast-130 brightness-105 saturate-115"
               draggable={false}
             />
             <div className="absolute inset-0 bg-radial from-[#ff4500]/20 via-transparent to-transparent mix-blend-screen" />
@@ -351,83 +351,83 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
         <div className="absolute inset-0 subtle-dossier-grid opacity-15 pointer-events-none z-10" />
 
         {/* Top & Bottom Cinematic Fade Vignettes */}
-        <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-[#070707] to-transparent z-10 pointer-events-none" />
-        <div className="absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-[#070707] to-transparent z-10 pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 h-16 sm:h-24 bg-gradient-to-b from-[#070707] to-transparent z-10 pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-20 sm:h-28 bg-gradient-to-t from-[#070707] to-transparent z-10 pointer-events-none" />
       </div>
 
       {/* ================= 1. TOP FLOATING STICKERS ROW ================= */}
-      <div className="relative z-30 max-w-7xl mx-auto w-full flex items-center justify-between px-1 font-mono text-[9px] sm:text-[10px]">
+      <div className="relative z-30 max-w-7xl mx-auto w-full flex items-center justify-between px-1 font-mono text-[8px] sm:text-[10px]">
         
-        {/* Left Tape Sticker: SAME STAGE, DIFFERENT ENERGY */}
-        <div className="inline-flex items-center transform -rotate-3 hover:rotate-0 transition-transform">
-          <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-[#ff5a1f]/15 border border-[#ff5a1f]/50 text-[#ff8a3d] font-mono font-bold tracking-wider uppercase rounded shadow-sm backdrop-blur-sm">
-            SAME STAGE, DIFFERENT ENERGY 👑
+        {/* Left Tape Sticker */}
+        <div className="inline-flex items-center transform -rotate-2 hover:rotate-0 transition-transform">
+          <div className="px-2 sm:px-3 py-0.5 sm:py-1 bg-[#ff5a1f]/15 border border-[#ff5a1f]/50 text-[#ff8a3d] font-mono font-bold tracking-wider uppercase rounded shadow-sm backdrop-blur-sm">
+            <span className="hidden sm:inline">SAME STAGE, </span>DIFF ENERGY 👑
           </div>
         </div>
 
-        {/* Center Tape Sticker: COMING SOON */}
+        {/* Center Tape Sticker */}
         <div className="inline-flex items-center transform rotate-1 hover:rotate-0 transition-transform">
-          <div className="px-2.5 sm:px-3.5 py-0.5 sm:py-1 bg-[#111111]/90 border border-[#ff5a1f]/60 text-[#ff8a3d] font-mono font-bold tracking-widest uppercase rounded shadow-[0_0_15px_rgba(255,90,31,0.25)] backdrop-blur-md flex items-center gap-1.5">
+          <div className="px-2 sm:px-3.5 py-0.5 sm:py-1 bg-[#111111]/90 border border-[#ff5a1f]/60 text-[#ff8a3d] font-mono font-bold tracking-widest uppercase rounded shadow-[0_0_15px_rgba(255,90,31,0.25)] backdrop-blur-md flex items-center gap-1 sm:gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#ff5a1f] animate-ping" />
-            <span>COMING SOON</span>
+            <span className="hidden sm:inline">COMING </span><span>SOON</span>
             <span>⏳</span>
           </div>
         </div>
 
         {/* Right Tape Sticker: GUESS WHAT?! */}
-        <div className="inline-flex items-center transform rotate-3 hover:rotate-0 transition-transform">
-          <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-[#ff5a1f] text-[#070707] font-display font-black tracking-wider uppercase rounded shadow-md">
+        <div className="inline-flex items-center transform rotate-2 hover:rotate-0 transition-transform">
+          <div className="px-2 sm:px-3 py-0.5 sm:py-1 bg-[#ff5a1f] text-[#070707] font-display font-black tracking-wider uppercase rounded shadow-md">
             GUESS WHAT?! ⚡
           </div>
         </div>
 
       </div>
 
-      {/* ================= 2. MAIN HERO CONTENT AREA (OPEN STAGE FOR IMAGE REVEAL + COMMUNITY SPECS) ================= */}
-      <div className="relative z-20 max-w-7xl mx-auto w-full flex-1 flex flex-col justify-between lg:flex-row items-center lg:items-end gap-5 lg:gap-6 my-auto py-3">
+      {/* ================= 2. MAIN HERO CONTENT AREA ================= */}
+      <div className="relative z-20 max-w-7xl mx-auto w-full flex-1 flex flex-col justify-between lg:flex-row items-center lg:items-end gap-2 sm:gap-5 lg:gap-6 my-auto py-1 sm:py-3">
         
         {/* Interactive Mobile Cue (Fades once interacted) */}
-        <div className={`sm:hidden pointer-events-auto transition-opacity duration-700 ${hasInteracted ? 'opacity-30 hover:opacity-100' : 'opacity-90 animate-pulse'} self-center`}>
-          <span className="px-3 py-1 rounded-full bg-[#111111]/80 border border-[#ff5a1f]/30 text-[#f4f0e8]/80 font-mono text-[8px] tracking-wider uppercase backdrop-blur-sm">
-            ✨ DRAG / TOUCH TO UNMASK
+        <div className={`sm:hidden pointer-events-auto transition-opacity duration-700 ${hasInteracted ? 'opacity-30 hover:opacity-100' : 'opacity-95 animate-pulse'} self-center mt-1`}>
+          <span className="px-2.5 py-0.5 rounded-full bg-[#111111]/90 border border-[#ff5a1f]/40 text-[#f4f0e8] font-mono text-[7.5px] tracking-wider uppercase backdrop-blur-sm shadow-sm">
+            ✨ DRAG TO UNMASK
           </span>
         </div>
 
         <div className="hidden lg:block flex-1" />
 
-        {/* ================= RIGHT COLUMN: FEW COMMUNITY CHAT BUBBLES ================= */}
-        <div className="flex flex-col items-start lg:items-end space-y-2 z-30 w-full lg:w-auto self-end">
+        {/* ================= RIGHT COLUMN: COMPACT COMMUNITY SPECULATION ================= */}
+        <div className="flex flex-col items-start lg:items-end space-y-1.5 sm:space-y-2 z-30 w-full lg:w-auto self-end">
           
           {/* Top-Right Tape Badge: THIS IS GONNA BE GOOD */}
-          <div className="self-start lg:self-end transform rotate-2 hover:rotate-0 transition-transform mb-0.5">
-            <div className="px-2.5 py-0.5 bg-[#111111]/90 border border-white/20 text-[#f4f0e8] font-mono text-[8px] sm:text-[9px] font-bold tracking-wider uppercase rounded shadow-md flex items-center gap-1 backdrop-blur-md">
+          <div className="self-start lg:self-end transform rotate-1 hover:rotate-0 transition-transform mb-0.5">
+            <div className="px-2 py-0.5 bg-[#111111]/90 border border-white/20 text-[#f4f0e8] font-mono text-[7.5px] sm:text-[9px] font-bold tracking-wider uppercase rounded shadow-md flex items-center gap-1 backdrop-blur-md">
               <span>THIS IS GONNA BE GOOD</span>
               <span>🔥</span>
             </div>
           </div>
 
-          {/* 2 Compact Comment Pills */}
-          <div className="w-full max-w-[260px] sm:max-w-xs space-y-1.5">
-            {communityComments.map((c) => (
+          {/* 1 or 2 Compact Comment Pills */}
+          <div className="w-full max-w-[230px] sm:max-w-xs space-y-1 sm:space-y-1.5">
+            {communityComments.slice(0, 2).map((c, idx) => (
               <div 
                 key={c.id}
-                className="group p-2 rounded-xl bg-[#111111]/85 hover:bg-[#181818] border border-white/15 hover:border-[#ff5a1f]/50 backdrop-blur-md shadow-lg transition-all text-left"
+                className={`group p-1.5 sm:p-2 rounded-xl bg-[#111111]/90 hover:bg-[#181818] border border-white/15 hover:border-[#ff5a1f]/50 backdrop-blur-md shadow-lg transition-all text-left ${idx === 1 ? 'hidden xs:block sm:block' : ''}`}
               >
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-1.5 sm:gap-2">
                   <img 
                     src={c.avatar} 
                     alt={c.user} 
-                    className="w-5 h-5 rounded-full object-cover border border-white/20 shrink-0" 
+                    className="w-4 h-4 sm:w-5 sm:h-5 rounded-full object-cover border border-white/20 shrink-0" 
                   />
                   <div className="flex-1 min-w-0">
-                    <span className="font-bold text-[#f4f0e8] text-[8.5px] block truncate">@{c.user}</span>
-                    <p className="text-[9px] sm:text-[10px] text-[#f4f0e8]/90 font-sans leading-snug">
+                    <span className="font-bold text-[#f4f0e8] text-[8px] sm:text-[8.5px] block truncate">@{c.user}</span>
+                    <p className="text-[8px] sm:text-[10px] text-[#f4f0e8]/90 font-sans leading-tight">
                       {c.text}
                     </p>
                   </div>
-                  <div className="flex flex-col items-center justify-center shrink-0 pl-1 text-[8px] text-[#ff8a3d]">
-                    <Heart className="w-2.5 h-2.5 fill-[#ff5a1f] text-[#ff5a1f]" />
-                    <span className="font-mono text-[7px] font-semibold">{c.likes}</span>
+                  <div className="flex flex-col items-center justify-center shrink-0 pl-0.5 text-[7px] text-[#ff8a3d]">
+                    <Heart className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#ff5a1f] text-[#ff5a1f]" />
+                    <span className="font-mono text-[6.5px] sm:text-[7px] font-semibold">{c.likes}</span>
                   </div>
                 </div>
               </div>
@@ -441,7 +441,7 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
                 soundFx.playEvidenceClick();
                 onExploreSpeakers('speaker-1');
               }}
-              className="px-3 py-1 bg-[#111111]/85 hover:bg-[#181818] border border-white/15 hover:border-[#ff5a1f] text-[#f4f0e8] font-mono text-[8.5px] sm:text-[9.5px] font-semibold tracking-wider rounded-full transition-all cursor-pointer backdrop-blur-sm"
+              className="px-2.5 py-0.5 sm:px-3 sm:py-1 bg-[#111111]/90 hover:bg-[#181818] border border-white/20 hover:border-[#ff5a1f] text-[#f4f0e8] font-mono text-[8px] sm:text-[9.5px] font-semibold tracking-wider rounded-full transition-all cursor-pointer backdrop-blur-sm"
             >
               EXPLORE DOSSIERS ↓
             </button>
@@ -452,19 +452,20 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
       </div>
 
       {/* ================= 3. BOTTOM EVENT METADATA ROW ================= */}
-      <div className="relative z-30 max-w-5xl mx-auto w-full pt-2 sm:pt-2.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[8.5px] sm:text-xs font-mono text-[#817b73]">
+      <div className="relative z-30 max-w-5xl mx-auto w-full pt-1.5 sm:pt-2.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 text-[8px] sm:text-xs font-mono text-[#817b73]">
         
         {/* Date Pill */}
-        <div className="flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-[#111111]/80 border border-white/10">
-          <Calendar className="w-3 h-3 text-[#ff5a1f]" />
-          <span className="font-bold text-[#f4f0e8]">10TH & 11TH JANUARY 2026</span>
-          <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-[#ff5a1f]/20 text-[#ff8a3d] border border-[#ff5a1f]/40 uppercase tracking-wider ml-1">COMING SOON</span>
+        <div className="flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-[#111111]/90 border border-white/10">
+          <Calendar className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#ff5a1f]" />
+          <span className="font-bold text-[#f4f0e8]">10-11 JAN 2026</span>
+          <span className="text-[7px] sm:text-[8px] font-bold px-1 py-0.2 rounded bg-[#ff5a1f]/20 text-[#ff8a3d] border border-[#ff5a1f]/40 uppercase tracking-wider ml-0.5">SOON</span>
         </div>
 
         {/* Venue Pill */}
-        <div className="flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-[#111111]/80 border border-white/10">
-          <MapPin className="w-3 h-3 text-[#ff8a3d]" />
-          <span>6 PM IST • AUDITORIUM & LIVE STREAM</span>
+        <div className="flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-[#111111]/90 border border-white/10">
+          <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#ff8a3d]" />
+          <span className="hidden sm:inline">6 PM IST • AUDITORIUM & LIVE STREAM</span>
+          <span className="sm:hidden">6 PM IST • AUDITORIUM</span>
         </div>
 
         {/* Free Pass CTA */}
@@ -473,15 +474,15 @@ export default function HeroMystery({ onTakeGuess, onExploreSpeakers, onRegister
             soundFx.playEvidenceClick();
             onRegister();
           }}
-          className="flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-[#ff5a1f]/10 border border-[#ff5a1f]/40 text-[#ff8a3d] hover:bg-[#ff5a1f] hover:text-[#070707] transition-colors cursor-pointer"
+          className="flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-[#ff5a1f]/15 border border-[#ff5a1f]/50 text-[#ff8a3d] hover:bg-[#ff5a1f] hover:text-[#070707] transition-colors cursor-pointer active:scale-95"
         >
-          <Ticket className="w-3 h-3" />
-          <span className="font-bold uppercase tracking-wider">FREE REGISTRATION</span>
+          <Ticket className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+          <span className="font-bold uppercase tracking-wider">FREE PASS</span>
         </button>
 
         {/* Scroll Prompt */}
         <div className="hidden md:flex items-center gap-1 text-[#817b73]">
-          <span>SCROLL TO EXPLORE</span>
+          <span>SCROLL</span>
           <ChevronDown className="w-3.5 h-3.5 animate-bounce" />
         </div>
 

@@ -168,12 +168,18 @@ export default function GuessesArena({ onJumpToSpeaker }) {
         ))}
       </div>
 
-      <div className="max-w-4xl mx-auto w-full relative z-10 space-y-10">
+      <motion.div 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-4xl mx-auto w-full relative z-10 space-y-8 sm:space-y-10"
+      >
         
         {/* ================= HEADER ================= */}
-        <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 border border-[#ff5a1f]/30 text-[#ff5a1f] font-mono text-xs font-bold tracking-widest uppercase shadow-xs">
-            <Trophy className="w-4 h-4 text-[#ff5a1f]" />
+        <div className="text-center space-y-2 sm:space-y-3 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-black/40 border border-[#ff5a1f]/30 text-[#ff5a1f] font-mono text-[10px] sm:text-xs font-bold tracking-widest uppercase shadow-xs">
+            <Trophy className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#ff5a1f]" />
             <span>COMMUNITY PREDICTION CHALLENGE</span>
           </div>
 
@@ -181,13 +187,13 @@ export default function GuessesArena({ onJumpToSpeaker }) {
             GUESS THE <span className="text-[#ff5a1f]">SPEAKERS</span>
           </h2>
 
-          <p className="font-sans text-sm sm:text-base text-[#817b73] max-w-2xl mx-auto leading-relaxed font-medium">
+          <p className="font-sans text-xs sm:text-base text-[#817b73] max-w-2xl mx-auto leading-relaxed font-medium">
             Select each keynote speaker below, submit your prediction with your <span className="text-[#ff8a3d] font-semibold">Name, Instagram ID & Department</span>, and claim your chance to win exclusive VIP access!
           </p>
         </div>
 
         {/* ================= 3 SPEAKER SELECTOR CARDS ================= */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
           {speakersList.map((spk, idx) => {
             const isSelected = selectedSpeakerId === spk.id;
             return (
@@ -199,10 +205,10 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                   setSelectedSpeakerId(spk.id);
                   setSubmitError(null);
                 }}
-                className={`p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 border flex flex-col justify-between gap-3 cursor-pointer ${
+                className={`p-3.5 sm:p-5 rounded-2xl text-left transition-all duration-300 border flex flex-col justify-between gap-2.5 sm:gap-3 cursor-pointer ${
                   isSelected
-                    ? 'bg-black/60 border-2 border-[#ff5a1f] shadow-[0_8px_25px_rgba(255,90,31,0.2)] scale-[1.02]'
-                    : 'bg-black/30 border-white/15 hover:border-[#ff5a1f]/50 hover:bg-black/50 shadow-xs'
+                    ? 'bg-black/70 border-2 border-[#ff5a1f] shadow-[0_8px_25px_rgba(255,90,31,0.2)] scale-[1.01]'
+                    : 'bg-black/35 border-white/15 hover:border-[#ff5a1f]/50 hover:bg-black/50 shadow-xs'
                 }`}
               >
                 <div className="flex items-center justify-between w-full">
@@ -218,10 +224,10 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 </div>
 
                 <div>
-                  <h4 className="font-display font-black text-lg text-[#f4f0e8] uppercase leading-tight tracking-wide">
+                  <h4 className="font-display font-black text-base sm:text-lg text-[#f4f0e8] uppercase leading-tight tracking-wide">
                     {spk.title}
                   </h4>
-                  <p className="font-sans text-xs text-[#817b73] line-clamp-2 mt-1 italic font-normal">
+                  <p className="font-sans text-[11px] sm:text-xs text-[#817b73] line-clamp-2 mt-1 italic font-normal">
                     "{spk.shortClue}"
                   </p>
                 </div>
@@ -238,21 +244,21 @@ export default function GuessesArena({ onJumpToSpeaker }) {
         </div>
 
         {/* ================= PREDICTION SUBMISSION FORM ================= */}
-        <div className="w-full space-y-6 pt-4">
+        <div className="w-full space-y-5 sm:space-y-6 pt-2 sm:pt-4">
           
           {/* Header row: Speaker badge & Dossier link */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
-            <div className="space-y-1">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
+            <div className="space-y-0.5 sm:space-y-1">
               <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 <span className="font-mono text-xs sm:text-sm font-black text-[#ff5a1f] uppercase tracking-widest">
                   PREDICTING: SPEAKER #{activeSpeaker.num}
                 </span>
                 <span className="text-white/20 hidden sm:inline">|</span>
-                <span className="font-mono text-[11px] sm:text-xs text-[#817b73] uppercase tracking-wider font-semibold">
+                <span className="font-mono text-[10px] sm:text-xs text-[#817b73] uppercase tracking-wider font-semibold">
                   {activeSpeaker.roleTag}
                 </span>
               </div>
-              <h3 className="font-display font-black text-2xl sm:text-4xl text-[#f4f0e8] uppercase tracking-wider mt-1">
+              <h3 className="font-display font-black text-xl sm:text-4xl text-[#f4f0e8] uppercase tracking-wider mt-1">
                 {activeSpeaker.title}
               </h3>
             </div>
@@ -266,26 +272,26 @@ export default function GuessesArena({ onJumpToSpeaker }) {
               className="font-mono text-xs sm:text-sm text-[#ff5a1f] hover:text-[#ff8a3d] font-bold flex items-center gap-1.5 hover:underline cursor-pointer tracking-wider self-start sm:self-center"
             >
               <span>Clues Dossier</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
             </button>
           </div>
 
           {/* Quick Clue Banner */}
-          <div className="p-4 sm:p-5 rounded-2xl border border-[#ff5a1f]/35 bg-black/40 flex items-center gap-3.5 shadow-sm">
-            <Sparkles className="w-5 h-5 text-[#ff5a1f] shrink-0" />
+          <div className="p-3.5 sm:p-5 rounded-2xl border border-[#ff5a1f]/35 bg-black/40 flex items-center gap-3 shadow-sm">
+            <Sparkles className="w-4 sm:w-5 h-4 sm:h-5 text-[#ff5a1f] shrink-0" />
             <p className="font-sans text-xs sm:text-sm text-[#f4f0e8] italic leading-snug font-medium">
               "{activeSpeaker.shortClue}"
             </p>
           </div>
 
           {/* The Form */}
-          <form onSubmit={handleGuessSubmit} className="space-y-5">
+          <form onSubmit={handleGuessSubmit} className="space-y-4 sm:space-y-5">
             
             {/* Row 1: Name, Instagram ID & Department */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
               
               {/* Full Name */}
-              <div className="space-y-2">
+              <div className="space-y-1.5 sm:space-y-2">
                 <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
                   <User className="w-3.5 h-3.5 text-[#ff5a1f]" />
                   <span>YOUR FULL NAME *</span>
@@ -296,12 +302,12 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Rahul Sharma"
-                  className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
+                  className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-base sm:text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
                 />
               </div>
 
               {/* Instagram Handle */}
-              <div className="space-y-2">
+              <div className="space-y-1.5 sm:space-y-2">
                 <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
                   <Instagram className="w-3.5 h-3.5 text-[#ff5a1f]" />
                   <span>INSTAGRAM ID *</span>
@@ -314,13 +320,13 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                     value={instaId.replace(/^@/, '')}
                     onChange={(e) => setInstaId(e.target.value)}
                     placeholder="your_username"
-                    className="w-full pl-8 pr-4 py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
+                    className="w-full pl-8 pr-3.5 sm:pr-4 py-2.5 sm:py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-base sm:text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
                   />
                 </div>
               </div>
 
               {/* Department */}
-              <div className="space-y-2">
+              <div className="space-y-1.5 sm:space-y-2">
                 <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
                   <GraduationCap className="w-3.5 h-3.5 text-[#ff5a1f]" />
                   <span>YOUR DEPARTMENT *</span>
@@ -331,14 +337,14 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                   placeholder="e.g. CSE / IT / AI & DS"
-                  className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
+                  className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-base sm:text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
                 />
               </div>
 
             </div>
 
             {/* Row 2: Speaker Guess Prediction */}
-            <div className="space-y-2">
+            <div className="space-y-1.5 sm:space-y-2">
               <label className="font-mono text-xs font-bold text-[#f4f0e8] flex items-center gap-1.5 uppercase tracking-wider">
                 <Flame className="w-3.5 h-3.5 text-[#ff5a1f]" />
                 <span>WHO IS SPEAKER #{activeSpeaker.num}? (YOUR GUESS) *</span>
@@ -349,12 +355,12 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 value={guessInput}
                 onChange={(e) => setGuessInput(e.target.value)}
                 placeholder="e.g. Kunal Shah, Anupam Mittal, Andrej Karpathy..."
-                className="w-full px-4 py-3.5 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
+                className="w-full px-3.5 sm:px-4 py-3 sm:py-3.5 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-base sm:text-sm font-sans font-medium text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all shadow-xs"
               />
             </div>
 
             {/* Row 3: Reason / Clue Theory (Optional) */}
-            <div className="space-y-2">
+            <div className="space-y-1.5 sm:space-y-2">
               <label className="font-mono text-xs font-bold text-[#817b73] flex items-center gap-1.5 uppercase tracking-wider">
                 <span>WHY DO YOU THINK SO? (OPTIONAL CLUE THEORY)</span>
               </label>
@@ -362,8 +368,8 @@ export default function GuessesArena({ onJumpToSpeaker }) {
                 type="text"
                 value={reasonInput}
                 onChange={(e) => setReasonInput(e.target.value)}
-                placeholder="e.g. The 100M+ users clue and CRED venture match perfectly!"
-                className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-sm font-sans text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all"
+                placeholder="e.g. The 100M+ users clue and venture match perfectly!"
+                className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 bg-[#0a0a0a] border border-white/15 focus:border-[#ff5a1f] rounded-xl text-base sm:text-sm font-sans text-[#f4f0e8] placeholder-[#817b73] focus:outline-none transition-all"
               />
             </div>
 
@@ -389,7 +395,7 @@ export default function GuessesArena({ onJumpToSpeaker }) {
 
         </div>
 
-      </div>
+      </motion.div>
 
       {/* ================= SUCCESS POP-UP MODAL (PREDICTION LOGGED) ================= */}
       <AnimatePresence>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -184,7 +185,13 @@ export default function SpeakerCoverflowRing({
       <div id="speaker-2" className="absolute top-0 opacity-0 pointer-events-none" />
       <div id="speaker-3" className="absolute top-0 opacity-0 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto w-full relative z-10 space-y-10">
+      <motion.div 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-7xl mx-auto w-full relative z-10 space-y-10"
+      >
         
         {/* ================= SECTION HEADER & COVERFLOW CONTROLS ================= */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-6">
@@ -236,7 +243,7 @@ export default function SpeakerCoverflowRing({
             type="button"
             onClick={handlePrev}
             aria-label="Previous Speaker"
-            className="absolute left-1 sm:left-4 z-50 p-3 sm:p-4 rounded-full bg-[#111111] hover:bg-[#181818] border-2 border-[#ff5a1f]/40 hover:border-[#ff5a1f] text-[#ff5a1f] hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer group"
+            className="absolute left-1 sm:left-4 z-50 p-2.5 sm:p-4 rounded-full bg-[#111111] hover:bg-[#181818] border-2 border-[#ff5a1f]/40 hover:border-[#ff5a1f] text-[#ff5a1f] hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer group"
           >
             <ChevronLeft className="w-5 sm:w-6 h-5 sm:h-6 group-hover:-translate-x-1 transition-transform text-[#ff5a1f]" />
           </button>
@@ -245,7 +252,7 @@ export default function SpeakerCoverflowRing({
             type="button"
             onClick={handleNext}
             aria-label="Next Speaker"
-            className="absolute right-1 sm:right-4 z-50 p-3 sm:p-4 rounded-full bg-[#111111] hover:bg-[#181818] border-2 border-[#ff5a1f]/40 hover:border-[#ff5a1f] text-[#ff5a1f] hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer group"
+            className="absolute right-1 sm:right-4 z-50 p-2.5 sm:p-4 rounded-full bg-[#111111] hover:bg-[#181818] border-2 border-[#ff5a1f]/40 hover:border-[#ff5a1f] text-[#ff5a1f] hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer group"
           >
             <ChevronRight className="w-5 sm:w-6 h-5 sm:h-6 group-hover:translate-x-1 transition-transform text-[#ff5a1f]" />
           </button>
@@ -258,10 +265,10 @@ export default function SpeakerCoverflowRing({
               transformStyle: 'preserve-3d',
               touchAction: 'pan-y'
             }}
-            className="relative w-full max-w-5xl h-[530px] sm:h-[600px] flex items-center justify-center overflow-visible"
+            className="relative w-full max-w-5xl h-[500px] sm:h-[600px] flex items-center justify-center overflow-visible"
           >
             {/* 3D Cylindrical Ring Base Platform */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[340px] sm:w-[620px] h-[95px] pointer-events-none -z-10 flex items-center justify-center">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[300px] sm:w-[620px] h-[95px] pointer-events-none -z-10 flex items-center justify-center">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#ff5a1f_0%,_transparent_72%)] opacity-20 blur-xl" />
               <div 
                 style={{ 
@@ -290,9 +297,9 @@ export default function SpeakerCoverflowRing({
 
               const isMobile = windowWidth < 640;
               const isSmallMobile = windowWidth < 400;
-              const sideDistance = isSmallMobile ? 120 : isMobile ? 160 : 280;
-              const sideScale = isMobile ? 0.78 : 0.83;
-              const centerScale = isSmallMobile ? 0.94 : 1.0;
+              const sideDistance = isSmallMobile ? 95 : isMobile ? 135 : 280;
+              const sideScale = isSmallMobile ? 0.72 : isMobile ? 0.78 : 0.83;
+              const centerScale = isSmallMobile ? 0.92 : 1.0;
 
               let rotateY = 0;
               let translateX = 0;
@@ -302,16 +309,16 @@ export default function SpeakerCoverflowRing({
               let zIndex = 30;
 
               if (offset === -1) {
-                rotateY = isMobile ? 24 : 30;
+                rotateY = isMobile ? 22 : 30;
                 translateX = -sideDistance;
-                translateZ = isMobile ? -80 : -120;
+                translateZ = isMobile ? -70 : -120;
                 scale = sideScale;
                 opacity = isMobile ? 0.55 : 0.72;
                 zIndex = 10;
               } else if (offset === 1) {
-                rotateY = isMobile ? -24 : -30;
+                rotateY = isMobile ? -22 : -30;
                 translateX = sideDistance;
-                translateZ = isMobile ? -80 : -120;
+                translateZ = isMobile ? -70 : -120;
                 scale = sideScale;
                 opacity = isMobile ? 0.55 : 0.72;
                 zIndex = 10;
@@ -346,7 +353,7 @@ export default function SpeakerCoverflowRing({
                     willChange: 'transform, opacity',
                     touchAction: 'pan-y'
                   }}
-                  className={`absolute w-[285px] xs:w-[310px] sm:w-[360px] aspect-[1/1.44] select-none cursor-pointer ${
+                  className={`absolute w-[265px] xs:w-[295px] sm:w-[360px] aspect-[1/1.44] select-none cursor-pointer ${
                     !isCenter ? 'hover:opacity-95 hover:scale-[0.85] transition-transform' : ''
                   }`}
                   title={isCenter ? (isFlipped ? 'Tap card to flip front' : 'Tap card to flip for secret clues') : 'Click to bring to center'}
@@ -603,7 +610,7 @@ export default function SpeakerCoverflowRing({
 
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }

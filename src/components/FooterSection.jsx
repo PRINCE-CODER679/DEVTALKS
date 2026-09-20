@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { 
   ArrowUp, 
   Calendar, 
@@ -13,7 +14,11 @@ import { soundFx } from '../utils/audio';
 export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro }) {
   const scrollToTop = () => {
     soundFx.playEvidenceClick();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.__lenis) {
+      window.__lenis.scrollTo(0, { duration: 1.2 });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -34,7 +39,13 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
       </div>
 
       {/* ================= SEAMLESS 4-COLUMN FOOTER NAVIGATION & CONTACT ================= */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-8 lg:px-12 pt-16 pb-10">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-8 lg:px-12 pt-12 sm:pt-16 pb-8 sm:pb-10"
+      >
         
         {/* Main 4-Column Grid: Structured with clean alignment & responsive spacing */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-8 xl:gap-10 pb-12 items-start">
@@ -260,7 +271,7 @@ export default function FooterSection({ onNavigate, onRegisterNow, onReplayIntro
           </button>
         </div>
 
-      </div>
+      </motion.div>
 
     </footer>
   );
